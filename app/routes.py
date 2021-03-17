@@ -3,6 +3,7 @@ from app.models import User
 from flask import Flask, jsonify, request, render_template, redirect, url_for, flash
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
+import dataBaseController
 
 # https://www.youtube.com/watch?v=9MHYHgh4jYc
 
@@ -15,18 +16,18 @@ def index():
     else:
         return "You are not authenticated!"
 
+
 def shutdown_server():
     func = request.environ.get('werkzeug.server.shutdown')
     if func is None:
         raise RuntimeError('Not running with the Werkzeug Server')
     func()
 
+
 @app.route('/shutdown', methods=['GET'])
 def shutdown():
     shutdown_server()
     return 'Server shutting down...'
-
-
 
 
 @app.route('/login/', methods=["POST", "GET"])
@@ -48,15 +49,18 @@ def login():
     else:
         return render_template("login.html")
 
+
 @app.route('/logout/')
 def logout():
     if current_user.is_authenticated:
         logout_user()
     return redirect(url_for('index'))
 
+
 @app.route('/<text>')
 def echo(text):
     return render_template("index.html", content=text)
+
 
 @app.route('/via')
 @login_required
@@ -64,5 +68,12 @@ def via():
     return render_template("_via_video_annotator.html")
 
 
+@app.route('/get_projects/', methods=["GET"])
+def get_projects():
+    return dataBaseController.get_projects(User.query.filter_by(username=current_user.username).first())
+
+@app.route('/test_post/', methods=["POST"])
+def test_post():
+    return request.data
 
 

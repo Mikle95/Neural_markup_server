@@ -58,7 +58,8 @@ _via_view_annotator.prototype._show_start_info = function() {
   this.c.setAttribute('style', 'grid-template-rows:1fr;')
   var via_page = document.createElement('div');
   via_page.setAttribute('id', 'via_start_info');
-  via_page.innerHTML = document.getElementById('via_start_info_content').innerHTML;
+  //via_page.innerHTML = document.getElementById('via_start_info_content').innerHTML;
+  via_page.innerHTML = 'Let\'s start'
   this.c.innerHTML = '';
   this.c.appendChild(via_page);
 }
