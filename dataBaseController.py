@@ -1,5 +1,6 @@
 from app import db
 from app.models import User, Markup
+import json
 
 
 def add_user(login, password):
@@ -24,3 +25,6 @@ def form_via_project_file(projects):
     # TODO: forming via project json
     return str(projects)
 
+def test_projects_names():
+    data = ["SomeProject1", "SomeProject2", "SomeProject3"]
+    return json.dumps(data)

@@ -58,11 +58,11 @@ _via_control_panel.prototype._init = function(type) {
   }.bind(this));
   this.c.appendChild(keyboard);
 
-  var help = _via_util_get_svg_button('micon_help', 'About VIA');
-  help.addEventListener('click', function() {
-    _via_util_page_show('page_about');
-  }.bind(this));
-  this.c.appendChild(help);
+  // var help = _via_util_get_svg_button('micon_help', 'About VIA');
+  // help.addEventListener('click', function() {
+  //   _via_util_page_show('page_about');
+  // }.bind(this));
+  // this.c.appendChild(help);
 }
 
 _via_control_panel.prototype._add_spacer = function() {
@@ -186,9 +186,9 @@ _via_control_panel.prototype._add_project_tools = function() {
   }.bind(this));
   this.c.appendChild(save);
 
-  var import_export_annotation = _via_util_get_svg_button('micon_import_export', 'Import or Export Annotations');
-  import_export_annotation.addEventListener('click', this._page_show_import_export.bind(this));
-  this.c.appendChild(import_export_annotation);
+  // var import_export_annotation = _via_util_get_svg_button('micon_import_export', 'Import or Export Annotations');
+  // import_export_annotation.addEventListener('click', this._page_show_import_export.bind(this));
+  // this.c.appendChild(import_export_annotation);
 }
 
 _via_control_panel.prototype._page_show_import_export = function(d) {
@@ -251,25 +251,25 @@ _via_control_panel.prototype._project_import_via2_on_local_file_read = function(
 }
 
 _via_control_panel.prototype._add_project_share_tools = function() {
-  if ( this.via.s ) {
-    var share = _via_util_get_svg_button('micon_share', 'Information about sharing this VIA project with others for collaborative annotation');
-    share.addEventListener('click', function() {
-      this._share_show_info();
-    }.bind(this));
-    var push = _via_util_get_svg_button('micon_upload', 'Push (i.e. share this project or share your updates made to this project)');
-    push.addEventListener('click', function() {
-      this.via.s.push();
-    }.bind(this));
-
-    var pull = _via_util_get_svg_button('micon_download', 'Pull (i.e. open a shared project or fetch updates for the current project)');
-    pull.addEventListener('click', function() {
-      this._share_show_pull();
-    }.bind(this));
-
-    this.c.appendChild(share);
-    this.c.appendChild(push);
-    this.c.appendChild(pull);
-  }
+  // if ( this.via.s ) {
+  //   var share = _via_util_get_svg_button('micon_share', 'Information about sharing this VIA project with others for collaborative annotation');
+  //   share.addEventListener('click', function() {
+  //     this._share_show_info();
+  //   }.bind(this));
+  //   var push = _via_util_get_svg_button('micon_upload', 'Push (i.e. share this project or share your updates made to this project)');
+  //   push.addEventListener('click', function() {
+  //     this.via.s.push();
+  //   }.bind(this));
+  //
+  //   var pull = _via_util_get_svg_button('micon_download', 'Pull (i.e. open a shared project or fetch updates for the current project)');
+  //   pull.addEventListener('click', function() {
+  //     this._share_show_pull();
+  //   }.bind(this));
+  //
+  //   this.c.appendChild(share);
+  //   this.c.appendChild(push);
+  //   this.c.appendChild(pull);
+  // }
 }
 
 _via_control_panel.prototype._share_show_info = function() {

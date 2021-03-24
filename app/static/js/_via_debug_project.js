@@ -1,3 +1,15 @@
+// var a = document.getElementById('micon_import_export');
+// a.parentElement.removeChild(a);
+// a = document.getElementById('micon_import_export');
+// a.parentElement.removeChild(a);
+//
+// a = document.getElementById('micon_help');
+// a.parentElement.removeChild(a);
+// // a = document.getElementById('micon_help');
+// // a.parentElement.removeChild(a);
+// a = document.getElementById('micon_share');
+// a.parentElement.removeChild(a);
+
 /*var _via_dp = []; // debug project
 
 //

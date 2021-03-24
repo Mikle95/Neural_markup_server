@@ -42,7 +42,7 @@ _via_view_manager.prototype._init_ui_elements = function() {
   this.pname = document.createElement('input');
   this.pname.setAttribute('type', 'text');
   this.pname.setAttribute('id', 'via_project_name_input');
-  this.pname.setAttribute('value', this.d.store.project.pname);
+  this.pname.setAttribute('value', 'Untitled'); //this.d.store.project.pname
   this.pname.setAttribute('title', 'Project Name (click to update)');
   this.pname.addEventListener('change', this._on_pname_change.bind(this));
 
@@ -51,24 +51,53 @@ _via_view_manager.prototype._init_ui_elements = function() {
   this.view_selector.setAttribute('title', 'Select a file for annotation');
   this.view_selector.addEventListener('change', this._on_view_selector_change.bind(this));
 
-  this.view_filter_regex = document.createElement('input');
-  this.view_filter_regex.setAttribute('type', 'text');
-  this.view_filter_regex.setAttribute('class', 'view_filter_regex');
-  this.view_filter_regex.setAttribute('title', 'Filter file list');
-  this.view_filter_regex.setAttribute('placeholder', 'Search');
-  this.view_filter_regex.addEventListener('input', this._on_view_filter_regex_change.bind(this));
+  this.projet_selector = document.createElement('select');
+  // this.view_filter_regex.setAttribute('type', 'text');
+  this.projet_selector.setAttribute('class', 'view_selector');
+  this.projet_selector.setAttribute('title', 'Filter file list');
+  // this.view_filter_regex.setAttribute('placeholder', 'Search');
+  this.projet_selector.addEventListener('change', this._on_project_selector_change.bind(this));
+  // this.view_filter_regex.addEventListener('reset', this._on_click_get_projects.bind(this));
 
   this.c.innerHTML = '';
   this.c.appendChild(this.pname);
+  this.c.appendChild(this.projet_selector);
   this.c.appendChild(this.view_selector);
-  this.c.appendChild(this.view_filter_regex);
+  this._on_click_get_projects(this);
 }
 
 //
 // UI elements change listeners
 //
+
+_via_view_manager.prototype._on_click_get_projects = function(e) {
+  var request = new XMLHttpRequest();
+    var params = "id_product=" + 1 + "&qty_product=" + 231;
+    request.open('POST', 'http://127.0.0.1:5000/get_all_projects', true);
+    request.addEventListener("readystatechange", () => {
+      if (request.readyState === 4 && request.status === 200) {
+        var values = JSON.parse(request.responseText);
+        this.projet_selector.innerHTML = '';
+        // this.view_filter_regex_vid_list = [];
+        for (var i = 0; i < values.length; ++i){
+          var oi = document.createElement('option');
+          oi.setAttribute('value', values[i]);
+          oi.innerHTML = values[i]
+          this.projet_selector.appendChild(oi);
+        }
+
+        // this.view_filter_regex.appendChild( this._view_selector_option_html(values[2], 2) );
+
+        // выводим в консоль то что ответил сервер
+        // alert( request.responseText );
+      }
+    });
+    request.send(params);
+}
+
 _via_view_manager.prototype._on_pname_change = function(e) {
   this.d.store.project.pname = e.target.value.trim();
+  this.projet_selector.options[this.projet_selector.selectedIndex].innerHTML = e.target.value.trim();
 }
 
 _via_view_manager.prototype._on_view_selector_change = function(e) {
@@ -255,9 +284,13 @@ _via_view_manager.prototype._view_selector_update_showall = function() {
   }
 }
 
-_via_view_manager.prototype._on_view_filter_regex_change = function() {
-  var regex = this.view_filter_regex.value;
-  this._view_selector_update_regex(regex);
+_via_view_manager.prototype._on_project_selector_change = function(e) {
+  // alert("Selected: " + e.target.options[e.target.selectedIndex].value);
+  this.pname.value = e.target.options[e.target.selectedIndex].value;
+  //TODO -- Здесь должна происходить загрузка проекта с сервера
+
+  // var regex = this.view_filter_regex.value;
+  // this._view_selector_update_regex(regex);
 }
 
 _via_view_manager.prototype._file_add_from_filelist = function(filelist) {

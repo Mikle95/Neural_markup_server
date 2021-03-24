@@ -68,11 +68,15 @@ def via():
     return render_template("_via_video_annotator.html")
 
 
-@app.route('/get_projects/', methods=["GET"])
-def get_projects():
-    return dataBaseController.get_projects(User.query.filter_by(username=current_user.username).first())
+@app.route('/get_all_projects/', methods=["GET", "POST"])
+@login_required
+def get_all_projects():
+    a = 1 + 2
+    return dataBaseController.test_projects_names()
+    # return dataBaseController.get_projects(User.query.filter_by(username=current_user.username).first())
 
 @app.route('/test_post/', methods=["POST"])
+@login_required
 def test_post():
     return request.data
 
