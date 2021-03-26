@@ -77,6 +77,7 @@ _via_view_manager.prototype._on_click_get_projects = function(e) {
     request.addEventListener("readystatechange", () => {
       if (request.readyState === 4 && request.status === 200) {
         var values = JSON.parse(request.responseText);
+        // values[values.length] = "Add new project";
         this.projet_selector.innerHTML = '';
         // this.view_filter_regex_vid_list = [];
         for (var i = 0; i < values.length; ++i){
