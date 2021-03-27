@@ -4,6 +4,7 @@ from flask import Flask, jsonify, request, render_template, redirect, url_for, f
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 import dataBaseController
+import storeManager
 
 # https://www.youtube.com/watch?v=9MHYHgh4jYc
 
@@ -25,7 +26,10 @@ def shutdown_server():
 
 
 @app.route('/shutdown', methods=['GET'])
+@login_required
 def shutdown():
+    if current_user.username != "admin":
+        return "Permission denied"
     shutdown_server()
     return 'Server shutting down...'
 
@@ -73,6 +77,25 @@ def via():
 def get_all_projects():
     return dataBaseController.test_projects_names()
     # return dataBaseController.get_projects(User.query.filter_by(username=current_user.username).first())
+
+@app.route('/save_project/', methods=["POST"])
+def save_project():
+    storeManager.save_project(request.data, current_user.username)
+    return "success!"
+
+@app.route('/delete_project/', methods=["POST"])
+def delete_project():
+    storeManager.delete_project(request.data, current_user.username)
+    return "success!"
+
+@app.route('/load_project/', methods=["POST"])
+def load_project():
+    if current_user.username != "admin":
+        return storeManager.load_project(request.data, current_user.username)
+    else:
+        return ""
+
+
 
 @app.route('/test_post/', methods=["POST"])
 @login_required
