@@ -26,5 +26,5 @@ def form_via_project_file(projects):
     return str(projects)
 
 def test_projects_names():
-    data = ["SomeProject1", "SomeProject2", "SomeProject3"]
+    data = ["SomeProject1", "SomeProject2", "My Test Project"]
     return json.dumps(data)

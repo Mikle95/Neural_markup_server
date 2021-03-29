@@ -90,10 +90,12 @@ def delete_project():
 
 @app.route('/load_project/', methods=["POST"])
 def load_project():
+    text = request.args.get('pname', default = '', type = str)
     if current_user.username != "admin":
-        return storeManager.load_project(request.data, current_user.username)
+
+        return storeManager.load_project(text, current_user.username)
     else:
-        return ""
+        return storeManager.load_project(text, current_user.username)
 
 
 

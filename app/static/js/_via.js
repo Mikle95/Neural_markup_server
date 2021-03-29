@@ -53,7 +53,7 @@ function _via(via_container) {
   this.editor = new _via_editor(this.d, this.va, this.editor_container);
 
   this.view_manager_container = document.createElement('div');
-  this.vm = new _via_view_manager(this.d, this.va, this.view_manager_container);
+  this.vm = new _via_view_manager(this.d, this.va, this.view_manager_container, this);
   this.vm._init();
 
   // control panel shows the view_manager_container

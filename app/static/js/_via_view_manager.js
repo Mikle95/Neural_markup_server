@@ -9,11 +9,13 @@
 
 'use strict';
 
-function _via_view_manager(data, view_annotator, container) {
+function _via_view_manager(data, view_annotator, container, via) {
   this._ID = '_via_view_manager_';
   this.d = data;
   this.va = view_annotator;
   this.c = container;
+  this.url = "http://127.0.0.1:5000/";
+  this.via = via;
 
   this.view_selector_vid_list = [];
   var is_view_filtered_by_regex = false;
@@ -287,8 +289,20 @@ _via_view_manager.prototype._view_selector_update_showall = function() {
 
 _via_view_manager.prototype._on_project_selector_change = function(e) {
   // alert("Selected: " + e.target.options[e.target.selectedIndex].value);
-  this.pname.value = e.target.options[e.target.selectedIndex].value;
+  this.pname.value = e.target.options[e.target.selectedIndex].innerHTML;
   //TODO -- Здесь должна происходить загрузка проекта с сервера
+  var request = new XMLHttpRequest();
+    var params = "pname=" + e.target.options[e.target.selectedIndex].value;
+    request.open('POST', this.url + 'load_project?' + params, true);
+    request.addEventListener("readystatechange", () => {
+      if (request.readyState === 4 && request.status === 200) {
+        if(request.responseText != "")
+          this.via.d.project_load(request.responseText)
+        // выводим в консоль то что ответил сервер
+        // alert( request.responseText );
+      }
+    });
+    request.send(params);
 
   // var regex = this.view_filter_regex.value;
   // this._view_selector_update_regex(regex);
