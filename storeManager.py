@@ -31,3 +31,15 @@ def delete_project(pname, username):
     filename = dir + "/" + username + ".json"
     if os.path.exists(filename) and os.path.isfile(filename):
         os.remove(filename)
+
+def create_dataset(pname, data):
+    if pname != "admin":
+        return
+
+def delete_dataset(pname, data):
+    if pname != "admin":
+        return
+
+def load_dataset(pname, data):
+    if pname != "admin":
+        return

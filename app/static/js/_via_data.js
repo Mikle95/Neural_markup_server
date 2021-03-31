@@ -24,12 +24,12 @@ function _via_data() {
 _via_data.prototype._init_default_project = function() {
   var p = {};
   p['project'] = {
-    'pid': '__VIA_PROJECT_ID__',
-    'rev': '__VIA_PROJECT_REV_ID__',
+    'pid': '_PROJECT_ID__',
+    'rev': '_PROJECT_REV_ID__',
     'rev_timestamp': '__VIA_PROJECT_REV_TIMESTAMP__',
-    'pname': 'Unnamed VIA Project',
+    'pname': 'Unnamed Project',
     'data_format_version': this.DATA_FORMAT_VERSION,
-    'creator': 'VGG Image Annotator (http://www.robots.ox.ac.uk/~vgg/software/via)',
+    'creator': 'Annotator',
     'created': Date.now(),
     'vid_list': [],
   }
@@ -596,11 +596,18 @@ _via_data.prototype.view_bulk_add_from_filelist = function(filelist) {
     try {
       var added_fid_list = [];
       var added_vid_list = [];
-      for ( var i = 0; i < filelist.length; ++i ) {
-        var fid = this._file_get_new_id();
-        if ( filelist[i].loc === _VIA_FILE_LOC.LOCAL ) {
-          this.file_ref[fid] = filelist[i].src; // local file ref. stored separately
-          filelist[i].src = '';                 // no need to store duplicate of file ref.
+      for ( var i = 0; i < filelist.length; ++i ){
+        var file = undefined;
+        for (var j = 1; j <= Object.keys(this.store.file).length; ++j) {
+          // var a = this.store.file[j.toString()];
+          if (this.store.file[j.toString()].fname === filelist[i].fname)
+            file = filelist[i];
+        }
+        if (true){//file === undefined) {
+          var fid = this._file_get_new_id();
+          if ( filelist[i].loc === _VIA_FILE_LOC.LOCAL ) {
+            this.file_ref[fid] = filelist[i].src; // local file ref. stored separately
+            filelist[i].src = '';                 // no need to store duplicate of file ref.
         }
         this.store.file[fid] = new _via_file(fid,
                                              filelist[i].fname,
@@ -614,6 +621,9 @@ _via_data.prototype.view_bulk_add_from_filelist = function(filelist) {
 
         added_fid_list.push(fid);
         added_vid_list.push(vid);
+      } else
+        this.file_update(file[0].fid, file[0].fname, filelist[i].src)
+
       }
       var payload = { 'vid_list':added_vid_list, 'fid_list':added_fid_list };
       this.emit_event( 'view_bulk_add', payload );

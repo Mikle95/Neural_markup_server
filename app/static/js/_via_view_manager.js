@@ -61,7 +61,7 @@ _via_view_manager.prototype._init_ui_elements = function() {
   // this.view_filter_regex.addEventListener('reset', this._on_click_get_projects.bind(this));
 
   this.c.innerHTML = '';
-  this.c.appendChild(this.pname);
+  // this.c.appendChild(this.pname);
   this.c.appendChild(this.projet_selector);
   this.c.appendChild(this.view_selector);
   this.get_project_names(this);
