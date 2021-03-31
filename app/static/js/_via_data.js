@@ -14,7 +14,6 @@ function _via_data() {
   this.store = this._init_default_project();
   this.file_ref = {};        // ref. to files selected using browser's file selector
   this.file_object_uri = {}; // WARNING: cleanup using file_object_url[fid]._destroy_file_object_url()
-
   this.DATA_FORMAT_VERSION = '3.1.1';
 
   // registers on_event(), emit_event(), ... methods from

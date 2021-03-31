@@ -12,10 +12,11 @@ import storeManager
 @app.route('/')
 @app.route('/check')
 def index():
-    if current_user.is_authenticated:
-        return "You are authenticated, {}!".format(current_user.username)
-    else:
-        return "You are not authenticated!"
+    return redirect(url_for('via'))
+    # if current_user.is_authenticated:
+    #     return "You are authenticated, {}!".format(current_user.username)
+    # else:
+    #     return "You are not authenticated!"
 
 
 def shutdown_server():
@@ -75,7 +76,8 @@ def via():
 @app.route('/get_all_projects/', methods=["GET", "POST"])
 @login_required
 def get_all_projects():
-    return dataBaseController.test_projects_names()
+    projects =  dataBaseController.get_projects(current_user.id)
+    return jsonify(projects)
     # return dataBaseController.get_projects(User.query.filter_by(username=current_user.username).first())
 
 @app.route('/save_project/', methods=["POST"])
@@ -91,11 +93,7 @@ def delete_project():
 @app.route('/load_project/', methods=["POST"])
 def load_project():
     text = request.args.get('pname', default = '', type = str)
-    if current_user.username != "admin":
-
-        return storeManager.load_project(text, current_user.username)
-    else:
-        return storeManager.load_project(text, current_user.username)
+    return storeManager.load_project(text, current_user.username)
 
 
 

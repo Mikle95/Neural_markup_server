@@ -256,10 +256,10 @@ _via_control_panel.prototype._add_project_share_tools = function() {
   //   share.addEventListener('click', function() {
   //     this._share_show_info();
   //   }.bind(this));
-  //   var push = _via_util_get_svg_button('micon_upload', 'Push (i.e. share this project or share your updates made to this project)');
-  //   push.addEventListener('click', function() {
-  //     this.via.s.push();
-  //   }.bind(this));
+    var push = _via_util_get_svg_button('micon_upload', 'Push (i.e. share this project or share your updates made to this project)');
+    push.addEventListener('click', function() {
+      this.via.s.push();
+    }.bind(this));
   //
   //   var pull = _via_util_get_svg_button('micon_download', 'Pull (i.e. open a shared project or fetch updates for the current project)');
   //   pull.addEventListener('click', function() {
@@ -267,7 +267,7 @@ _via_control_panel.prototype._add_project_share_tools = function() {
   //   }.bind(this));
   //
   //   this.c.appendChild(share);
-  //   this.c.appendChild(push);
+    this.c.appendChild(push);
   //   this.c.appendChild(pull);
   // }
 }

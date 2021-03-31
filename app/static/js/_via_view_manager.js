@@ -14,7 +14,6 @@ function _via_view_manager(data, view_annotator, container, via) {
   this.d = data;
   this.va = view_annotator;
   this.c = container;
-  this.url = "http://127.0.0.1:5000/";
   this.via = via;
 
   this.view_selector_vid_list = [];
@@ -65,27 +64,27 @@ _via_view_manager.prototype._init_ui_elements = function() {
   this.c.appendChild(this.pname);
   this.c.appendChild(this.projet_selector);
   this.c.appendChild(this.view_selector);
-  this._on_click_get_projects(this);
+  this.get_project_names(this);
 }
 
 //
 // UI elements change listeners
 //
 
-_via_view_manager.prototype._on_click_get_projects = function(e) {
+_via_view_manager.prototype.get_project_names = function(e) {
   var request = new XMLHttpRequest();
-    var params = "id_product=" + 1 + "&qty_product=" + 231;
-    request.open('POST', 'http://127.0.0.1:5000/get_all_projects', true);
+    // var params = "id_product=" + 1 + "&qty_product=" + 231;
+    request.open('POST', this.via.url + 'get_all_projects', true);
     request.addEventListener("readystatechange", () => {
       if (request.readyState === 4 && request.status === 200) {
         var values = JSON.parse(request.responseText);
         // values[values.length] = "Add new project";
         this.projet_selector.innerHTML = '';
         // this.view_filter_regex_vid_list = [];
-        for (var i = 0; i < values.length; ++i){
+        for (var i = -1; i < values.length; ++i){
           var oi = document.createElement('option');
-          oi.setAttribute('value', values[i]);
-          oi.innerHTML = values[i]
+          oi.setAttribute('value', i > -1 ? values[i] : "New Project");
+          oi.innerHTML = i > -1 ? values[i] : "New Project"
           this.projet_selector.appendChild(oi);
         }
 
@@ -95,7 +94,7 @@ _via_view_manager.prototype._on_click_get_projects = function(e) {
         // alert( request.responseText );
       }
     });
-    request.send(params);
+    request.send();
 }
 
 _via_view_manager.prototype._on_pname_change = function(e) {
@@ -293,7 +292,7 @@ _via_view_manager.prototype._on_project_selector_change = function(e) {
   //TODO -- Здесь должна происходить загрузка проекта с сервера
   var request = new XMLHttpRequest();
     var params = "pname=" + e.target.options[e.target.selectedIndex].value;
-    request.open('POST', this.url + 'load_project?' + params, true);
+    request.open('POST', this.via.url + 'load_project?' + params, true);
     request.addEventListener("readystatechange", () => {
       if (request.readyState === 4 && request.status === 200) {
         if(request.responseText != "")

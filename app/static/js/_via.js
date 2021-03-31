@@ -11,7 +11,7 @@
 
 function _via(via_container) {
   this._ID = '_via';
-
+  this.url = "http://127.0.0.1:5000/";
   console.log('Initializing VGG Image Annotator (VIA) version ' + _VIA_VERSION)
   this.via_container = via_container;
 

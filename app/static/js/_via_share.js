@@ -42,46 +42,55 @@ _via_share.prototype.push = function() {
       return;
     }
 
+    var request = new XMLHttpRequest();
+    request.open('POST', via.url + 'save_project', true);
+    request.setRequestHeader('Content-Type', 'text/json; charset=UTF-8');
+    request.addEventListener("readystatechange", () => {
+      if (request.readyState === 4 && request.status === 200)
+        _via_util_msg_show('Project uploaded successfully!');
+    });
+    request.send(JSON.stringify(this.d.store));
+
     // create a new project
-    _via_util_msg_show('Initializing new shared project ...', true);
-    this._project_push().then( function(ok) {
-      this._project_on_push_ok_response(ok);
-    }.bind(this), function(err) {
-      this._project_on_push_err_response(err);
-    }.bind(this));
-  } else {
-    // update existing project
-    _via_util_msg_show('Checking for updates to remote project ...', true);
-    this._project_pull(this.d.store.project.pid).then( function(remote_rev) {
-      this.d.project_is_different(remote_rev).then( function(yes) {
-        _via_util_msg_show('Checking for updates to remote project ...', true);
-        try {
-          var d = JSON.parse(yes);
-          if ( this.d.store.project.rev === d.project.rev ) {
-            // push new revision
-            var pid = this.d.store.project.pid;
-            var rev = this.d.store.project.rev;
-            _via_util_msg_show('Pushing project ...', true);
-            this._project_push(pid, rev).then( function(ok) {
-              this._project_on_push_ok_response(ok);
-            }.bind(this), function(err) {
-              this._project_on_push_err_response(err);
-            }.bind(this));
-          } else {
-            // newer revision exists, pull first
-            _via_util_msg_show('You must first pull remote revision first. (local revision=' + this.d.store.project.rev + ', remote rev=' + d['rev'] + ')', true);
-            return;
-          }
-        }
-        catch(e) {
-          _via_util_msg_show('Error parsing response from server: ' + e);
-        }
-      }.bind(this), function(no) {
-        _via_util_msg_show('There are no new changes to push!');
-      }.bind(this));
-    }.bind(this), function(err) {
-      _via_util_msg_show('Failed to retrive remote VIA project: ' + err);
-    }.bind(this));
+    // _via_util_msg_show('Initializing new shared project ...', true);
+    // this._project_push().then( function(ok) {
+  //     this._project_on_push_ok_response(ok);
+  //   }.bind(this), function(err) {
+  //     this._project_on_push_err_response(err);
+  //   }.bind(this));
+  // } else {
+  //   // update existing project
+  //   _via_util_msg_show('Checking for updates to remote project ...', true);
+  //   this._project_pull(this.d.store.project.pid).then( function(remote_rev) {
+  //     this.d.project_is_different(remote_rev).then( function(yes) {
+  //       _via_util_msg_show('Checking for updates to remote project ...', true);
+  //       try {
+  //         var d = JSON.parse(yes);
+  //         if ( this.d.store.project.rev === d.project.rev ) {
+  //           // push new revision
+  //           var pid = this.d.store.project.pid;
+  //           var rev = this.d.store.project.rev;
+  //           _via_util_msg_show('Pushing project ...', true);
+  //           this._project_push(pid, rev).then( function(ok) {
+  //             this._project_on_push_ok_response(ok);
+  //           }.bind(this), function(err) {
+  //             this._project_on_push_err_response(err);
+  //           }.bind(this));
+  //         } else {
+  //           // newer revision exists, pull first
+  //           _via_util_msg_show('You must first pull remote revision first. (local revision=' + this.d.store.project.rev + ', remote rev=' + d['rev'] + ')', true);
+  //           return;
+  //         }
+  //       }
+  //       catch(e) {
+  //         _via_util_msg_show('Error parsing response from server: ' + e);
+  //       }
+  //     }.bind(this), function(no) {
+  //       _via_util_msg_show('There are no new changes to push!');
+  //     }.bind(this));
+  //   }.bind(this), function(err) {
+  //     _via_util_msg_show('Failed to retrive remote VIA project: ' + err);
+  //   }.bind(this));
   }
 }
 
