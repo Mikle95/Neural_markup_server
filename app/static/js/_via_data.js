@@ -597,13 +597,6 @@ _via_data.prototype.view_bulk_add_from_filelist = function(filelist) {
       var added_fid_list = [];
       var added_vid_list = [];
       for ( var i = 0; i < filelist.length; ++i ){
-        var file = undefined;
-        for (var j = 1; j <= Object.keys(this.store.file).length; ++j) {
-          // var a = this.store.file[j.toString()];
-          if (this.store.file[j.toString()].fname === filelist[i].fname)
-            file = filelist[i];
-        }
-        if (true){//file === undefined) {
           var fid = this._file_get_new_id();
           if ( filelist[i].loc === _VIA_FILE_LOC.LOCAL ) {
             this.file_ref[fid] = filelist[i].src; // local file ref. stored separately
@@ -621,8 +614,6 @@ _via_data.prototype.view_bulk_add_from_filelist = function(filelist) {
 
         added_fid_list.push(fid);
         added_vid_list.push(vid);
-      } else
-        this.file_update(file[0].fid, file[0].fname, filelist[i].src)
 
       }
       var payload = { 'vid_list':added_vid_list, 'fid_list':added_fid_list };

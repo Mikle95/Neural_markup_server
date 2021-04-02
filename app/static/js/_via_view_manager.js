@@ -335,14 +335,29 @@ _via_view_manager.prototype._on_add_media_local = function() {
 _via_view_manager.prototype._file_add_local = function(e) {
   var files = e.target.files;
   var filelist = [];
+
   for ( var findex = 0; findex < files.length; ++findex ) {
+    var flag = false;
+    for (var i = 1; i <= Object.keys(this.d.store.file).length; ++i)
+      if (files[findex].name === this.d.store.file[i.toString()].fname){
+        this.d.file_update(this.d.store.file[i.toString()].fid, 'src', files[findex]).then( function(ok) {
+          this.va.view_show(this.va.vid);
+        }.bind(this), function(err) {
+        _via_util_msg_show('Failed to update properties of file: ' + err );
+        }.bind(this));
+        flag = true;
+        break;
+      }
+    if(flag) continue;
+
     filelist.push({ 'fname':files[findex].name,
                     'type':_via_util_infer_file_type_from_filename(files[findex].name),
                     'loc':_VIA_FILE_LOC.LOCAL,
                     'src':files[findex],
                   });
   }
-  this._file_add_from_filelist(filelist);
+  if(filelist.length > 0)
+    this._file_add_from_filelist(filelist);
 }
 
 _via_view_manager.prototype._on_event_view_bulk_add = function(data, event_payload) {

@@ -27,3 +27,6 @@ class Markup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return '<Project: {}, User_Id: {}>'.format(self.filename, self.user_id)

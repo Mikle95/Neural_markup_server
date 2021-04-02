@@ -30,10 +30,6 @@ _via_share.prototype._disabled_info = function() {
 }
 
 _via_share.prototype.push = function() {
-  if ( this.d.store.project.pid === _VIA_PROJECT_ID_MARKER &&
-       this.d.store.project.rev === _VIA_PROJECT_REV_ID_MARKER &&
-       this.d.store.project.rev_timestamp === _VIA_PROJECT_REV_TIMESTAMP_MARKER
-     ) {
     // avoid pushing empty projects
     if ( Object.keys(this.d.store.file).length === 0 ||
          Object.keys(this.d.store.view).length === 0
@@ -91,7 +87,7 @@ _via_share.prototype.push = function() {
   //   }.bind(this), function(err) {
   //     _via_util_msg_show('Failed to retrive remote VIA project: ' + err);
   //   }.bind(this));
-  }
+  // }
 }
 
 _via_share.prototype.pull = function(pid) {
