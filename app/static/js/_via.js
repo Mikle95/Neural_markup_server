@@ -1,17 +1,11 @@
-/**
- *
- * @class
- * @classdesc VIA
- * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
- * @date 12 May 2019
- *
- */
-
 'use strict'
 
-function _via(via_container) {
+function _via(via_container, url) {
+  this.user_rights = 'user'
+  this.username = '---'
+  this.url = url;
+
   this._ID = '_via';
-  this.url = "http://127.0.0.1:5000/";
   console.log('Initializing VGG Image Annotator (VIA) version ' + _VIA_VERSION)
   this.via_container = via_container;
 
@@ -58,6 +52,23 @@ function _via(via_container) {
 
   // control panel shows the view_manager_container
   this.cp = new _via_control_panel(this.control_panel_container, this);
+  var request = new XMLHttpRequest();
+    request.open('GET', 'get_rights', true);
+    request.addEventListener("readystatechange", () => {
+      if (request.readyState === 4 && request.status === 200) {
+        try {
+          var data = JSON.parse(request.responseText);
+          this.username = data[0];
+          this.user_rights = data[1];
+          this.cp.add_user();
+          if (this.user_rights === 'admin'){
+            this.cp.add_admin_panel_ref();
+          }
+        }
+        catch(err){}
+      }
+    });
+    request.send();
   this.cp._set_region_shape('RECTANGLE');
 
   // event handlers for buttons in the control panel

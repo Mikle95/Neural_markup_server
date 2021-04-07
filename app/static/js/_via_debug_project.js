@@ -1,3 +1,5 @@
+var empty_project = '{"project":{"pid":"_PROJECT_ID__","rev":"_PROJECT_REV_ID__","rev_timestamp":"__VIA_PROJECT_REV_TIMESTAMP__","pname":"Unnamed Project","creator":"Annotator","created":1617798058680,"vid_list":[]},"config":{"file":{"loc_prefix":{"1":"","2":"","3":"","4":""}},"ui":{"file_content_align":"center","file_metadata_editor_visible":true,"spatial_metadata_editor_visible":true,"spatial_region_label_attribute_id":"","gtimeline_visible_row_count":"4"}},"attribute":{},"file":{},"metadata":{},"view":{}}';
+
 // var a = document.getElementById('micon_import_export');
 // a.parentElement.removeChild(a);
 // a = document.getElementById('micon_import_export');

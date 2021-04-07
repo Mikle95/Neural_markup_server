@@ -29,7 +29,7 @@ def shutdown_server():
 @app.route('/shutdown', methods=['GET'])
 @login_required
 def shutdown():
-    if current_user.username != "admin":
+    if current_user.rights != "admin":
         return "Permission denied"
     shutdown_server()
     return 'Server shutting down...'
@@ -80,21 +80,28 @@ def get_all_projects():
     return jsonify(projects)
     # return dataBaseController.get_projects(User.query.filter_by(username=current_user.username).first())
 
+
 @app.route('/save_project/', methods=["POST"])
 def save_project():
     storeManager.save_project(request.data, current_user.username)
     return "success!"
+
 
 @app.route('/delete_project/', methods=["POST"])
 def delete_project():
     storeManager.delete_project(request.data, current_user.username)
     return "success!"
 
+
 @app.route('/load_project/', methods=["POST"])
 def load_project():
     text = request.args.get('pname', default = '', type = str)
     return storeManager.load_project(text, current_user.username)
 
+
+@app.route('/get_rights/', methods=["GET"])
+def get_rights():
+    return jsonify([current_user.username, current_user.rights])
 
 
 @app.route('/test_post/', methods=["POST"])

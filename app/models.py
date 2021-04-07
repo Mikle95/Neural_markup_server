@@ -10,12 +10,13 @@ def load_user(id):
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
+    rights = db.Column(db.String(64), default="user")
     # email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     Markups = db.relationship('Markup', backref='author', lazy='dynamic')
 
     def __repr__(self):
-        return '<User: {}, Id: {}, Online: {}>'.format(self.username, self.id, self.is_authenticated)
+        return '<User: {}, Id: {}, Online: {}, Rights: {}>'.format(self.username, self.id, self.is_authenticated, self.rights)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

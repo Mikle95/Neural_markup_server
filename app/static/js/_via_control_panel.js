@@ -58,11 +58,30 @@ _via_control_panel.prototype._init = function(type) {
   }.bind(this));
   this.c.appendChild(keyboard);
 
-  // var help = _via_util_get_svg_button('micon_help', 'About VIA');
-  // help.addEventListener('click', function() {
-  //   _via_util_page_show('page_about');
-  // }.bind(this));
-  // this.c.appendChild(help);
+}
+
+_via_control_panel.prototype.add_user = function() {
+  this._add_spacer();
+  user = document.createElement('div')
+  user.id = 'user_rights';
+  user.innerHTML = this.via.username + "(" + this.via.user_rights + ")"
+  this.c.appendChild(user);
+
+  logout = document.createElement('button');
+  logout.innerHTML = 'LogOut'
+  logout.onclick = function () {
+    window.location.href = "logout";
+  }
+  this.c.appendChild(logout);
+}
+
+_via_control_panel.prototype.add_admin_panel_ref = function(){
+  logout = document.createElement('button');
+  logout.innerHTML = 'Managment'
+  logout.onclick = function () {
+    window.location.href = "admin_panel";
+  }
+  this.c.appendChild(logout);
 }
 
 _via_control_panel.prototype._add_spacer = function() {

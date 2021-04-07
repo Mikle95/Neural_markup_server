@@ -72,6 +72,8 @@ _via_view_manager.prototype._init_ui_elements = function() {
 //
 
 _via_view_manager.prototype.get_project_names = function(e) {
+  if (this.projet_selector.innerHTML.length > 0)
+    return;
   var request = new XMLHttpRequest();
     // var params = "id_product=" + 1 + "&qty_product=" + 231;
     request.open('POST', this.via.url + 'get_all_projects', true);
@@ -81,10 +83,11 @@ _via_view_manager.prototype.get_project_names = function(e) {
         // values[values.length] = "Add new project";
         this.projet_selector.innerHTML = '';
         // this.view_filter_regex_vid_list = [];
+        // var text = [this.d.store.pname, 'New Project'];
         for (var i = -1; i < values.length; ++i){
           var oi = document.createElement('option');
-          oi.setAttribute('value', i > -1 ? values[i] : "New Project");
-          oi.innerHTML = i > -1 ? values[i] : "New Project"
+          oi.setAttribute('value', i > -1 ? values[i] : this.d.store.pname);
+          oi.innerHTML = i > -1 ? values[i] : this.d.store.project.pname;
           this.projet_selector.appendChild(oi);
         }
 
@@ -95,6 +98,10 @@ _via_view_manager.prototype.get_project_names = function(e) {
       }
     });
     request.send();
+}
+
+_via_view_manager.prototype.load_first = function(){
+  this._load_project_from_server(this.projet_selector.value);
 }
 
 _via_view_manager.prototype._on_pname_change = function(e) {
@@ -287,24 +294,26 @@ _via_view_manager.prototype._view_selector_update_showall = function() {
 }
 
 _via_view_manager.prototype._on_project_selector_change = function(e) {
-  // alert("Selected: " + e.target.options[e.target.selectedIndex].value);
-  this.pname.value = e.target.options[e.target.selectedIndex].innerHTML;
-  //TODO -- Здесь должна происходить загрузка проекта с сервера
+  this._load_project_from_server(e.target.options[e.target.selectedIndex].value);
+  // this.pname.value = e.target.options[e.target.selectedIndex].innerHTML;
+}
+
+_via_view_manager.prototype._load_project_from_server = function(pname){
   var request = new XMLHttpRequest();
-    var params = "pname=" + e.target.options[e.target.selectedIndex].value;
+    var params = "pname=" + pname;
     request.open('POST', this.via.url + 'load_project?' + params, true);
     request.addEventListener("readystatechange", () => {
       if (request.readyState === 4 && request.status === 200) {
         if(request.responseText != "")
           this.via.d.project_load(request.responseText)
+        else
+          this.via.d.project_load(empty_project);
+        //   this.via.d = _via_data();
         // выводим в консоль то что ответил сервер
         // alert( request.responseText );
       }
     });
     request.send(params);
-
-  // var regex = this.view_filter_regex.value;
-  // this._view_selector_update_regex(regex);
 }
 
 _via_view_manager.prototype._file_add_from_filelist = function(filelist) {
