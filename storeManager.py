@@ -1,6 +1,6 @@
 import json
 import os
-import dataBaseController
+import dataBaseController as dbc
 
 def save_project(jsonStr, username):
     project = json.loads(jsonStr)
@@ -9,9 +9,13 @@ def save_project(jsonStr, username):
     dir = "store/" +  project["project"]["pname"]
     filename =dir + "/" + username + ".json"
     if not os.path.exists(dir):
-        os.mkdir(dir)
+        # if dbc.get_user(username).rights == "admin":
+        #     os.mkdir(dir)
+        # else:
+        return
+
     if not os.path.exists(filename):
-        dataBaseController.add_new_project(project["project"]["pname"], username)
+        dbc.add_new_project(project["project"]["pname"], username)
     with open(filename, "w", encoding='utf8') as write_file:
         json.dump(project, write_file, ensure_ascii=False)
 
@@ -25,8 +29,15 @@ def load_project(pname, username):
     else:
         return ''
 
-def delete_project(pname, username):
-    dataBaseController.delete_project(pname, username)
+
+def delete_project(pname):
+    dir = "store/" + pname
+    dbc.delete_project(pname)
+    os.remove(dir)
+
+
+def delete_user_project(pname, username):
+    dbc.delete_user_project(pname, username)
     dir = "store/" + pname
     filename = dir + "/" + username + ".json"
     if os.path.exists(filename) and os.path.isfile(filename):

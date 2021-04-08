@@ -1,9 +1,3 @@
-/**
- * @class
- * @classdesc Editor for metadata and attributes
- * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
- * @since 14 Jan. 2019
- */
 function _via_editor(data, view_annotator, container) {
   this._ID = '_via_editor';
   this.d  = data;
@@ -104,7 +98,7 @@ _via_editor.prototype.show = function() {
 
   // add everything to container
   this.c.appendChild(toolbar);
-  //this.c.appendChild(this.editor_content_selector);
+  // this.c.appendChild(this.editor_content_selector);
   this.c.appendChild(this.content_container);
 
   this.attributes_update();

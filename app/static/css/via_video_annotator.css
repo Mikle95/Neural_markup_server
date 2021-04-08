@@ -89,6 +89,17 @@ to annotate temporal segments of a video: contains 4 rows
 .temporal_segmenter_container > .toolbar_container select { font-size:small; margin-right:0.4em; }
 
 /* Editor panel for add/update/view metadata and attributes */
+#admin_container { display:block; position:absolute; bottom:0; left:0; right:0; height:40vh; overflow:auto; background-color:#f2f2f2; border-top: 0.2em solid #e6e6e6; }
+#admin_container svg { font-size:large; margin:0 0.4em; }
+#admin_container > .editor_content_selector { display:block; margin:0; padding:0.4em 1em;  }
+#admin_container > .toolbar { position:absolute; right:1em; top:0.5em; }
+#admin_container > .content_container {display:inline-block; padding:0 1em; }
+#admin_container > .content_container table { border-collapse:collapse; border:1px solid #cccccc; }
+#admin_container > .content_container th { border:1px solid #cccccc; padding:0.3em 0.4em; }
+#admin_container > .content_container td { border:1px solid #cccccc; padding:0.3em 0.4em; }
+#admin_container > .content_container .attribute_entry { display:block; margin-bottom:0.4em; }
+#admin_container > .content_container input[type="text"] { width:10em; }
+
 #editor_container { display:block; position:absolute; bottom:0; left:0; right:0; height:40vh; overflow:auto; background-color:#f2f2f2; border-top: 0.2em solid #e6e6e6; }
 #editor_container svg { font-size:large; margin:0 0.4em; }
 #editor_container > .editor_content_selector { display:block; margin:0; padding:0.4em 1em;  }

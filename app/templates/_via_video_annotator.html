@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8">
     <title>VIA Video Annotator</title>
-    <meta name="author" content="Abhishek Dutta">
-    <meta name="description" content="VGG Image Annotator (VIA) is a standalone manual annotator software for image, audio and video. The full application is packaged as an offline html page of size < 400KB and runs solely from a web browser. More details are available at: http://www.robots.ox.ac.uk/~vgg/software/via/">
+<!--    <meta name="author" content="Abhishek Dutta">-->
+<!--    <meta name="description" content="VGG Image Annotator (VIA) is a standalone manual annotator software for image, audio and video. The full application is packaged as an offline html page of size < 400KB and runs solely from a web browser. More details are available at: http://www.robots.ox.ac.uk/~vgg/software/via/">-->
     <link rel="stylesheet" type="text/css" href="/static/css/via_video_annotator.css">
   </head>
 
@@ -400,65 +400,6 @@
 
         <p>&nbsp;</p>
       </div>
-
-      <div data-pageid="page_about" class="via_page">
-        <div class="toolbar"><span onclick="_via_util_page_hide()" class="text_button">&times;</span></div>
-        <h2>VGG Image Annotator (VIA)</h2>
-        <p>Version: <a href="https://gitlab.com/vgg/via/blob/master/CHANGELOG">__VIA_VERSION__</a></p>
-        <p>VGG Image Annotator (VIA) is a simple and standalone manual annotation tool
-          for image, audio and video. The VIA software is a light weight, standalone
-          and offline software package that does not require any installation or setup
-          and runs solely in a web browser. The complete VIA software fits in a single
-          self-contained HTML page of size less than 500 kilobyte that runs as an
-          offline application in most modern web browsers. VIA software is an open
-          source project created solely using HTML, Javascript and CSS. More details
-          about VIA is available from <a href="http://www.robots.ox.ac.uk/~vgg/software/via">http://www.robots.ox.ac.uk/~vgg/software/via</a>.</p>
-        <h4>Open Source Ecosystem</h4>
-        <p>We have nurtured a large and thriving open source community which not only
-          provides feedback but also contributes code to add new features and improve
-          existing features in the VIA software. The open source ecosystem of VIA
-          thrives around its <a href="https://gitlab.com/vgg/via">source code repository</a>
-          hosted by the Gitlab platform. Most of our users report issues and request
-          new features for future releases using the
-          <a href="https://gitlab.com/vgg/via/issues">issue portal</a>. Many of our
-          users not only submit bug reports but also suggest a potential fix for
-          these software issues. Some of our users also contribute code to add new
-          features to the VIA software using the
-          <a href="https://gitlab.com/vgg/via/merge_requests">merge request</a> portal.
-          A list of our contributors is available
-          <a href="https://gitlab.com/vgg/via/blob/master/Contributors.md">here</a>.</p>
-
-        <p>Thanks to the flexibility provided by our BSD open source software
-          <a href="https://gitlab.com/vgg/via/blob/master/LICENSE">license</a>, many
-          industrial projects have adapted the VIA software for internal or commercial use.</p>
-
-        <h4>License</h4>
-        <pre>
-Copyright (c) 2019, Abhishek Dutta, Visual Geometry Group, Oxford University and VIA Contributors.
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-Redistributions of source code must retain the above copyright notice, this
-list of conditions and the following disclaimer.
-Redistributions in binary form must reproduce the above copyright notice,
-this list of conditions and the following disclaimer in the documentation
-and/or other materials provided with the distribution.
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-        </pre>
-        <p>Copyright &copy; 2019, <a href="mailto:adutta-removeme@robots.ox.ac.uk">Abhishek Dutta</a>, Visual Geometry Group, Oxford University and VIA Contributors.</p>
-      </div>
     </div> <!-- end of page container -->
 
     <!-- used by _via_view_annotator._show_start_info() -->
@@ -497,6 +438,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <script src="/static/js/_via_view_manager.js"></script>
 
     <script src="/static/js/_via_editor.js"></script>
+    <script src="/static/js/admin_panel.js"></script>
     <script src="/static/js/_via_debug_project.js"></script>
     <script src="/static/js/_via.js"></script>
 

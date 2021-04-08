@@ -7,6 +7,7 @@ from flask_login import UserMixin
 def load_user(id):
     return User.query.get(int(id))
 
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
@@ -24,6 +25,7 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+
 class Markup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String, index=True)
@@ -31,3 +33,8 @@ class Markup(db.Model):
 
     def __repr__(self):
         return '<Project: {}, User_Id: {}>'.format(self.filename, self.user_id)
+
+
+class Project(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    pname = db.Column(db.String, unique=True)

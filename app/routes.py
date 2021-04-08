@@ -89,7 +89,7 @@ def save_project():
 
 @app.route('/delete_project/', methods=["POST"])
 def delete_project():
-    storeManager.delete_project(request.data, current_user.username)
+    storeManager.delete_user_project(request.data, current_user.username)
     return "success!"
 
 

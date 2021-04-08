@@ -31,6 +31,14 @@ function _via(via_container, url) {
   this.editor_container.classList.add('hide');
   this.via_container.appendChild(this.editor_container);
 
+  this.admin_container = document.createElement('div');
+  this.admin_container.classList.add('hide');
+  this.admin_container.setAttribute('id', 'admin_container');
+  // this.admin_container.setAttribute('class', 'editor_container')
+  this.via_container.appendChild(this.admin_container);
+
+
+
   this.message_container = document.createElement('div');
   this.message_container.setAttribute('id', '_via_message_container');
   this.message_container.setAttribute('class', 'message_container');
@@ -45,6 +53,8 @@ function _via(via_container, url) {
 
   this.va = new _via_view_annotator(this.d, this.view_container);
   this.editor = new _via_editor(this.d, this.va, this.editor_container);
+
+  this.ap = new admin_panel(this, this.admin_container);
 
   this.view_manager_container = document.createElement('div');
   this.vm = new _via_view_manager(this.d, this.va, this.view_manager_container, this);
@@ -77,6 +87,9 @@ function _via(via_container, url) {
   }.bind(this));
   this.cp.on_event('editor_toggle', this._ID, function(data, event_payload) {
     this.editor.toggle();
+  }.bind(this));
+  this.cp.on_event('admin_panel_toggle', this._ID, function(data, event_payload) {
+    this.ap.toggle();
   }.bind(this));
 
   // keyboard event handlers
