@@ -38,3 +38,6 @@ class Markup(db.Model):
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     pname = db.Column(db.String, unique=True)
+
+    def __repr__(self):
+        return '<Preoject: {}>'.format(self.pname)
