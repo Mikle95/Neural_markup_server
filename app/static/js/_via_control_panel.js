@@ -1,12 +1,3 @@
-/**
- *
- * @class
- * @classdesc VIA Control Panel
- * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
- * @date 16 May 2019
- *
- */
-
 function _via_control_panel(control_panel_container, via) {
   this._ID = '_via_control_panel_';
   this.c   = control_panel_container;
@@ -21,11 +12,6 @@ function _via_control_panel(control_panel_container, via) {
 
 _via_control_panel.prototype._init = function(type) {
   this.c.innerHTML = '';
-
-  // var logo_panel = document.createElement('div');
-  // logo_panel.setAttribute('class', 'logo');
-  // logo_panel.innerHTML = '<a href="http://www.robots.ox.ac.uk/~vgg/software/via/" title="VGG Image Annotator (VIA)" target="_blank">VIA</a>'
-  // this.c.appendChild(logo_panel);
 
   this.c.appendChild(this.via.vm.c);
   this._add_view_manager_tools();
@@ -76,12 +62,13 @@ _via_control_panel.prototype.add_user = function() {
 }
 
 _via_control_panel.prototype.add_admin_panel_ref = function(){
-  logout = document.createElement('button');
-  logout.innerHTML = 'Managment'
-  logout.onclick = function () {
-    window.location.href = "admin_panel";
-  }
-  this.c.appendChild(logout);
+  var btn = document.createElement('button');
+  btn.innerHTML = 'Managment'
+  btn.addEventListener('click' ,function () {
+    // this.emit_event('admin_panel_toggle', {});
+    via.ap.toggle();
+  })
+  this.c.appendChild(btn);
 }
 
 _via_control_panel.prototype._add_spacer = function() {
@@ -113,9 +100,10 @@ _via_control_panel.prototype._add_view_manager_tools = function() {
   }.bind(this));
   this.c.appendChild(add_media_bulk);
 
-  var del_view = _via_util_get_svg_button('micon_remove_circle', 'Remove the Current File', 'remove_media');
-  del_view.addEventListener('click', this.via.vm._on_del_view.bind(this.via.vm));
-  this.c.appendChild(del_view);
+  // var del_view = _via_util_get_svg_button('micon_remove_circle', 'Remove the Current File', 'remove_media');
+  // del_view.addEventListener('click', this.via.vm._on_del_view.bind(this.via.vm));
+  // // del_view.classList.add('hide');
+  // this.c.appendChild(del_view);
 }
 
 _via_control_panel.prototype._add_region_shape_selector = function() {

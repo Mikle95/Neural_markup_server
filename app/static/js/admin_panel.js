@@ -26,6 +26,16 @@ admin_panel.prototype.hide = function (){
 admin_panel.prototype.show = function (){
     this.c.classList.remove('hide');
 
+    var request = new XMLHttpRequest();
+    request.open('POST', this.via.url + 'get_all_projects', true);
+    request.addEventListener("readystatechange", () => {
+      if (request.readyState === 4 && request.status === 200) {
+        var values = JSON.parse(request.responseText);
+        alert(values.length);
+        alert(values);
+      }
+    });
+    request.send();
     //GetAllProjects
 
     //GetAllUserForProject

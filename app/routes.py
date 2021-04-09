@@ -73,12 +73,20 @@ def via():
     return render_template("_via_video_annotator.html")
 
 
+@app.route('/get_projects/', methods=["GET", "POST"])
+@login_required
+def get_projects():
+    projects = dataBaseController.get_projects(current_user.id)
+    return jsonify(projects)
+    # return dataBaseController.get_projects(User.query.filter_by(username=current_user.username).first())
+
 @app.route('/get_all_projects/', methods=["GET", "POST"])
 @login_required
 def get_all_projects():
-    projects =  dataBaseController.get_projects(current_user.id)
-    return jsonify(projects)
-    # return dataBaseController.get_projects(User.query.filter_by(username=current_user.username).first())
+    if current_user.rights != 'admin':
+        return "Permission denied"
+    return jsonify(dataBaseController.get_all_projects())
+
 
 
 @app.route('/save_project/', methods=["POST"])

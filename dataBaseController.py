@@ -1,5 +1,5 @@
 from app import db
-from app.models import User, Markup
+from app.models import User, Markup, Project
 import json
 
 
@@ -42,3 +42,7 @@ def delete_user_project(pname, user):
 
 def delete_project(pname):
     db.session.remove(Markup.query.filter_by(filename=pname))
+
+
+def get_all_projects():
+    return Project.query.all()

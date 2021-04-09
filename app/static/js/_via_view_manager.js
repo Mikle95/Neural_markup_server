@@ -76,7 +76,7 @@ _via_view_manager.prototype.get_project_names = function(e) {
     return;
   var request = new XMLHttpRequest();
     // var params = "id_product=" + 1 + "&qty_product=" + 231;
-    request.open('POST', this.via.url + 'get_all_projects', true);
+    request.open('POST', this.via.url + 'get_projects', true);
     request.addEventListener("readystatechange", () => {
       if (request.readyState === 4 && request.status === 200) {
         var values = JSON.parse(request.responseText);
