@@ -25,9 +25,10 @@ def test_projects_names():
 def add_new_project(pname, user):
     if(type(user) == str):
         user_id = User.query.filter_by(username = user).first().id
-        db.session.add(Markup.query.filter_by(user_id=user_id, filename = pname))
+        db.session.add(Markup(user_id=user_id, filename = pname))
     else:
-        db.session.add(Markup.query.filter_by(user_id=user, filename=pname))
+        db.session.add(Markup(user_id=user, filename=pname))
+    db.session.add(Project(pname=pname))
     db.session.commit()
 
 
@@ -45,4 +46,4 @@ def delete_project(pname):
 
 
 def get_all_projects():
-    return Project.query.all()
+    return [a.pname for a in Project.query.all()]

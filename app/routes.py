@@ -85,7 +85,8 @@ def get_projects():
 def get_all_projects():
     if current_user.rights != 'admin':
         return "Permission denied"
-    return jsonify(dataBaseController.get_all_projects())
+    data = dataBaseController.get_all_projects()
+    return jsonify(data)
 
 
 

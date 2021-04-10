@@ -139,3 +139,4 @@ app/static/js/_via_debug_project.js
 store/*
 *.json
 migrations/*
+/migrations/
