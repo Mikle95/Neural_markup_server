@@ -5,6 +5,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 import dataBaseController
 import storeManager
+import json
 
 # https://www.youtube.com/watch?v=9MHYHgh4jYc
 
@@ -80,6 +81,7 @@ def get_projects():
     return jsonify(projects)
     # return dataBaseController.get_projects(User.query.filter_by(username=current_user.username).first())
 
+
 @app.route('/get_all_projects/', methods=["GET", "POST"])
 @login_required
 def get_all_projects():
@@ -89,6 +91,24 @@ def get_all_projects():
     return jsonify(data)
 
 
+@app.route('/get_all_users/', methods=["GET", "POST"])
+@login_required
+def get_all_users():
+    if current_user.rights != 'admin':
+        return "Permission denied"
+    data = dataBaseController.get_all_users()
+    return jsonify(data)
+
+
+@app.route('/add_user_for_project/', methods=["POST"])
+@login_required
+def add_user_for_project():
+    if current_user.rights != 'admin':
+        return "Permission denied"
+    if not dataBaseController.add_user_for_proect(request.data):
+        return 'Wrong username!'
+    return storeManager.add_user_project(request.data)
+
 
 @app.route('/save_project/', methods=["POST"])
 def save_project():
@@ -96,16 +116,26 @@ def save_project():
     return "success!"
 
 
-@app.route('/delete_project/', methods=["POST"])
-def delete_project():
-    storeManager.delete_user_project(request.data, current_user.username)
-    return "success!"
+@app.route('/delete_user_for_project/', methods=["POST"])
+@login_required
+def delete_user_for_project():
+    if current_user.rights != 'admin':
+        return "Permission denied"
+    data = json.loads(request.data)
+    return storeManager.delete_user_project(data['pname'], data['username'])
 
 
 @app.route('/load_project/', methods=["POST"])
 def load_project():
     text = request.args.get('pname', default = '', type = str)
     return storeManager.load_project(text, current_user.username)
+
+
+@app.route('/create_project/<pname>', methods=["GET", "POST"])
+def create_project(pname):
+    if current_user.rights != "admin":
+        return
+    return storeManager.create_project(pname, current_user.username)
 
 
 @app.route('/get_rights/', methods=["GET"])

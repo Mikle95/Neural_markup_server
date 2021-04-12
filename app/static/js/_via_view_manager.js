@@ -75,15 +75,11 @@ _via_view_manager.prototype.get_project_names = function(e) {
   if (this.projet_selector.innerHTML.length > 0)
     return;
   var request = new XMLHttpRequest();
-    // var params = "id_product=" + 1 + "&qty_product=" + 231;
     request.open('POST', this.via.url + 'get_projects', true);
     request.addEventListener("readystatechange", () => {
       if (request.readyState === 4 && request.status === 200) {
         var values = JSON.parse(request.responseText);
-        // values[values.length] = "Add new project";
         this.projet_selector.innerHTML = '';
-        // this.view_filter_regex_vid_list = [];
-        // var text = [this.d.store.pname, 'New Project'];
         for (var i = -1; i < values.length; ++i){
           var oi = document.createElement('option');
           oi.setAttribute('value', i > -1 ? values[i] : this.d.store.pname);
