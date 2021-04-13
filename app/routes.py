@@ -77,7 +77,10 @@ def via():
 @app.route('/get_projects/', methods=["GET", "POST"])
 @login_required
 def get_projects():
-    projects = dataBaseController.get_projects(current_user.id)
+    if current_user.rights == 'admin':
+        projects = dataBaseController.get_projects(None)
+    else:
+        projects = dataBaseController.get_projects(current_user.id)
     return jsonify(projects)
     # return dataBaseController.get_projects(User.query.filter_by(username=current_user.username).first())
 
@@ -128,14 +131,35 @@ def delete_user_for_project():
 @app.route('/load_project/', methods=["POST"])
 def load_project():
     text = request.args.get('pname', default = '', type = str)
+    if current_user.rights == "admin":
+        return storeManager.load_project(text, "admin")
     return storeManager.load_project(text, current_user.username)
+
+
+@app.route('/load_admin_project/<pname>', methods=["POST"])
+def load_admin_project(pname):
+    return storeManager.load_project(pname, "admin")
 
 
 @app.route('/create_project/<pname>', methods=["GET", "POST"])
 def create_project(pname):
+    if pname.find("..") > -1:
+        return "Exception!"
     if current_user.rights != "admin":
-        return
-    return storeManager.create_project(pname, current_user.username)
+        return ""
+    if not dataBaseController.create_project(pname) or not storeManager.create_project(pname):
+        return 'Exception!'
+    else:
+        return 'Success!'
+
+
+@app.route('/delete_project/<pname>', methods=["GET", "POST"])
+def delete_project(pname):
+    if pname.find("..") > -1:
+        return "Exception!"
+    if current_user.rights != "admin":
+        return "Exception!"
+    return storeManager.delete_project(pname)
 
 
 @app.route('/get_rights/', methods=["GET"])

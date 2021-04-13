@@ -40,4 +40,4 @@ class Project(db.Model):
     pname = db.Column(db.String, unique=True)
 
     def __repr__(self):
-        return '<Preoject: {}>'.format(self.pname)
+        return '<Project: {}>'.format(self.pname)

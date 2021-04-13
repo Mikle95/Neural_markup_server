@@ -9,14 +9,13 @@ def save_project(jsonStr, username):
         return ""
     dir = "store/" +  project["project"]["pname"]
     filename =dir + "/" + username + ".json"
+
     if not os.path.exists(dir):
-        # if dbc.get_user(username).rights == "admin":
-        #     os.mkdir(dir)
-        # else:
         return
 
     if not os.path.exists(filename):
-        dbc.add_new_project(project["project"]["pname"], username)
+        dbc.add_new_user_project(project["project"]["pname"], username)
+
     with open(filename, "w", encoding='utf8') as write_file:
         json.dump(project, write_file, ensure_ascii=False)
 
@@ -33,8 +32,10 @@ def load_project(pname, username):
 
 def delete_project(pname):
     dir = "store/" + pname
-    # dbc.delete_project(pname)
-    os.remove(dir)
+    dbc.delete_project(pname)
+    if os.path.exists(dir):
+        shutil.rmtree(dir, ignore_errors=False, onerror=None)
+    return "success!"
 
 
 def delete_user_project(pname, username):
@@ -74,7 +75,11 @@ def create_project(pname):
         data = json.load(empty)
     data["project"]["pname"] = pname
     with open(filename, 'w') as newProj:
-        json.dump(newProj, data)
+        json.dump(data, newProj)
+    return True
+
+
+
 
 
 def create_dataset(pname, data):

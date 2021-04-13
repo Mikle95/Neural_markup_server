@@ -14,7 +14,7 @@ def project_exist(pname):
 
 def markup_exist(username, pname):
     user_id = get_user_id_by_name(username)
-    return db.session.query(exists().where(Markup.user_id == user_id)).scalar()
+    return Markup.query.filter_by(user_id=user_id, filename=pname).count() > 0
 
 
 def get_user_id_by_name(username):
@@ -32,8 +32,10 @@ def get_user(username):
     return User.query.filter_by(username=username).first()
 
 def get_projects(user_id):
-    user_projs = Markup.query.filter_by(user_id=user_id)
-    return [a.filename for a in user_projs]
+    if user_id == None:
+        return [a.pname for a in Project.query.all()]
+    else:
+        return [a.filename for a in Markup.query.filter_by(user_id=user_id)]
 
 
 def test_projects_names():
@@ -41,7 +43,7 @@ def test_projects_names():
     return json.dumps(data)
 
 
-def add_new_project(pname, user):
+def add_new_user_project(pname, user):
     if(type(user) == str):
         user_id = User.query.filter_by(username = user).first().id
         db.session.add(Markup(user_id=user_id, filename = pname))
@@ -63,7 +65,16 @@ def delete_user_project(pname, user):
 
 
 def delete_project(pname):
-    db.session.remove(Markup.query.filter_by(filename=pname))
+    Markup.query.filter_by(filename=pname).delete()
+    Project.query.filter_by(pname=pname).delete()
+    db.session.commit()
+    return True
+
+
+def create_project(pname):
+    db.session.add(Project(pname=pname))
+    db.session.commit()
+    return True
 
 
 def get_all_projects():
@@ -72,8 +83,10 @@ def get_all_projects():
         data[a.pname] = [User.query.filter_by(id=x.user_id).first().username for x in Markup.query.filter_by(filename=a.pname)]
     return data
 
+
 def get_all_users():
     return [a.username for a in User.query.all()]
+
 
 def add_user_for_proect(stringJS):
     data = json.loads(stringJS)

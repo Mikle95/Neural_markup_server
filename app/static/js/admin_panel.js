@@ -102,17 +102,20 @@ admin_panel.prototype.project_container_update = function () {
 admin_panel.prototype.add_cells = function (){
     var keys = Object.keys(this.projects);
     for (var i = 0; i < keys.length; ++i) {
+        const pname = keys[i];
         var tr = document.createElement('tr');
-        tr.appendChild(this.html_element('th', keys[i]));
+        var proj = this.html_element('th', keys[i]);
+        var delProjBtn = _via_util_get_svg_button('micon_remove_circle', 'remove Project')
+        delProjBtn.addEventListener('click', function (){
+            via.ap.delete_project(pname);
+        })
+        proj.appendChild(delProjBtn);
+        tr.appendChild(proj);
         for (var j = 0; j < this.projects[keys[i]].length; ++j)
             if(via.username !== this.projects[keys[i]][j]) {
-                var usr = this.projects[keys[i]][j];
-                var proj = keys[i];
+                const usr = this.projects[keys[i]][j];
                 var td = this.html_element('td', this.projects[keys[i]][j])
-                var el = document.createElementNS(_VIA_SVG_NS, 'svg');
-                el.setAttributeNS(null, 'viewBox', '0 0 24 24');
-                el.innerHTML = '<use xlink:href="#' + 'micon_remove_circle' + '"></use><title>' + 'remove ' + usr + '</title>';
-                el.setAttributeNS(null, 'class', 'svg_button');
+                var el = _via_util_get_svg_button('micon_remove_circle', 'remove ' + usr)
                 el.addEventListener('click', function () {
                     via.ap.user_for_project(usr, pname, 'delete');
                 })
@@ -123,7 +126,6 @@ admin_panel.prototype.add_cells = function (){
         var selector = document.createElement('select');
         selector.setAttribute('style', 'width:12em;');
         this.fill_user_selector(selector);
-        var pname = keys[i];
 
         btn.addEventListener('click', function () {
             via.ap.user_for_project(selector.value, pname, 'add');
@@ -138,14 +140,38 @@ admin_panel.prototype.add_cells = function (){
 
 }
 
+admin_panel.prototype.delete_project = function (pname){
+    if (!confirm("Удалить проект " + pname + "?")) return;
+    var request = new XMLHttpRequest();
+    request.open('POST', via.url + 'delete_project/' + pname, true);
+    request.setRequestHeader('Content-Type', 'text/json; charset=UTF-8');
+    request.addEventListener("readystatechange", () => {
+      if (request.readyState === 4 && request.status === 200)
+        via.ap.show()
+    });
+    request.send();
+}
+
+admin_panel.prototype.create_project = function (pname){
+    var request = new XMLHttpRequest();
+    request.open('POST', via.url + 'create_project/' + pname, true);
+    request.setRequestHeader('Content-Type', 'text/json; charset=UTF-8');
+    request.addEventListener("readystatechange", () => {
+      if (request.readyState === 4 && request.status === 200)
+        via.ap.show()
+    });
+    request.send();
+}
+
 
 admin_panel.prototype.fill_user_selector = function(selector){
-    for (var i = 0; i < this.users.length; ++i) {
-        var oi = document.createElement('option');
-        oi.setAttribute('value', this.users[i]);
-        oi.innerHTML = this.users[i];
-        selector.appendChild(oi);
-    }
+    for (var i = 0; i < this.users.length; ++i)
+        if(this.users[i] !== via.username) {
+            var oi = document.createElement('option');
+            oi.setAttribute('value', this.users[i]);
+            oi.innerHTML = this.users[i];
+            selector.appendChild(oi);
+        }
 }
 
 
@@ -167,15 +193,15 @@ admin_panel.prototype.get_create_panel = function (){
   var c = document.createElement('div');
   c.setAttribute('class', 'attribute_entry');
 
-  this.new_attribute_name_input = document.createElement('input');
-  this.new_attribute_name_input.setAttribute('type', 'text');
-  this.new_attribute_name_input.setAttribute('placeholder', 'name of new project');
-  c.appendChild(this.new_attribute_name_input);
+  this.new_project_name_input = document.createElement('input');
+  this.new_project_name_input.setAttribute('type', 'text');
+  this.new_project_name_input.setAttribute('placeholder', 'name of new project');
+  c.appendChild(this.new_project_name_input);
 
   var add = document.createElement('button');
   add.setAttribute('class', 'text-button');
-  add.innerHTML = 'Create';
-  // add.addEventListener('click', this.on_attribute_create.bind(this));
+  add.innerHTML = 'Create project';
+  add.addEventListener('click', this.on_project_create.bind(this));
   c.appendChild(add);
 
   return c;
@@ -187,3 +213,7 @@ admin_panel.prototype.html_element = function(name, text) {
   return e;
 }
 
+admin_panel.prototype.on_project_create = function () {
+    var pname = this.new_project_name_input.value
+    this.create_project(pname)
+}

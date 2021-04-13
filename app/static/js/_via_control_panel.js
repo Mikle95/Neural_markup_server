@@ -90,15 +90,15 @@ _via_control_panel.prototype._add_view_manager_tools = function() {
   add_media_local.addEventListener('click', this.via.vm._on_add_media_local.bind(this.via.vm));
   this.c.appendChild(add_media_local);
 
-  var add_media_bulk = _via_util_get_svg_button('micon_lib_add', 'Bulk add file URI ( e.g. file:///... or http://... ) contained in a local CSV file where each row is a remote or local filename.', 'add_media_bulk');
-  //add_media_bulk.addEventListener('click', this.via.vm._on_add_media_bulk.bind(this.via.vm));
-  add_media_bulk.addEventListener('click', function() {
-    var action_map = {
-      'via_page_fileuri_button_bulk_add':this._page_on_action_fileuri_bulk_add.bind(this),
-    }
-    _via_util_page_show('page_fileuri_bulk_add', action_map);
-  }.bind(this));
-  this.c.appendChild(add_media_bulk);
+  // var add_media_bulk = _via_util_get_svg_button('micon_lib_add', 'Bulk add file URI ( e.g. file:///... or http://... ) contained in a local CSV file where each row is a remote or local filename.', 'add_media_bulk');
+  // //add_media_bulk.addEventListener('click', this.via.vm._on_add_media_bulk.bind(this.via.vm));
+  // add_media_bulk.addEventListener('click', function() {
+  //   var action_map = {
+  //     'via_page_fileuri_button_bulk_add':this._page_on_action_fileuri_bulk_add.bind(this),
+  //   }
+  //   _via_util_page_show('page_fileuri_bulk_add', action_map);
+  // }.bind(this));
+  // this.c.appendChild(add_media_bulk);
 
   // var del_view = _via_util_get_svg_button('micon_remove_circle', 'Remove the Current File', 'remove_media');
   // del_view.addEventListener('click', this.via.vm._on_del_view.bind(this.via.vm));
@@ -263,19 +263,18 @@ _via_control_panel.prototype._add_project_share_tools = function() {
   //   share.addEventListener('click', function() {
   //     this._share_show_info();
   //   }.bind(this));
-    var push = _via_util_get_svg_button('micon_upload', 'Push (i.e. share this project or share your updates made to this project)');
+    var push = _via_util_get_svg_button('micon_upload', 'Push (upload the project to the server)');
     push.addEventListener('click', function() {
       this.via.s.push();
     }.bind(this));
   //
-  //   var pull = _via_util_get_svg_button('micon_download', 'Pull (i.e. open a shared project or fetch updates for the current project)');
-  //   pull.addEventListener('click', function() {
-  //     this._share_show_pull();
-  //   }.bind(this));
-  //
+      var pull = _via_util_get_svg_button('micon_download', 'download the admin project');
+      pull.addEventListener('click', function () {
+        this.via.s.pull();
+      }.bind(this));
   //   this.c.appendChild(share);
     this.c.appendChild(push);
-  //   this.c.appendChild(pull);
+    this.c.appendChild(pull);
   // }
 }
 
@@ -320,40 +319,6 @@ _via_control_panel.prototype._share_show_info = function() {
   }
 }
 
-_via_control_panel.prototype._share_show_pull = function() {
-  if ( this.via.d.project_is_remote() ) {
-    // check if remote project has newer version
-    this.via.s._project_pull(this.via.d.store.project.pid).then( function(ok) {
-      try {
-        var d = JSON.parse(ok);
-        if ( d.project.rev === this.via.d.store.project.rev ) {
-          _via_util_msg_show('You already have the latest revision of this project');
-          return;
-        } else {
-          this.via.d.project_merge_rev(d);
-        }
-      }
-      catch(e) {
-        _via_util_msg_show('Malformed response from server.');
-        console.warn(e);
-      }
-    }.bind(this), function(err) {
-      _via_util_msg_show('Failed to pull project.');
-      console.warn(err);
-    }.bind(this));
-  } else {
-    var action_map = {
-      'via_page_button_open_shared':this._page_on_action_open_shared.bind(this),
-    }
-    _via_util_page_show('page_share_open_shared', action_map);
-  }
-}
-
-_via_control_panel.prototype._page_on_action_open_shared = function(d) {
-  if ( d._action_id === 'via_page_button_open_shared' ) {
-    this.via.s.pull(d.via_page_input_pid);
-  }
-}
 
 _via_control_panel.prototype._page_on_action_fileuri_bulk_add = function(d) {
   if ( d.via_page_fileuri_urilist.length ) {
