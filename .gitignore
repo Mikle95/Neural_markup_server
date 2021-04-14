@@ -135,7 +135,7 @@ viaServer.db
 old/
 store/*
 Debug.py
-app/static/js/_via_debug_project.js
+app/static/js/debug_project.js
 *.json
 migrations/*
 /migrations/

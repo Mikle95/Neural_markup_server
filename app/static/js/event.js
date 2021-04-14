@@ -7,17 +7,17 @@
 
 'use strict';
 
-function _via_event() {
-  this.on_event       = _via_event.prototype.on_event;
-  this.emit_event     = _via_event.prototype.emit_event;
-  this.disable_events = _via_event.prototype.disable;
-  this.enable_events  = _via_event.prototype.enable;
-  this.clear_events   = _via_event.prototype.clear;
+function event() {
+  this.on_event       = event.prototype.on_event;
+  this.emit_event     = event.prototype.emit_event;
+  this.disable_events = event.prototype.disable;
+  this.enable_events  = event.prototype.enable;
+  this.clear_events   = event.prototype.clear;
 
   this._event = { 'enabled':true, 'targets':{} };
 }
 
-_via_event.prototype.on_event = function(event_id, listener_name, listener_method, listener_param) {
+event.prototype.on_event = function(event_id, listener_name, listener_method, listener_param) {
   // initialise event handlers data structure (if not exist)
   if ( typeof(this._event.targets[event_id]) === 'undefined' ) {
     this._event.targets[event_id] = { 'listener_name_list':[],
@@ -34,7 +34,7 @@ _via_event.prototype.on_event = function(event_id, listener_name, listener_metho
   }
 }
 
-_via_event.prototype.emit_event = function(event_id, event_payload) {
+event.prototype.emit_event = function(event_id, event_payload) {
   if ( this._event.enabled ) {
     if ( typeof(this._event.targets[event_id]) !== 'undefined' ) {
       for ( var i = 0; i < this._event.targets[event_id].listener_name_list.length; ++i ) {
@@ -44,15 +44,15 @@ _via_event.prototype.emit_event = function(event_id, event_payload) {
   }
 }
 
-_via_event.prototype.disable = function() {
+event.prototype.disable = function() {
   this._event.enabled = false;
 }
 
-_via_event.prototype.enable = function() {
+event.prototype.enable = function() {
   this._event.enabled = true;
 }
 
-_via_event.prototype.clear = function(listener_name, event_id) {
+event.prototype.clear = function(listener_name, event_id) {
   if ( typeof(listener_name) === 'undefined' ) {
     if ( typeof(event_id) === 'undefined' ) {
       this._event.targets = {}; // clear all listeners
@@ -92,7 +92,7 @@ _via_event.prototype.clear = function(listener_name, event_id) {
   }
 }
 
-_via_event.prototype.delete_listener = function(event_id, listener_index) {
+event.prototype.delete_listener = function(event_id, listener_index) {
   this._event.targets[event_id].listener_name_list.splice(listener_index, 1);
   this._event.targets[event_id].listener_method_list.splice(listener_index, 1);
   this._event.targets[event_id].listener_param_list.splice(listener_index, 1);

@@ -9,27 +9,27 @@
 
 'use strict';
 
-function _via_share(data, conf) {
+function share(data, conf) {
   this._ID = '_via_share_';
   this.d = data;
   this.conf = conf;
 
   // registers on_event(), emit_event(), ... methods from
-  // _via_event to let this module listen and emit events
-  _via_event.call(this);
+  // event to let this module listen and emit events
+  event.call(this);
 }
 
-_via_share.prototype._disable_share = function() {
+share.prototype._disable_share = function() {
   this.push   = this._disabled_info;
   this.pull   = this._disabled_info;
   this.exists = this._disabled_info;
 }
 
-_via_share.prototype._disabled_info = function() {
+share.prototype._disabled_info = function() {
   _via_util_msg_show('Share feature has been disabled in demo applications!');
 }
 
-_via_share.prototype.push = function() {
+share.prototype.push = function() {
     // avoid pushing empty projects
     if ( Object.keys(this.d.store.file).length === 0 ||
          Object.keys(this.d.store.view).length === 0
@@ -49,7 +49,7 @@ _via_share.prototype.push = function() {
 
 }
 
-_via_share.prototype.pull = function() {
+share.prototype.pull = function() {
   var request = new XMLHttpRequest();
     request.open('POST', via.url + 'load_admin_project/' + via.d.store.project.pname, true);
     request.addEventListener("readystatechange", () => {
@@ -61,7 +61,7 @@ _via_share.prototype.pull = function() {
     request.send();
 }
 
-_via_share.prototype.exists = function(pid) {
+share.prototype.exists = function(pid) {
   return new Promise( function(ok_callback, err_callback) {
     var xhr = new XMLHttpRequest();
     xhr.addEventListener('load', function() {
@@ -84,7 +84,7 @@ _via_share.prototype.exists = function(pid) {
   }.bind(this));
 }
 
-_via_share.prototype._project_on_push_ok_response = function(ok_response) {
+share.prototype._project_on_push_ok_response = function(ok_response) {
   try {
     var d = JSON.parse(ok_response);
     if ( d.hasOwnProperty('pid') &&
@@ -104,12 +104,12 @@ _via_share.prototype._project_on_push_ok_response = function(ok_response) {
   }
 }
 
-_via_share.prototype._project_on_push_err_response = function(reason, err_msg) {
+share.prototype._project_on_push_err_response = function(reason, err_msg) {
   _via_util_msg_show('Push failed: ' + reason + ' ' + err_msg);
   console.warn(err_response);
 }
 
-_via_share.prototype._project_pull = function(pid) {
+share.prototype._project_pull = function(pid) {
   return new Promise( function(ok_callback, err_callback) {
     var xhr = new XMLHttpRequest();
     xhr.addEventListener('load', function() {
@@ -132,7 +132,7 @@ _via_share.prototype._project_pull = function(pid) {
   }.bind(this));
 }
 
-_via_share.prototype._project_push = function(pid, rev) {
+share.prototype._project_push = function(pid, rev) {
   return new Promise( function(ok_callback, err_callback) {
     var xhr = new XMLHttpRequest();
     xhr.addEventListener('load', function() {

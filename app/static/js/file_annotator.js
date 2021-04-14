@@ -22,7 +22,7 @@ var _VIA_RINPUT_STATE = {
   REGION_DRAW_NCLICK_ONGOING: 11,
 };
 
-function _via_file_annotator(view_annotator, data, vid, file_label, container) {
+function file_annotator(view_annotator, data, vid, file_label, container) {
   this._ID = '_via_file_annotator_';
   this.va = view_annotator;
   this.d = data;
@@ -68,8 +68,8 @@ function _via_file_annotator(view_annotator, data, vid, file_label, container) {
   this.conf.SPATIAL_REGION_TIME_TOL = 0.02; // in sec
 
   // registers on_event(), emit_event(), ... methods from
-  // _via_event to let this module listen and emit events
-  _via_event.call( this );
+  // event to let this module listen and emit events
+  event.call( this );
 
   // register event listeners
   this.d.on_event('metadata_add', this._ID, this._on_event_metadata_add.bind(this));
@@ -82,9 +82,9 @@ function _via_file_annotator(view_annotator, data, vid, file_label, container) {
   this._init();
 }
 
-_via_file_annotator.prototype._init = function() {
+file_annotator.prototype._init = function() {
   if ( this.d.store.view[this.vid].fid_list.length !== 1 ) {
-    console.warn('_via_file_annotator() can only operate on a single file!');
+    console.warn('file_annotator() can only operate on a single file!');
     return;
   }
 
@@ -98,7 +98,7 @@ _via_file_annotator.prototype._init = function() {
   this.fid = this.d.store.view[this.vid].fid_list[0];
 }
 
-_via_file_annotator.prototype._file_load_show_error_page = function() {
+file_annotator.prototype._file_load_show_error_page = function() {
   this.c.innerHTML = '';
   var page = document.createElement('div');
   page.setAttribute('class', 'error_page');
@@ -223,7 +223,7 @@ _via_file_annotator.prototype._file_load_show_error_page = function() {
   this.c.appendChild(page);
 }
 
-_via_file_annotator.prototype._file_on_attribute_update = function(e) {
+file_annotator.prototype._file_on_attribute_update = function(e) {
   var pname = e.target.dataset.pname;
   var pvalue = '';
   switch(pname) {
@@ -257,7 +257,7 @@ _via_file_annotator.prototype._file_on_attribute_update = function(e) {
   }.bind(this));
 }
 
-_via_file_annotator.prototype._file_load = function() {
+file_annotator.prototype._file_load = function() {
   return new Promise( function(ok_callback, err_callback) {
     this.file_html_element = this._file_create_html_element();
     this.file_html_element.setAttribute('title', this.d.store.file[this.fid].fname);
@@ -302,7 +302,7 @@ _via_file_annotator.prototype._file_load = function() {
   }.bind(this));
 }
 
-_via_file_annotator.prototype._file_create_html_element = function() {
+file_annotator.prototype._file_create_html_element = function() {
   var media;
   switch( this.d.store.file[this.fid].type ) {
   case _VIA_FILE_TYPE.VIDEO:
@@ -347,7 +347,7 @@ _via_file_annotator.prototype._file_create_html_element = function() {
   return media;
 }
 
-_via_file_annotator.prototype._file_html_element_compute_scale = function() {
+file_annotator.prototype._file_html_element_compute_scale = function() {
   var maxh = this.c.clientHeight;
   var maxw = this.c.clientWidth;
 
@@ -402,7 +402,7 @@ _via_file_annotator.prototype._file_html_element_compute_scale = function() {
 //
 // event listeners
 //
-_via_file_annotator.prototype._file_html_element_ready = function() {
+file_annotator.prototype._file_html_element_ready = function() {
   //_via_util_msg_show('Loaded file [' + this.d.store.file[this.fid].fname + ']' );
   this._file_html_element_compute_scale();
   this.file_html_element.setAttribute('style', this.file_html_element_size_css);
@@ -463,7 +463,7 @@ _via_file_annotator.prototype._file_html_element_ready = function() {
 //
 // input event listeners
 //
-_via_file_annotator.prototype._rinput_attach_input_handlers = function(container) {
+file_annotator.prototype._rinput_attach_input_handlers = function(container) {
   container.addEventListener('mousedown', this._rinput_mousedown_handler.bind(this));
   container.addEventListener('mouseup', this._rinput_mouseup_handler.bind(this));
   container.addEventListener('mousemove', this._rinput_mousemove_handler.bind(this));
@@ -473,11 +473,11 @@ _via_file_annotator.prototype._rinput_attach_input_handlers = function(container
   container.addEventListener('keydown', this._rinput_keydown_handler.bind(this));
 }
 
-_via_file_annotator.prototype._rinput_remove_input_handlers = function() {
+file_annotator.prototype._rinput_remove_input_handlers = function() {
   // @todo
 }
 
-_via_file_annotator.prototype._rinput_keydown_handler = function(e) {
+file_annotator.prototype._rinput_keydown_handler = function(e) {
   if ( e.key === 'n' || e.key === 'p' ) {
     e.preventDefault();
     if(e.key === 'n') {
@@ -584,12 +584,12 @@ _via_file_annotator.prototype._rinput_keydown_handler = function(e) {
   }
 }
 
-_via_file_annotator.prototype._rinput_cancel_last_nclick = function() {
+file_annotator.prototype._rinput_cancel_last_nclick = function() {
   var n = this.user_input_pts.length;
   this.user_input_pts.splice(n-2, 2); // delete last two points
 }
 
-_via_file_annotator.prototype._rinput_mousedown_handler = function(e) {
+file_annotator.prototype._rinput_mousedown_handler = function(e) {
   e.stopPropagation();
   var cx = e.offsetX;
   var cy = e.offsetY;
@@ -694,7 +694,7 @@ _via_file_annotator.prototype._rinput_mousedown_handler = function(e) {
   }
 }
 
-_via_file_annotator.prototype._rinput_mouseup_handler = function(e) {
+file_annotator.prototype._rinput_mouseup_handler = function(e) {
   e.stopPropagation();
   var cx = e.offsetX;
   var cy = e.offsetY;
@@ -832,7 +832,7 @@ _via_file_annotator.prototype._rinput_mouseup_handler = function(e) {
   }
 }
 
-_via_file_annotator.prototype._rinput_mousemove_handler = function(e) {
+file_annotator.prototype._rinput_mousemove_handler = function(e) {
   e.stopPropagation();
   var cx = e.offsetX;
   var cy = e.offsetY;
@@ -921,7 +921,7 @@ _via_file_annotator.prototype._rinput_mousemove_handler = function(e) {
   }
 }
 
-_via_file_annotator.prototype._rinput_pts_canvas_to_file = function(canvas_input_pts) {
+file_annotator.prototype._rinput_pts_canvas_to_file = function(canvas_input_pts) {
   var file_input_pts = canvas_input_pts.slice(0);
   var n = canvas_input_pts.length;
   var x, y;
@@ -931,7 +931,7 @@ _via_file_annotator.prototype._rinput_pts_canvas_to_file = function(canvas_input
   return file_input_pts;
 }
 
-_via_file_annotator.prototype._rinput_is_near_last_user_input_point = function(cx, cy) {
+file_annotator.prototype._rinput_is_near_last_user_input_point = function(cx, cy) {
   var n = this.user_input_pts.length;
   if ( n >= 2 ) {
     var dx = Math.abs(cx - this.user_input_pts[n-2]);
@@ -944,7 +944,7 @@ _via_file_annotator.prototype._rinput_is_near_last_user_input_point = function(c
   return false;
 }
 
-_via_file_annotator.prototype._rinput_is_near_first_user_input_point = function(cx, cy) {
+file_annotator.prototype._rinput_is_near_first_user_input_point = function(cx, cy) {
   var n = this.user_input_pts.length;
   if ( n >= 2 ) {
     var dx = Math.abs(cx - this.user_input_pts[0]);
@@ -957,12 +957,12 @@ _via_file_annotator.prototype._rinput_is_near_first_user_input_point = function(
   return false;
 }
 
-_via_file_annotator.prototype._rinput_region_draw_nclick_done = function() {
+file_annotator.prototype._rinput_region_draw_nclick_done = function() {
   var canvas_input_pts = this.user_input_pts.slice(0);
   this._metadata_add(this.va.region_draw_shape, canvas_input_pts);
 }
 
-_via_file_annotator.prototype._rinput_wheel_handler = function(e) {
+file_annotator.prototype._rinput_wheel_handler = function(e) {
   if ( this.selected_mid_list.length ) {
     e.preventDefault();
     var aid_list = Object.keys(this.d.store.attribute);
@@ -999,12 +999,12 @@ _via_file_annotator.prototype._rinput_wheel_handler = function(e) {
 //
 // user input state
 //
-_via_file_annotator.prototype._state_set = function(state_id) {
+file_annotator.prototype._state_set = function(state_id) {
   this.state_id = state_id;
   //console.log('[vid=' + this.vid + '] State = ' + this._state_id2str(this.state_id));
 }
 
-_via_file_annotator.prototype._state_id2str = function(state_id) {
+file_annotator.prototype._state_id2str = function(state_id) {
   for ( var state in _VIA_RINPUT_STATE ) {
     if ( _VIA_RINPUT_STATE[state] === state_id ) {
       return state;
@@ -1013,7 +1013,7 @@ _via_file_annotator.prototype._state_id2str = function(state_id) {
   return '';
 }
 
-_via_file_annotator.prototype._state_str2id = function(state) {
+file_annotator.prototype._state_str2id = function(state) {
   if ( _VIA_RINPUT_STATE.hasOwnProperty(state) ) {
     return _VIA_RINPUT_STATE[state];
   } else {
@@ -1024,7 +1024,7 @@ _via_file_annotator.prototype._state_str2id = function(state) {
 //
 // region probes
 //
-_via_file_annotator.prototype._is_user_input_pts_equal = function() {
+file_annotator.prototype._is_user_input_pts_equal = function() {
   var n = this.user_input_pts.length;
   if ( n >= 4 ) {
     if ( this.user_input_pts[0] === this.user_input_pts[2] &&
@@ -1036,7 +1036,7 @@ _via_file_annotator.prototype._is_user_input_pts_equal = function() {
   return false;
 }
 
-_via_file_annotator.prototype._is_point_inside_existing_regions = function(cx, cy) {
+file_annotator.prototype._is_point_inside_existing_regions = function(cx, cy) {
   var mid_list = [];
   var mid_edge_dist = [];
   var dist_minmax;
@@ -1069,7 +1069,7 @@ _via_file_annotator.prototype._is_point_inside_existing_regions = function(cx, c
   return mid_list;
 }
 
-_via_file_annotator.prototype._is_point_inside_sel_regions = function(cx, cy) {
+file_annotator.prototype._is_point_inside_sel_regions = function(cx, cy) {
   var mid, mindex;
   for ( mindex in this.selected_mid_list ) {
     mid = this.selected_mid_list[mindex];
@@ -1086,7 +1086,7 @@ _via_file_annotator.prototype._is_point_inside_sel_regions = function(cx, cy) {
 //
 // metadata
 //
-_via_file_annotator.prototype._metadata_resize_region = function(mindex, cpindex, cx, cy) {
+file_annotator.prototype._metadata_resize_region = function(mindex, cpindex, cx, cy) {
   return new Promise( function(ok_callback, err_callback) {
     var mid = this.selected_mid_list[mindex];
     var x = cx * this.cscale;
@@ -1103,7 +1103,7 @@ _via_file_annotator.prototype._metadata_resize_region = function(mindex, cpindex
   }.bind(this));
 }
 
-_via_file_annotator.prototype._metadata_move_region = function(mid_list, cdx, cdy) {
+file_annotator.prototype._metadata_move_region = function(mid_list, cdx, cdy) {
   return new Promise( function(ok_callback, err_callback) {
     var mid, shape_id;
     var dx = cdx * this.cscale;
@@ -1127,7 +1127,7 @@ _via_file_annotator.prototype._metadata_move_region = function(mid_list, cdx, cd
   }.bind(this));
 }
 
-_via_file_annotator.prototype._metadata_add = function(region_shape, canvas_input_pts) {
+file_annotator.prototype._metadata_add = function(region_shape, canvas_input_pts) {
   return new Promise( function(ok_callback, err_callback) {
     var file_input_pts = this._rinput_pts_canvas_to_file(canvas_input_pts);
     var xy = this._metadata_pts_to_xy(region_shape, file_input_pts);
@@ -1154,7 +1154,7 @@ _via_file_annotator.prototype._metadata_add = function(region_shape, canvas_inpu
   }.bind(this));
 }
 
-_via_file_annotator.prototype._metadata_get_default_attribute_values = function() {
+file_annotator.prototype._metadata_get_default_attribute_values = function() {
   var av = {};
   var aid_list = this.d._cache_get_attribute_group(['FILE1_Z1_XY1',
                                                     'FILE1_Z0_XY1']);
@@ -1172,7 +1172,7 @@ _via_file_annotator.prototype._metadata_get_default_attribute_values = function(
   return av;
 }
 
-_via_file_annotator.prototype._metadata_xy_to_creg = function(vid, mid) {
+file_annotator.prototype._metadata_xy_to_creg = function(vid, mid) {
   var cxy = this.d.store.metadata[mid].xy.slice(0);
   var n = cxy.length;
   for ( var i = 1; i < n; ++i ) {
@@ -1181,7 +1181,7 @@ _via_file_annotator.prototype._metadata_xy_to_creg = function(vid, mid) {
   return cxy;
 }
 
-_via_file_annotator.prototype._metadata_move_xy = function(xy0, dx, dy) {
+file_annotator.prototype._metadata_move_xy = function(xy0, dx, dy) {
   var xy = xy0.slice(0);
   var shape_id = xy[0];
   switch(shape_id) {
@@ -1209,7 +1209,7 @@ _via_file_annotator.prototype._metadata_move_xy = function(xy0, dx, dy) {
   return xy;
 }
 
-_via_file_annotator.prototype._metadata_pts_to_xy = function(shape_id, pts) {
+file_annotator.prototype._metadata_pts_to_xy = function(shape_id, pts) {
   var xy = [shape_id];
   switch(shape_id) {
   case _VIA_RSHAPE.POINT:
@@ -1247,7 +1247,7 @@ _via_file_annotator.prototype._metadata_pts_to_xy = function(shape_id, pts) {
   return xy;
 }
 
-_via_file_annotator.prototype._metadata_pts_to_xy_rect = function(pts) {
+file_annotator.prototype._metadata_pts_to_xy_rect = function(pts) {
   var d = [];
   var x2, y2;
   if ( pts[0] < pts[2] ) {
@@ -1272,7 +1272,7 @@ _via_file_annotator.prototype._metadata_pts_to_xy_rect = function(pts) {
 //
 // canvas region maintainers
 //
-_via_file_annotator.prototype._creg_update = function(vid) {
+file_annotator.prototype._creg_update = function(vid) {
   var mid;
   for ( var mindex in this.d.cache.mid_list[this.vid] ) {
     mid = this.d.cache.mid_list[this.vid][mindex];
@@ -1284,11 +1284,11 @@ _via_file_annotator.prototype._creg_update = function(vid) {
   }
 }
 
-_via_file_annotator.prototype._on_event_edit_current_frame_regions = function(data, event_payload) {
+file_annotator.prototype._on_event_edit_current_frame_regions = function(data, event_payload) {
   this._creg_show_current_frame_regions();
 }
 
-_via_file_annotator.prototype._on_event_edit_frame_regions = function(data, event_payload) {
+file_annotator.prototype._on_event_edit_frame_regions = function(data, event_payload) {
   this.creg = {};
   var mid;
   for ( var mindex in event_payload.mid_list ) {
@@ -1298,12 +1298,12 @@ _via_file_annotator.prototype._on_event_edit_frame_regions = function(data, even
   this._creg_draw_all();
 }
 
-_via_file_annotator.prototype._creg_show_current_frame_regions = function() {
+file_annotator.prototype._creg_show_current_frame_regions = function() {
   this._creg_add_current_frame_regions(this.vid);
   this._creg_draw_all();
 }
 
-_via_file_annotator.prototype._creg_add_current_frame_regions = function(vid) {
+file_annotator.prototype._creg_add_current_frame_regions = function(vid) {
   this.creg = {};
 
   var t = this.file_html_element.currentTime;
@@ -1322,17 +1322,17 @@ _via_file_annotator.prototype._creg_add_current_frame_regions = function(vid) {
   }
 }
 
-_via_file_annotator.prototype._creg_add = function(vid, mid) {
+file_annotator.prototype._creg_add = function(vid, mid) {
   this.creg[mid] = this._metadata_xy_to_creg(vid, mid);
 }
 
-_via_file_annotator.prototype._creg_clear = function() {
+file_annotator.prototype._creg_clear = function() {
   this.rshape_canvas = document.getElementById('region_shape');
   this.rshapectx = this.rshape_canvas.getContext('2d', { alpha:true });
   this.rshapectx.clearRect(0, 0, this.rshape_canvas.width, this.rshape_canvas.height);
 }
 
-_via_file_annotator.prototype._creg_draw_all = function() {
+file_annotator.prototype._creg_draw_all = function() {
   this._creg_clear();
 
   if ( this.d.store.config.ui['spatial_region_label_attribute_id'] === '' ) {
@@ -1352,19 +1352,19 @@ _via_file_annotator.prototype._creg_draw_all = function() {
   }
 }
 
-_via_file_annotator.prototype._creg_draw_file_label = function() {
+file_annotator.prototype._creg_draw_file_label = function() {
   this.rshapectx.fillStyle = 'yellow';
   this.rshapectx.font = '16px mono';
   var label_width = this.rshapectx.measureText(this.file_label).width;
   this.rshapectx.fillText(this.file_label, this.rshape_canvas.width/2 - label_width/2, 20);
 }
 
-_via_file_annotator.prototype._creg_draw = function(mid) {
+file_annotator.prototype._creg_draw = function(mid) {
   var is_selected = this.selected_mid_list.includes(mid);
   this._draw(this.rshapectx, this.creg[mid], is_selected, mid);
 }
 
-_via_file_annotator.prototype._creg_draw_label = function(mid) {
+file_annotator.prototype._creg_draw_label = function(mid) {
   if ( this.d.store.metadata[mid].av.hasOwnProperty(this.d.store.config.ui['spatial_region_label_attribute_id']) ) {
     var lx = this.creg[mid][1];
     var ly = this.creg[mid][2];
@@ -1412,7 +1412,7 @@ _via_file_annotator.prototype._creg_draw_label = function(mid) {
   }
 }
 
-_via_file_annotator.prototype._creg_is_inside = function(xy, cx, cy, tolerance) {
+file_annotator.prototype._creg_is_inside = function(xy, cx, cy, tolerance) {
   var shape_id = xy[0];
   var is_inside = false;
   switch( shape_id ) {
@@ -1477,14 +1477,14 @@ _via_file_annotator.prototype._creg_is_inside = function(xy, cx, cy, tolerance) 
     }
     break;
   default:
-    console.warn('_via_file_annotator._draw() : shape_id=' + shape_id + ' not implemented');
+    console.warn('file_annotator._draw() : shape_id=' + shape_id + ' not implemented');
   }
   return is_inside;
 }
 
 // returns 0 when (px,py) is outside the polygon
 // source: http://geomalgorithms.com/a03-_inclusion.html
-_via_file_annotator.prototype._creg_is_inside_polygon = function (xy_pts, px, py) {
+file_annotator.prototype._creg_is_inside_polygon = function (xy_pts, px, py) {
   var xy = xy_pts.slice(0);
   if ( xy.length === 0 || xy.length === 1 ) {
     return 0;
@@ -1521,11 +1521,11 @@ _via_file_annotator.prototype._creg_is_inside_polygon = function (xy_pts, px, py
 // =0 if (x2,y2) lies on the line joining (x0,y0) and (x1,y1)
 // >0 if (x2,y2) lies on the right side of line joining (x0,y0) and (x1,y1)
 // source: http://geomalgorithms.com/a03-_inclusion.html
-_via_file_annotator.prototype._creg_is_left = function (x0, y0, x1, y1, x2, y2) {
+file_annotator.prototype._creg_is_left = function (x0, y0, x1, y1, x2, y2) {
   return ( ((x1 - x0) * (y2 - y0))  - ((x2 -  x0) * (y1 - y0)) );
 }
 
-_via_file_annotator.prototype._creg_move_control_point = function(xy0, cpindex, new_x, new_y) {
+file_annotator.prototype._creg_move_control_point = function(xy0, cpindex, new_x, new_y) {
   var xy = xy0.slice(0);
   var shape_id = xy[0];
   switch( shape_id ) {
@@ -1596,7 +1596,7 @@ _via_file_annotator.prototype._creg_move_control_point = function(xy0, cpindex, 
   return xy;
 }
 
-_via_file_annotator.prototype._creg_get_control_points = function(xy) {
+file_annotator.prototype._creg_get_control_points = function(xy) {
   var shape_id = xy[0];
   switch( shape_id ) {
   case _VIA_RSHAPE.POINT:
@@ -1639,7 +1639,7 @@ _via_file_annotator.prototype._creg_get_control_points = function(xy) {
   return [];
 }
 
-_via_file_annotator.prototype._creg_is_near_a_point = function(px, py, x, y, tolerance) {
+file_annotator.prototype._creg_is_near_a_point = function(px, py, x, y, tolerance) {
   var dx = Math.abs(x - px);
   var dy = Math.abs(y - py);
   if ( dx <= tolerance && dy <= tolerance ) {
@@ -1649,7 +1649,7 @@ _via_file_annotator.prototype._creg_is_near_a_point = function(px, py, x, y, tol
   }
 }
 
-_via_file_annotator.prototype._creg_is_on_control_point = function(xy, cx, cy, tolerance) {
+file_annotator.prototype._creg_is_on_control_point = function(xy, cx, cy, tolerance) {
   var cp = this._creg_get_control_points(xy); // cp[0] = shape_id
   var n = cp.length;
   for ( var i = 1; i < n; i = i + 2 ) {
@@ -1660,7 +1660,7 @@ _via_file_annotator.prototype._creg_is_on_control_point = function(xy, cx, cy, t
   return -1;
 }
 
-_via_file_annotator.prototype._creg_is_on_sel_region_cp = function(cx, cy, tolerance) {
+file_annotator.prototype._creg_is_on_sel_region_cp = function(cx, cy, tolerance) {
   var n = this.selected_mid_list.length;
   var mid, shape_id;
   var sel_region_cp = [-1, -1];
@@ -1676,15 +1676,15 @@ _via_file_annotator.prototype._creg_is_on_sel_region_cp = function(cx, cy, toler
   return sel_region_cp;
 }
 
-_via_file_annotator.prototype._creg_select_one = function(mid) {
+file_annotator.prototype._creg_select_one = function(mid) {
   this.selected_mid_list = [mid];
 }
 
-_via_file_annotator.prototype._creg_select = function(mid) {
+file_annotator.prototype._creg_select = function(mid) {
   this.selected_mid_list.push(mid);
 }
 
-_via_file_annotator.prototype._creg_select_multiple = function(mid_list) {
+file_annotator.prototype._creg_select_multiple = function(mid_list) {
   var n = mid_list.length;
   if ( n > 0 ) {
     for ( var i = 0; i < n; ++i ) {
@@ -1693,7 +1693,7 @@ _via_file_annotator.prototype._creg_select_multiple = function(mid_list) {
   }
 }
 
-_via_file_annotator.prototype._creg_select_toggle = function(mid_list) {
+file_annotator.prototype._creg_select_toggle = function(mid_list) {
   var n = mid_list.length;
   if ( n > 0 ) {
     var mindex;
@@ -1710,15 +1710,15 @@ _via_file_annotator.prototype._creg_select_toggle = function(mid_list) {
   }
 }
 
-_via_file_annotator.prototype._creg_select_none = function() {
+file_annotator.prototype._creg_select_none = function() {
   this.selected_mid_list = [];
 }
 
-_via_file_annotator.prototype._creg_select_all = function() {
+file_annotator.prototype._creg_select_all = function() {
   this.selected_mid_list = Object.keys(this.creg);
 }
 
-_via_file_annotator.prototype._creg_del_sel_regions = function() {
+file_annotator.prototype._creg_del_sel_regions = function() {
   this.d.metadata_delete_bulk( this.vid, this.selected_mid_list, true ).then( function(ok) {
     this._creg_select_none();
     this._smetadata_hide();
@@ -1729,7 +1729,7 @@ _via_file_annotator.prototype._creg_del_sel_regions = function() {
   }.bind(this));
 }
 
-_via_file_annotator.prototype._creg_edge_minmax_dist_to_point = function(xy, px, py) {
+file_annotator.prototype._creg_edge_minmax_dist_to_point = function(xy, px, py) {
   var shape_id = xy[0];
   var edge_pts = [];
   switch( shape_id ) {
@@ -1774,7 +1774,7 @@ _via_file_annotator.prototype._creg_edge_minmax_dist_to_point = function(xy, px,
     edge_pts = xy.slice(1); // discard shape_id;
     break;
   default:
-    console.warn('_via_file_annotator._draw() : shape_id=' + shape_id + ' not implemented');
+    console.warn('file_annotator._draw() : shape_id=' + shape_id + ' not implemented');
   }
   var dist_minmax = [+Infinity, -Infinity];
   var dist, dx, dy;
@@ -1795,7 +1795,7 @@ _via_file_annotator.prototype._creg_edge_minmax_dist_to_point = function(xy, px,
 //
 // external event listener
 //
-_via_file_annotator.prototype._on_event_metadata_add = function(data, event_payload) {
+file_annotator.prototype._on_event_metadata_add = function(data, event_payload) {
   var vid = event_payload.vid;
   var mid = event_payload.mid;
   if ( this.vid === vid &&
@@ -1814,7 +1814,7 @@ _via_file_annotator.prototype._on_event_metadata_add = function(data, event_payl
   }
 }
 
-_via_file_annotator.prototype._on_event_metadata_delete_bulk = function(data, event_payload) {
+file_annotator.prototype._on_event_metadata_delete_bulk = function(data, event_payload) {
   var vid = event_payload.vid;
   var mid_list = event_payload.mid_list;
   for ( var mindex in mid_list ) {
@@ -1827,7 +1827,7 @@ _via_file_annotator.prototype._on_event_metadata_delete_bulk = function(data, ev
   this._creg_draw_all();
 }
 
-_via_file_annotator.prototype._on_event_metadata_update = function(data, event_payload) {
+file_annotator.prototype._on_event_metadata_update = function(data, event_payload) {
   var vid = event_payload.vid;
   var mid = event_payload.mid;
   if ( this.vid === vid &&
@@ -1838,7 +1838,7 @@ _via_file_annotator.prototype._on_event_metadata_update = function(data, event_p
   }
 }
 
-_via_file_annotator.prototype._on_event_view_update = function(data, event_payload) {
+file_annotator.prototype._on_event_view_update = function(data, event_payload) {
   var vid = event_payload.vid;
 
   if ( this.vid === vid ) {
@@ -1846,24 +1846,24 @@ _via_file_annotator.prototype._on_event_view_update = function(data, event_paylo
   }
 }
 
-_via_file_annotator.prototype._on_event_attribute_update = function(data, event_payload) {
+file_annotator.prototype._on_event_attribute_update = function(data, event_payload) {
   this._fmetadata_show();
 }
 
-_via_file_annotator.prototype._on_event_attribute_del = function(data, event_payload) {
+file_annotator.prototype._on_event_attribute_del = function(data, event_payload) {
   this._fmetadata_show();
 }
 
 //
 // temp. regions
 //
-_via_file_annotator.prototype._tmpreg_draw_region = function(shape_id, pts) {
+file_annotator.prototype._tmpreg_draw_region = function(shape_id, pts) {
   var xy = this._metadata_pts_to_xy(shape_id, pts);
 
   this._draw(this.temprctx, xy);
 }
 
-_via_file_annotator.prototype._tmpreg_draw_crosshair = function(cx, cy) {
+file_annotator.prototype._tmpreg_draw_crosshair = function(cx, cy) {
   // draw cross hair in complementary colours
   this.temprctx.lineWidth = 1;
   this.temprctx.strokeStyle = this.conf.CROSSHAIR_COLOR1;
@@ -1883,7 +1883,7 @@ _via_file_annotator.prototype._tmpreg_draw_crosshair = function(cx, cy) {
   this.temprctx.stroke();
 }
 
-_via_file_annotator.prototype._tmpreg_move_sel_regions = function(dx, dy) {
+file_annotator.prototype._tmpreg_move_sel_regions = function(dx, dy) {
   var mid, mindex;
   for ( mindex in this.selected_mid_list ) {
     mid = this.selected_mid_list[mindex];
@@ -1892,13 +1892,13 @@ _via_file_annotator.prototype._tmpreg_move_sel_regions = function(dx, dy) {
   }
 }
 
-_via_file_annotator.prototype._tmpreg_move_sel_region_cp = function(mindex, cpindex, cx, cy) {
+file_annotator.prototype._tmpreg_move_sel_region_cp = function(mindex, cpindex, cx, cy) {
   var mid = this.selected_mid_list[mindex];
   var moved_cxy = this._creg_move_control_point(this.creg[mid], cpindex, cx, cy);
   this._draw(this.temprctx, moved_cxy, false);
 }
 
-_via_file_annotator.prototype._tmpreg_clear = function() {
+file_annotator.prototype._tmpreg_clear = function() {
   this.temprctx.clearRect(0, 0, this.tempr_canvas.width, this.tempr_canvas.height);
 }
 
@@ -1907,15 +1907,15 @@ _via_file_annotator.prototype._tmpreg_clear = function() {
 //
 // Note: xy = [shape_id, x0, y0, x1, y1, ..., xk, yk]
 
-_via_file_annotator.prototype._draw_text = function (ctx, x, y, mid){
-  if(this.d.store.metadata[mid].av.hasOwnProperty(1)) {
+file_annotator.prototype._draw_text = function (ctx, x, y, mid){
+  if(mid !== undefined && this.d.store.metadata[mid].av.hasOwnProperty(1)) {
     var text = this.d.store.attribute[1]['options'][this.d.store.metadata[mid].av[1]];
     ctx.fillStyle = this.conf.REGION_BOUNDARY_COLOR;
     ctx.fillText(text, x, y - 5);
   }
 }
 
-_via_file_annotator.prototype._draw = function(ctx, xy, is_selected, mid) {
+file_annotator.prototype._draw = function(ctx, xy, is_selected, mid) {
   var shape_id = xy[0];
   switch( shape_id ) {
   case _VIA_RSHAPE.POINT:
@@ -1948,7 +1948,7 @@ _via_file_annotator.prototype._draw = function(ctx, xy, is_selected, mid) {
     this._draw_polygon_region(ctx, xy, is_selected, shape_id);
     break;
   default:
-    console.warn('_via_file_annotator._draw() : shape_id=' + shape_id + ' not implemented');
+    console.warn('file_annotator._draw() : shape_id=' + shape_id + ' not implemented');
   }
 
   if ( is_selected ) {
@@ -1960,7 +1960,7 @@ _via_file_annotator.prototype._draw = function(ctx, xy, is_selected, mid) {
   }
 }
 
-_via_file_annotator.prototype._draw_point_region = function(ctx, cx, cy, is_selected) {
+file_annotator.prototype._draw_point_region = function(ctx, cx, cy, is_selected) {
   if ( is_selected ) {
     ctx.strokeStyle = this.conf.SEL_REGION_BOUNDARY_COLOR;
     ctx.lineWidth   = this.conf.SEL_REGION_LINE_WIDTH;
@@ -1982,13 +1982,13 @@ _via_file_annotator.prototype._draw_point_region = function(ctx, cx, cy, is_sele
   }
 }
 
-_via_file_annotator.prototype._draw_point = function(ctx, cx, cy, r) {
+file_annotator.prototype._draw_point = function(ctx, cx, cy, r) {
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, 2*Math.PI, false);
   ctx.closePath();
 }
 
-_via_file_annotator.prototype._draw_rect_region = function(ctx, x, y, w, h, is_selected) {
+file_annotator.prototype._draw_rect_region = function(ctx, x, y, w, h, is_selected) {
   if (is_selected) {
     ctx.strokeStyle = this.conf.SEL_REGION_BOUNDARY_COLOR;
     ctx.lineWidth   = this.conf.SEL_REGION_LINE_WIDTH;
@@ -2007,7 +2007,7 @@ _via_file_annotator.prototype._draw_rect_region = function(ctx, x, y, w, h, is_s
   }
 }
 
-_via_file_annotator.prototype._draw_rect = function(ctx, x, y, w, h) {
+file_annotator.prototype._draw_rect = function(ctx, x, y, w, h) {
   ctx.beginPath();
   ctx.moveTo(x  , y);
   ctx.lineTo(x+w, y);
@@ -2016,7 +2016,7 @@ _via_file_annotator.prototype._draw_rect = function(ctx, x, y, w, h) {
   ctx.closePath();
 }
 
-_via_file_annotator.prototype._draw_circle_region = function(ctx, cx, cy, r, is_selected) {
+file_annotator.prototype._draw_circle_region = function(ctx, cx, cy, r, is_selected) {
   if (is_selected) {
     ctx.strokeStyle = this.conf.SEL_REGION_BOUNDARY_COLOR;
     ctx.lineWidth   = this.conf.SEL_REGION_LINE_WIDTH;
@@ -2035,13 +2035,13 @@ _via_file_annotator.prototype._draw_circle_region = function(ctx, cx, cy, r, is_
   }
 }
 
-_via_file_annotator.prototype._draw_circle = function(ctx, cx, cy, r) {
+file_annotator.prototype._draw_circle = function(ctx, cx, cy, r) {
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, 2*Math.PI, false);
   ctx.closePath();
 }
 
-_via_file_annotator.prototype._draw_ellipse_region = function(ctx, cx, cy, rx, ry, is_selected) {
+file_annotator.prototype._draw_ellipse_region = function(ctx, cx, cy, rx, ry, is_selected) {
   if (is_selected) {
     ctx.strokeStyle = this.conf.SEL_REGION_BOUNDARY_COLOR;
     ctx.lineWidth   = this.conf.SEL_REGION_LINE_WIDTH;
@@ -2060,7 +2060,7 @@ _via_file_annotator.prototype._draw_ellipse_region = function(ctx, cx, cy, rx, r
   }
 }
 
-_via_file_annotator.prototype._draw_ellipse = function(ctx, cx, cy, rx, ry) {
+file_annotator.prototype._draw_ellipse = function(ctx, cx, cy, rx, ry) {
   ctx.save();
   ctx.beginPath();
   ctx.translate(cx-rx, cy-ry);
@@ -2070,7 +2070,7 @@ _via_file_annotator.prototype._draw_ellipse = function(ctx, cx, cy, rx, ry) {
   ctx.closePath();
 }
 
-_via_file_annotator.prototype._extreme_to_rshape = function(xy, shape_id) {
+file_annotator.prototype._extreme_to_rshape = function(xy, shape_id) {
   var n = xy.length;
   switch(shape_id) {
   case _VIA_RSHAPE.EXTREME_RECTANGLE:
@@ -2112,7 +2112,7 @@ _via_file_annotator.prototype._extreme_to_rshape = function(xy, shape_id) {
   }
 }
 
-_via_file_annotator.prototype._draw_extreme_rectangle_region = function(ctx, xy, is_selected) {
+file_annotator.prototype._draw_extreme_rectangle_region = function(ctx, xy, is_selected) {
   var n = xy.length;
   var ebox = this._extreme_to_rshape(xy, _VIA_RSHAPE.EXTREME_RECTANGLE);
 
@@ -2141,7 +2141,7 @@ _via_file_annotator.prototype._draw_extreme_rectangle_region = function(ctx, xy,
   }
 }
 
-_via_file_annotator.prototype._draw_extreme_circle_region = function(ctx, xy, is_selected) {
+file_annotator.prototype._draw_extreme_circle_region = function(ctx, xy, is_selected) {
   var n = xy.length;
   if ( n === 7 ) {
   var ebox = this._extreme_to_rshape(xy, _VIA_RSHAPE.EXTREME_CIRCLE);
@@ -2171,7 +2171,7 @@ _via_file_annotator.prototype._draw_extreme_circle_region = function(ctx, xy, is
   }
 }
 
-_via_file_annotator.prototype._draw_polygon_region = function(ctx, pts, is_selected, shape_id) {
+file_annotator.prototype._draw_polygon_region = function(ctx, pts, is_selected, shape_id) {
   if ( is_selected ) {
     ctx.strokeStyle = this.conf.SEL_REGION_BOUNDARY_COLOR;
     ctx.lineWidth   = this.conf.SEL_REGION_LINE_WIDTH;
@@ -2209,7 +2209,7 @@ _via_file_annotator.prototype._draw_polygon_region = function(ctx, pts, is_selec
 }
 
 // note: pts[0] should contain shape-id
-_via_file_annotator.prototype._draw_polygon = function(ctx, pts) {
+file_annotator.prototype._draw_polygon = function(ctx, pts) {
   ctx.beginPath();
   ctx.moveTo(pts[1], pts[2]);
   var n = pts.length;
@@ -2219,7 +2219,7 @@ _via_file_annotator.prototype._draw_polygon = function(ctx, pts) {
 }
 
 // control point for resize of region boundaries
-_via_file_annotator.prototype._draw_control_point = function(ctx, cx, cy) {
+file_annotator.prototype._draw_control_point = function(ctx, cx, cy) {
   ctx.beginPath();
   ctx.arc(cx, cy, this.conf.CONTROL_POINT_RADIUS, 0, 2*Math.PI, false);
   ctx.closePath();
@@ -2233,7 +2233,7 @@ _via_file_annotator.prototype._draw_control_point = function(ctx, cx, cy) {
 //
 // region draw enable/disable
 //
-_via_file_annotator.prototype._rinput_enable = function() {
+file_annotator.prototype._rinput_enable = function() {
   this._state_set(_VIA_RINPUT_STATE.IDLE);
   this.input.style.pointerEvents = 'auto';
   this.input.classList.add('rinput_enabled');
@@ -2247,7 +2247,7 @@ _via_file_annotator.prototype._rinput_enable = function() {
   }
 }
 
-_via_file_annotator.prototype._rinput_disable = function() {
+file_annotator.prototype._rinput_disable = function() {
   this._state_set(_VIA_RINPUT_STATE.SUSPEND);
   this.input.style.pointerEvents = 'none';
   this.input.classList.remove('rinput_enabled');
@@ -2262,11 +2262,11 @@ _via_file_annotator.prototype._rinput_disable = function() {
 //
 // on-screen file metadata editor
 //
-_via_file_annotator.prototype._fmetadata_hide = function() {
+file_annotator.prototype._fmetadata_hide = function() {
   this.fmetadata_container.classList.add('hide');
 }
 
-_via_file_annotator.prototype._fmetadata_set_position = function() {
+file_annotator.prototype._fmetadata_set_position = function() {
   var x = this.left_pad + this.conf.FILE_METADATA_MARGIN;
   var y = this.conf.FILE_METADATA_MARGIN;
 
@@ -2274,12 +2274,12 @@ _via_file_annotator.prototype._fmetadata_set_position = function() {
   this.fmetadata_container.style.top  = Math.round(y) + 'px';
 }
 
-_via_file_annotator.prototype._fmetadata_toggle = function() {
+file_annotator.prototype._fmetadata_toggle = function() {
   this.d.store.config.ui['file_metadata_editor_visible'] = ! this.d.store.config.ui['file_metadata_editor_visible'];
   this._fmetadata_show();
 }
 
-_via_file_annotator.prototype._fmetadata_show = function() {
+file_annotator.prototype._fmetadata_show = function() {
   if ( ! this.d.cache.attribute_group.hasOwnProperty('FILE1_Z0_XY0') ) {
     this.fmetadata_container.innerHTML = '';
     this._fmetadata_hide();
@@ -2325,7 +2325,7 @@ _via_file_annotator.prototype._fmetadata_show = function() {
   }
 }
 
-_via_file_annotator.prototype._fmetadata_toggle_button = function() {
+file_annotator.prototype._fmetadata_toggle_button = function() {
   var span = document.createElement('span');
   span.setAttribute('class', 'text_button');
   if ( this.d.store.config.ui['file_metadata_editor_visible'] ) {
@@ -2339,7 +2339,7 @@ _via_file_annotator.prototype._fmetadata_toggle_button = function() {
   return span;
 }
 
-_via_file_annotator.prototype._fmetadata_update = function(mid) {
+file_annotator.prototype._fmetadata_update = function(mid) {
   var aid_list = this.d.cache.attribute_group['FILE1_Z0_XY0'];
   var table = document.createElement('table');
   var header = this._metadata_header_html(aid_list);
@@ -2375,11 +2375,11 @@ _via_file_annotator.prototype._fmetadata_update = function(mid) {
 //
 // on-screen spatial metadata editor
 //
-_via_file_annotator.prototype._smetadata_hide = function() {
+file_annotator.prototype._smetadata_hide = function() {
   this.smetadata_container.classList.add('hide');
 }
 
-_via_file_annotator.prototype._smetadata_set_position = function() {
+file_annotator.prototype._smetadata_set_position = function() {
   var mid = this.selected_mid_list[0];
   var x = this.left_pad + this.creg[mid][1];
   var y = this.conf.REGION_SMETADATA_MARGIN + this.creg[mid][2];
@@ -2414,12 +2414,12 @@ _via_file_annotator.prototype._smetadata_set_position = function() {
   this.smetadata_container.style.top  = Math.round(y) + 'px';
 }
 
-_via_file_annotator.prototype._smetadata_toggle = function() {
+file_annotator.prototype._smetadata_toggle = function() {
   this.d.store.config.ui['spatial_metadata_editor_visible'] = ! this.d.store.config.ui['spatial_metadata_editor_visible'];
   this._smetadata_show();
 }
 
-_via_file_annotator.prototype._smetadata_toggle_button = function() {
+file_annotator.prototype._smetadata_toggle_button = function() {
   var span = document.createElement('span');
   span.setAttribute('class', 'text_button');
   if ( this.d.store.config.ui['spatial_metadata_editor_visible'] ) {
@@ -2433,7 +2433,7 @@ _via_file_annotator.prototype._smetadata_toggle_button = function() {
   return span;
 }
 
-_via_file_annotator.prototype._smetadata_show = function() {
+file_annotator.prototype._smetadata_show = function() {
   if ( this.selected_mid_list.length === 1 ) {
     this.smetadata_container.classList.remove('hide');
     this._smetadata_update();
@@ -2443,7 +2443,7 @@ _via_file_annotator.prototype._smetadata_show = function() {
   }
 }
 
-_via_file_annotator.prototype._smetadata_update = function() {
+file_annotator.prototype._smetadata_update = function() {
   var aid_list = this.d._cache_get_attribute_group(['FILE1_Z1_XY1',
                                                     'FILE1_Z0_XY1',
                                                     'FILE1_Z2_XY0']);
@@ -2491,7 +2491,7 @@ _via_file_annotator.prototype._smetadata_update = function() {
   }
 }
 
-_via_file_annotator.prototype._metadata_header_html = function(aid_list) {
+file_annotator.prototype._metadata_header_html = function(aid_list) {
   var tr = document.createElement('tr');
   var aid;
   for ( var aindex in aid_list ) {
@@ -2503,7 +2503,7 @@ _via_file_annotator.prototype._metadata_header_html = function(aid_list) {
   return tr;
 }
 
-_via_file_annotator.prototype._metadata_on_change = function(e) {
+file_annotator.prototype._metadata_on_change = function(e) {
   var mid = e.target.dataset.mid;
   var aid = e.target.dataset.aid;
   var aval = e.target.value;
@@ -2534,7 +2534,7 @@ _via_file_annotator.prototype._metadata_on_change = function(e) {
   }.bind(this));
 }
 
-_via_file_annotator.prototype._metadata_attribute_io_html_element = function(mid, aid) {
+file_annotator.prototype._metadata_attribute_io_html_element = function(mid, aid) {
   var aval  = this.d.store.metadata[mid].av[aid];
   var dval  = this.d.store.attribute[aid].default_option_id;
   var atype = this.d.store.attribute[aid].type;

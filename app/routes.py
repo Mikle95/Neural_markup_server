@@ -71,7 +71,7 @@ def echo(text):
 @app.route('/via')
 @login_required
 def via():
-    return render_template("_via_video_annotator.html")
+    return render_template("annotator.html")
 
 
 @app.route('/get_projects/', methods=["GET", "POST"])

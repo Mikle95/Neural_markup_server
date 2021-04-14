@@ -30,7 +30,7 @@ html, body { margin:0; padding:0; box-sizing:border-box; font-family:Sans; font-
 #view_container { display:grid; grid-row-gap:0.5em; } /* grid-template-rows is set dynamically */
 
 /* view content: image, video, audio, image pair, etc. */
-#view_container > .view_content_container { display:grid; } /* grid-template-rows value set by _view_annotate_single_video(), video_annotate_single_image(), etc methods in _via_view_annotator.js */
+#view_container > .view_content_container { display:grid; } /* grid-template-rows value set by _view_annotate_single_video(), video_annotate_single_image(), etc methods in view_annotator.js */
 
 #view_container > .view_content_container > .file_container { display:block; position:relative; margin:0; padding:0; }
 #view_container > .view_content_container > .file_container * { position:absolute; top:0; }

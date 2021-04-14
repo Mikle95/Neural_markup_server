@@ -362,7 +362,7 @@ function _via_util_msg_show(msg, sticky) {
        ) {
       _via_msg_clear_timer = setTimeout( function() {
         document.getElementById('_via_message_container').style.display = 'none';
-      }, _VIA_CONFIG.MSG_TIMEOUT);
+      }, config.MSG_TIMEOUT);
     }
 
     content.innerHTML = msg + '<span class="message_panel_close_button">&times;</span>';

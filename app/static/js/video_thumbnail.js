@@ -4,12 +4,12 @@
  *
  * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
  * @since 5 Feb. 2019
- * @param {_via_file} an instance of _via_file corresponding to a video file
+ * @param {_via_file} an instance of file corresponding to a video file
  */
 
 'use strict';
 
-function _via_video_thumbnail(fid, data) {
+function video_thumbnail(fid, data) {
   this._ID = '_via_video_thumbnail_';
   this.fid = fid;
   this.d = data;
@@ -18,7 +18,7 @@ function _via_video_thumbnail(fid, data) {
   this.frames = {}; // indexed by second
 
   if ( this.d.store.file[this.fid].type !== _VIA_FILE_TYPE.VIDEO ) {
-    console.log('_via_video_thumbnail() : file type must be ' +
+    console.log('video_thumbnail() : file type must be ' +
                 _VIA_FILE_TYPE.VIDEO + ' (got ' + this.d.store.file[this.fid].type + ')');
     return;
   }
@@ -29,16 +29,16 @@ function _via_video_thumbnail(fid, data) {
   this.thumbnail_canvas = document.createElement('canvas');
 
   // registers on_event(), emit_event(), ... methods from
-  // _via_event to let this module listen and emit events
-  _via_event.call( this );
+  // event to let this module listen and emit events
+  event.call( this );
 
   this._init();
 }
 
-_via_video_thumbnail.prototype._init = function() {
+video_thumbnail.prototype._init = function() {
 }
 
-_via_video_thumbnail.prototype.load = function() {
+video_thumbnail.prototype.load = function() {
   return new Promise( function(ok_callback, err_callback) {
     this._load_video().then( function() {
       this.video.currentTime = 0.0;
@@ -50,7 +50,7 @@ _via_video_thumbnail.prototype.load = function() {
   }.bind(this));
 }
 
-_via_video_thumbnail.prototype._load_video = function() {
+video_thumbnail.prototype._load_video = function() {
   return new Promise( function(ok_callback, err_callback) {
     this.video = document.createElement('video');
     this.video.setAttribute('src', this.d.file_get_src(this.fid));
@@ -76,7 +76,7 @@ _via_video_thumbnail.prototype._load_video = function() {
     }.bind(this));
     this.video.addEventListener('abort', function() {
       this.d.file_free_resources(this.fid);
-      console.log('_via_video_thumbnail._load_video() abort')
+      console.log('video_thumbnail._load_video() abort')
       err_callback('abort');
     }.bind(this));
 
@@ -84,14 +84,14 @@ _via_video_thumbnail.prototype._load_video = function() {
   }.bind(this));
 }
 
-_via_video_thumbnail.prototype.get_thumbnail = function(time_float) {
+video_thumbnail.prototype.get_thumbnail = function(time_float) {
   this.is_thumbnail_read_ongoing = true;
   this.thumbnail_time = parseInt(time_float);
   this.video.currentTime = this.thumbnail_time;
   return this.thumbnail_canvas;
 }
 
-_via_video_thumbnail.prototype._on_seeked = function() {
+video_thumbnail.prototype._on_seeked = function() {
   if ( this.is_thumbnail_read_ongoing &&
        this.thumbnail_context
      ) {

@@ -38,7 +38,7 @@ const _VIA_ATTRIBUTE_ANCHOR = {
   'FILEN_ZN_XYN':'__FUTURE__',   // a region defined in a video frame of each video
 };
 
-function _via_attribute(name, anchor_id, type, desc, options, default_option_id) {
+function attribute(name, anchor_id, type, desc, options, default_option_id) {
   this.aname     = name;
   this.anchor_id = anchor_id;
   this.type      = type;

@@ -9,7 +9,7 @@
 
 'use strict';
 
-function _via_view_manager(data, view_annotator, container, via) {
+function view_manager(data, view_annotator, container, via) {
   this._ID = '_via_view_manager_';
   this.d = data;
   this.va = view_annotator;
@@ -20,8 +20,8 @@ function _via_view_manager(data, view_annotator, container, via) {
   var is_view_filtered_by_regex = false;
 
   // registers on_event(), emit_event(), ... methods from
-  // _via_event to let this module listen and emit events
-  _via_event.call( this );
+  // event to let this module listen and emit events
+  event.call( this );
 
   this.d.on_event('project_loaded', this._ID, this._on_event_project_loaded.bind(this));
   this.d.on_event('project_updated', this._ID, this._on_event_project_updated.bind(this));
@@ -34,12 +34,12 @@ function _via_view_manager(data, view_annotator, container, via) {
   this._init_ui_elements();
 }
 
-_via_view_manager.prototype._init = function() {
+view_manager.prototype._init = function() {
   this._init_ui_elements();
   this._view_selector_update();
 }
 
-_via_view_manager.prototype._init_ui_elements = function() {
+view_manager.prototype._init_ui_elements = function() {
   this.pname = document.createElement('input');
   this.pname.setAttribute('type', 'text');
   this.pname.setAttribute('id', 'via_project_name_input');
@@ -71,7 +71,7 @@ _via_view_manager.prototype._init_ui_elements = function() {
 // UI elements change listeners
 //
 
-_via_view_manager.prototype.get_project_names = function(e) {
+view_manager.prototype.get_project_names = function(e) {
   if (this.projet_selector.innerHTML.length > 0)
     return;
   var request = new XMLHttpRequest();
@@ -96,23 +96,23 @@ _via_view_manager.prototype.get_project_names = function(e) {
     request.send();
 }
 
-_via_view_manager.prototype.load_first = function(){
+view_manager.prototype.load_first = function(){
   this._load_project_from_server(this.projet_selector.value);
 }
 
-_via_view_manager.prototype._on_pname_change = function(e) {
+view_manager.prototype._on_pname_change = function(e) {
   this.d.store.project.pname = e.target.value.trim();
   this.projet_selector.options[this.projet_selector.selectedIndex].innerHTML = e.target.value.trim();
 }
 
-_via_view_manager.prototype._on_view_selector_change = function(e) {
+view_manager.prototype._on_view_selector_change = function(e) {
   var vid = e.target.options[e.target.selectedIndex].value;
   if ( vid !== this.va.vid ) {
     this.va.view_show(vid);
   }
 }
 
-_via_view_manager.prototype._on_next_view = function() {
+view_manager.prototype._on_next_view = function() {
   if ( this.view_selector.options.length ) {
     var vid = this.view_selector.options[this.view_selector.selectedIndex].value;
     var vindex = this.view_selector_vid_list.indexOf(vid);
@@ -128,7 +128,7 @@ _via_view_manager.prototype._on_next_view = function() {
   }
 }
 
-_via_view_manager.prototype._on_prev_view = function() {
+view_manager.prototype._on_prev_view = function() {
   if ( this.view_selector.options.length ) {
     var vid = this.view_selector.options[this.view_selector.selectedIndex].value;
     var vindex = this.view_selector_vid_list.indexOf(vid);
@@ -144,7 +144,7 @@ _via_view_manager.prototype._on_prev_view = function() {
   }
 }
 
-_via_view_manager.prototype._on_event_view_show = function(data, event_payload) {
+view_manager.prototype._on_event_view_show = function(data, event_payload) {
   var vid = event_payload.vid.toString();
   this.view_selector.selectedIndex = -1;
 
@@ -158,15 +158,15 @@ _via_view_manager.prototype._on_event_view_show = function(data, event_payload) 
   }
 }
 
-_via_view_manager.prototype._on_event_view_next = function(data, event_payload) {
+view_manager.prototype._on_event_view_next = function(data, event_payload) {
   this._on_next_view();
 }
 
-_via_view_manager.prototype._on_event_view_prev = function(data, event_payload) {
+view_manager.prototype._on_event_view_prev = function(data, event_payload) {
   this._on_prev_view();
 }
 
-_via_view_manager.prototype._on_event_project_loaded = function(data, event_payload) {
+view_manager.prototype._on_event_project_loaded = function(data, event_payload) {
   this._init_ui_elements();
   this._view_selector_update();
   if ( this.d.store.project.vid_list.length ) {
@@ -175,7 +175,7 @@ _via_view_manager.prototype._on_event_project_loaded = function(data, event_payl
   }
 }
 
-_via_view_manager.prototype._on_event_project_updated = function(data, event_payload) {
+view_manager.prototype._on_event_project_updated = function(data, event_payload) {
   var current_vid = this.va.vid;
   this._init_ui_elements();
   this._view_selector_update();
@@ -192,12 +192,12 @@ _via_view_manager.prototype._on_event_project_updated = function(data, event_pay
 //
 // View Selector
 //
-_via_view_manager.prototype._view_selector_clear = function() {
+view_manager.prototype._view_selector_clear = function() {
   this.view_selector.innerHTML = '';
   this.view_selector_vid_list = [];
 }
 
-_via_view_manager.prototype._view_selector_option_html = function(vindex, vid) {
+view_manager.prototype._view_selector_option_html = function(vindex, vid) {
   var oi = document.createElement('option');
   oi.setAttribute('value', vid);
 
@@ -219,7 +219,7 @@ _via_view_manager.prototype._view_selector_option_html = function(vindex, vid) {
   return oi;
 }
 
-_via_view_manager.prototype._view_selector_update = function() {
+view_manager.prototype._view_selector_update = function() {
   if ( this.is_view_filtered_by_regex ) {
     this._view_selector_update_regex();
   } else {
@@ -227,7 +227,7 @@ _via_view_manager.prototype._view_selector_update = function() {
   }
 }
 
-_via_view_manager.prototype._view_selector_update_regex = function(regex) {
+view_manager.prototype._view_selector_update_regex = function(regex) {
   if ( regex === '' ||
        typeof(regex) === 'undefined'
      ) {
@@ -264,7 +264,7 @@ _via_view_manager.prototype._view_selector_update_regex = function(regex) {
   }
 }
 
-_via_view_manager.prototype._view_selector_update_showall = function() {
+view_manager.prototype._view_selector_update_showall = function() {
   var existing_selectedIndex = this.view_selector.selectedIndex;
   var existing_vid;
   if ( existing_selectedIndex !== -1 ) {
@@ -289,12 +289,12 @@ _via_view_manager.prototype._view_selector_update_showall = function() {
   }
 }
 
-_via_view_manager.prototype._on_project_selector_change = function(e) {
+view_manager.prototype._on_project_selector_change = function(e) {
   this._load_project_from_server(e.target.options[e.target.selectedIndex].value);
   // this.pname.value = e.target.options[e.target.selectedIndex].innerHTML;
 }
 
-_via_view_manager.prototype._load_project_from_server = function(pname){
+view_manager.prototype._load_project_from_server = function(pname){
   var request = new XMLHttpRequest();
     var params = "pname=" + pname;
     request.open('POST', this.via.url + 'load_project?' + params, true);
@@ -304,7 +304,7 @@ _via_view_manager.prototype._load_project_from_server = function(pname){
           this.via.d.project_load(request.responseText)
         else
           this.via.d.project_load(empty_project);
-        //   this.via.d = _via_data();
+        //   this.via.d = data();
         // выводим в консоль то что ответил сервер
         // alert( request.responseText );
       }
@@ -312,7 +312,7 @@ _via_view_manager.prototype._load_project_from_server = function(pname){
     request.send(params);
 }
 
-_via_view_manager.prototype._file_add_from_filelist = function(filelist) {
+view_manager.prototype._file_add_from_filelist = function(filelist) {
   this.d.view_bulk_add_from_filelist(filelist).then( function(ok) {
     var filetype_summary = {};
     var fid, ftype_str;
@@ -331,13 +331,13 @@ _via_view_manager.prototype._file_add_from_filelist = function(filelist) {
   }.bind(this));
 }
 
-_via_view_manager.prototype._on_add_media_local = function() {
+view_manager.prototype._on_add_media_local = function() {
   _via_util_file_select_local(_VIA_FILE_SELECT_TYPE.IMAGE | _VIA_FILE_SELECT_TYPE.VIDEO | _VIA_FILE_SELECT_TYPE.AUDIO,
                               this._file_add_local.bind(this),
                               true);
 }
 
-_via_view_manager.prototype._file_add_local = function(e) {
+view_manager.prototype._file_add_local = function(e) {
   var files = e.target.files;
   var filelist = [];
 
@@ -365,7 +365,7 @@ _via_view_manager.prototype._file_add_local = function(e) {
     this._file_add_from_filelist(filelist);
 }
 
-_via_view_manager.prototype._on_event_view_bulk_add = function(data, event_payload) {
+view_manager.prototype._on_event_view_bulk_add = function(data, event_payload) {
   this._view_selector_update();
   this.d._cache_update();
   if ( event_payload.vid_list.length ) {
@@ -373,7 +373,7 @@ _via_view_manager.prototype._on_event_view_bulk_add = function(data, event_paylo
   }
 }
 
-_via_view_manager.prototype._on_add_media_remote = function() {
+view_manager.prototype._on_add_media_remote = function() {
   var url = window.prompt('Enter URL of an image, audio or video (e.g. http://www....)',
                           '');
   var filelist = [ {'fname':url,
@@ -386,18 +386,18 @@ _via_view_manager.prototype._on_add_media_remote = function() {
   this._file_add_from_filelist(filelist);
 }
 
-_via_view_manager.prototype._on_add_media_bulk = function() {
+view_manager.prototype._on_add_media_bulk = function() {
   _via_util_file_select_local(_VIA_FILE_SELECT_TYPE.TEXT,
                               this._on_add_media_bulk_file_selected.bind(this), false);
 }
 
-_via_view_manager.prototype._on_add_media_bulk_file_selected = function(e) {
+view_manager.prototype._on_add_media_bulk_file_selected = function(e) {
   if ( e.target.files.length ) {
     _via_util_load_text_file(e.target.files[0], this._on_add_media_bulk_file_load.bind(this));
   }
 }
 
-_via_view_manager.prototype._on_add_media_bulk_file_load = function(file_data) {
+view_manager.prototype._on_add_media_bulk_file_load = function(file_data) {
   var url_list = file_data.split('\n');
   if ( url_list.length ) {
     var filelist = [];
@@ -418,7 +418,7 @@ _via_view_manager.prototype._on_add_media_bulk_file_load = function(file_data) {
   }
 }
 
-_via_view_manager.prototype._on_del_view = function() {
+view_manager.prototype._on_del_view = function() {
   this.d.view_del(this.va.vid).then( function(ok) {
     _via_util_msg_show('Deleted view ' + ( parseInt(ok.vindex) + 1));
   }.bind(this), function(err) {
@@ -426,7 +426,7 @@ _via_view_manager.prototype._on_del_view = function() {
   }.bind(this));
 }
 
-_via_view_manager.prototype._on_event_view_del = function(data, event_payload) {
+view_manager.prototype._on_event_view_del = function(data, event_payload) {
   this._view_selector_update();
   var vindex = event_payload.vindex;
   if ( this.d.store.project.vid_list.length ) {

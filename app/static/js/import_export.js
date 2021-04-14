@@ -9,16 +9,16 @@
 
 'use strict';
 
-function _via_import_export(data) {
+function import_export(data) {
   this.d = data;
 
   // registers on_event(), emit_event(), ... methods from
-  // _via_event to let this module listen and emit events
+  // event to let this module listen and emit events
   this._EVENT_ID_PREFIX = '_via_import_export_';
-  _via_event.call(this);
+  event.call(this);
 }
 
-_via_import_export.prototype.import_from_file = function(data_format, file) {
+import_export.prototype.import_from_file = function(data_format, file) {
   switch(data_format) {
   case 'coco':
     _via_util_load_text_file(file[0], this.import_from_coco.bind(this));
@@ -28,7 +28,7 @@ _via_import_export.prototype.import_from_file = function(data_format, file) {
   }
 }
 
-_via_import_export.prototype.import_from_coco = function(json_str) {
+import_export.prototype.import_from_coco = function(json_str) {
   try {
     var d = JSON.parse(json_str);
     if ( ! ( d.hasOwnProperty('annotations') &&
@@ -48,11 +48,11 @@ _via_import_export.prototype.import_from_coco = function(json_str) {
       var src = d.images[i].coco_url;
       var type = _VIA_FILE_TYPE.IMAGE;
       var loc = _VIA_FILE_LOC.URIHTTP;
-      p.file[fid] = new _via_file(fid, fname, type, loc, src);
+      p.file[fid] = new file(fid, fname, type, loc, src);
 
       // add a view for each file
       var vid = fid;
-      p.view[vid] = new _via_view( [ fid ] ); // view with single file
+      p.view[vid] = new view( [ fid ] ); // view with single file
       p.project.vid_list.push(vid);
     }
 
@@ -60,7 +60,7 @@ _via_import_export.prototype.import_from_coco = function(json_str) {
     for ( var i in d.categories ) {
       var aid = d.categories[i].id;
       var aname = d.categories[i].name;
-      p.attribute[aid] = new _via_attribute(aname, 'FILE1_Z0_XY1', _VIA_ATTRIBUTE_TYPE.TEXT, {}, {});
+      p.attribute[aid] = new attribute(aname, 'FILE1_Z0_XY1', _VIA_ATTRIBUTE_TYPE.TEXT, {}, {});
 /*
       var aid = d.categories[i].supercategory;
       var option_id = d.categories[i].id;
@@ -72,7 +72,7 @@ _via_import_export.prototype.import_from_coco = function(json_str) {
       } else {
         var options = {};
         options[option_id] = option_value;
-        p.attribute[aid] = new _via_attribute(aid, 'FILE1_Z0_XY1', _VIA_ATTRIBUTE_TYPE.SELECT, options, {});
+        p.attribute[aid] = new attribute(aid, 'FILE1_Z0_XY1', _VIA_ATTRIBUTE_TYPE.SELECT, options, {});
       }
 */
     }
@@ -91,7 +91,7 @@ _via_import_export.prototype.import_from_coco = function(json_str) {
           shape.push(d.annotations[i].segmentation[0][j]);
         }
 
-        p.metadata[mid] = new _via_metadata(vid, [], shape, av);
+        p.metadata[mid] = new metadata(vid, [], shape, av);
       }
     }
 
@@ -103,7 +103,7 @@ _via_import_export.prototype.import_from_coco = function(json_str) {
   }
 }
 
-_via_import_export.prototype.export_to_file = function(data_format) {
+import_export.prototype.export_to_file = function(data_format) {
   console.log(data_format)
   switch(data_format) {
   case 'via3_csv':
@@ -118,7 +118,7 @@ _via_import_export.prototype.export_to_file = function(data_format) {
   }
 }
 
-_via_import_export.prototype.export_to_via3_csv = function() {
+import_export.prototype.export_to_via3_csv = function() {
   return new Promise( function(ok_callback, err_callback) {
     var csv = [];
 
@@ -185,7 +185,7 @@ _via_import_export.prototype.export_to_via3_csv = function() {
   }.bind(this));
 }
 
-_via_import_export.prototype.export_to_temporal_segments_csv = function() {
+import_export.prototype.export_to_temporal_segments_csv = function() {
   return new Promise( function(ok_callback, err_callback) {
     var csv = [];
 

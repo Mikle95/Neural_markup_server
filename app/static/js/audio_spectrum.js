@@ -9,7 +9,7 @@
 
 'use strict';
 
-function _via_audio_spectrum(file, path) {
+function audio_spectrum(file, path) {
   this.file = file;
   this.file_path = path;
   this.file_object_url = undefined; // file contents are in this the object url
@@ -18,7 +18,7 @@ function _via_audio_spectrum(file, path) {
   if ( this.file.type !== _VIA_FILE_TYPE.VIDEO &&
        this.file.type !== _VIA_FILE_TYPE.AUDIO
      ) {
-    console.log('_via_audio_spectrum() : file type must be ' +
+    console.log('audio_spectrum() : file type must be ' +
                 _VIA_FILE_TYPE.VIDEO + ' or ' + _VIA_FILE_TYPE.AUDIO +
                 ' (got ' + this.file.type + ')');
     return;
@@ -30,12 +30,12 @@ function _via_audio_spectrum(file, path) {
   this.thumbnail_canvas = document.createElement('canvas');
 
   // registers on_event(), emit_event(), ... methods from
-  // _via_event to let this module listen and emit events
+  // event to let this module listen and emit events
   this._EVENT_ID_PREFIX = '_via_audio_spectrum_';
-  _via_event.call( this );
+  event.call( this );
 }
 
-_via_audio_spectrum.prototype._init = function(container, swidth, sheight) {
+audio_spectrum.prototype._init = function(container, swidth, sheight) {
   console.log(container)
   this.c = container;
   this.swidth = swidth;
@@ -47,7 +47,7 @@ _via_audio_spectrum.prototype._init = function(container, swidth, sheight) {
   this.c.appendChild(this.scanvas);
 }
 
-_via_audio_spectrum.prototype._update = function(tstart, tend, width_per_sec) {
+audio_spectrum.prototype._update = function(tstart, tend, width_per_sec) {
   if ( this.audio_data_len ) {
     this.tstart = tstart;
     this.tend = tend;
@@ -84,18 +84,18 @@ _via_audio_spectrum.prototype._update = function(tstart, tend, width_per_sec) {
       this.current_amp_spectrum[i] = mid - Math.round( this.current_amp_spectrum[i] * norm );
     }
 
-    //console.log('_via_audio_spectrum.prototype._update() : ' + tstart + '->' + tend);
+    //console.log('audio_spectrum.prototype._update() : ' + tstart + '->' + tend);
     console.log(this.current_amp_spectrum);
     this._draw();
   }
 }
 
-_via_audio_spectrum.prototype._clear = function() {
+audio_spectrum.prototype._clear = function() {
   this.sctx.fillStyle = '#ffffff';
   this.sctx.fillRect(0, 0, this.scanvas.width, this.scanvas.height);
 }
 
-_via_audio_spectrum.prototype._draw = function() {
+audio_spectrum.prototype._draw = function() {
   this._clear();
   this.sctx.strokeStyle = '#707070';
   this.sctx.lineWidth = this.DRAW_LINE_WIDTH;
@@ -112,14 +112,14 @@ _via_audio_spectrum.prototype._draw = function() {
 
 // WARNING: not invoking this method will result in
 // resources being allocated to things that are no longer needed
-_via_audio_spectrum.prototype._on_event_destroy = function() {
+audio_spectrum.prototype._on_event_destroy = function() {
   if ( typeof(this.file_object_url) !== 'undefined' ) {
-    console.log('_via_audio_spectrum(): revoking object uri for fid=' + this.file.fid);
+    console.log('audio_spectrum(): revoking object uri for fid=' + this.file.fid);
     URL.revokeObjectURL(this.file_object_url);
   }
 }
 
-_via_audio_spectrum.prototype.load = function() {
+audio_spectrum.prototype.load = function() {
   return new Promise( function(ok_callback, err_callback) {
     this._file_read().then( function() {
       console.log('file read done');
@@ -131,7 +131,7 @@ _via_audio_spectrum.prototype.load = function() {
   }.bind(this));
 }
 
-_via_audio_spectrum.prototype._file_read = function() {
+audio_spectrum.prototype._file_read = function() {
   return new Promise( function(ok_callback, err_callback) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', this.file.src);
@@ -198,7 +198,7 @@ _via_audio_spectrum.prototype._file_read = function() {
   }.bind(this));
 }
 
-_via_audio_spectrum.prototype._load_video = function(src) {
+audio_spectrum.prototype._load_video = function(src) {
   return new Promise( function(ok_callback, err_callback) {
     this.video = document.createElement('video');
     this.video.setAttribute('src', src);
@@ -222,7 +222,7 @@ _via_audio_spectrum.prototype._load_video = function(src) {
       err_callback('error');
     }.bind(this));
     this.video.addEventListener('abort', function() {
-      console.log('_via_audio_spectrum._load_video() abort')
+      console.log('audio_spectrum._load_video() abort')
       err_callback('abort');
     }.bind(this));
 
@@ -230,14 +230,14 @@ _via_audio_spectrum.prototype._load_video = function(src) {
   }.bind(this));
 }
 
-_via_audio_spectrum.prototype.get_thumbnail = function(time_float) {
+audio_spectrum.prototype.get_thumbnail = function(time_float) {
   this.is_thumbnail_read_ongoing = true;
   this.thumbnail_time = parseInt(time_float);
   this.video.currentTime = this.thumbnail_time;
   return this.thumbnail_canvas;
 }
 
-_via_audio_spectrum.prototype._on_seeked = function() {
+audio_spectrum.prototype._on_seeked = function() {
   if ( this.is_thumbnail_read_ongoing &&
        this.thumbnail_context
      ) {
@@ -249,6 +249,6 @@ _via_audio_spectrum.prototype._on_seeked = function() {
   }
 }
 
-_via_audio_spectrum.prototype._downsample = function(buffer, in_sample_rate, out_sample_rate) {
+audio_spectrum.prototype._downsample = function(buffer, in_sample_rate, out_sample_rate) {
 
 }

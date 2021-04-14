@@ -1,16 +1,16 @@
-function _via_control_panel(control_panel_container, via) {
+function control_panel(control_panel_container, via) {
   this._ID = '_via_control_panel_';
   this.c   = control_panel_container;
   this.via = via;
 
   // registers on_event(), emit_event(), ... methods from
-  // _via_event to let this module listen and emit events
-  _via_event.call( this );
+  // event to let this module listen and emit events
+  event.call( this );
 
   this._init();
 }
 
-_via_control_panel.prototype._init = function(type) {
+control_panel.prototype._init = function(type) {
   this.c.innerHTML = '';
 
   this.c.appendChild(this.via.vm.c);
@@ -46,7 +46,7 @@ _via_control_panel.prototype._init = function(type) {
 
 }
 
-_via_control_panel.prototype.add_user = function() {
+control_panel.prototype.add_user = function() {
   this._add_spacer();
   user = document.createElement('div')
   user.id = 'user_rights';
@@ -61,7 +61,7 @@ _via_control_panel.prototype.add_user = function() {
   this.c.appendChild(logout);
 }
 
-_via_control_panel.prototype.add_admin_panel_ref = function(){
+control_panel.prototype.add_admin_panel_ref = function(){
   var btn = document.createElement('button');
   btn.innerHTML = 'Managment'
   btn.addEventListener('click' ,function () {
@@ -71,13 +71,13 @@ _via_control_panel.prototype.add_admin_panel_ref = function(){
   this.c.appendChild(btn);
 }
 
-_via_control_panel.prototype._add_spacer = function() {
+control_panel.prototype._add_spacer = function() {
   var spacer = document.createElement('div');
   spacer.setAttribute('class', 'spacer');
   this.c.appendChild(spacer);
 }
 
-_via_control_panel.prototype._add_view_manager_tools = function() {
+control_panel.prototype._add_view_manager_tools = function() {
   var prev_view = _via_util_get_svg_button('micon_navigate_prev', 'Show Previous File', 'show_prev');
   prev_view.addEventListener('click', this.via.vm._on_prev_view.bind(this.via.vm));
   this.c.appendChild(prev_view);
@@ -106,7 +106,7 @@ _via_control_panel.prototype._add_view_manager_tools = function() {
   // this.c.appendChild(del_view);
 }
 
-_via_control_panel.prototype._add_region_shape_selector = function() {
+control_panel.prototype._add_region_shape_selector = function() {
   if ( document.getElementById('shape_point') === null ) {
     return;
   }
@@ -169,7 +169,7 @@ _via_control_panel.prototype._add_region_shape_selector = function() {
   this.shape_selector_list = { 'POINT':point, 'RECTANGLE':rect, 'EXTREME_RECTANGLE':extreme_rect, 'CIRCLE':circle, 'EXTREME_CIRCLE':extreme_circle, 'ELLIPSE':ellipse, 'LINE':line, 'POLYGON':polygon, 'POLYLINE':polyline };
 }
 
-_via_control_panel.prototype._set_region_shape = function(shape) {
+control_panel.prototype._set_region_shape = function(shape) {
   this.emit_event( 'region_shape', {'shape':shape});
   for ( var si in this.shape_selector_list ) {
     if ( si === shape ) {
@@ -180,7 +180,7 @@ _via_control_panel.prototype._set_region_shape = function(shape) {
   }
 }
 
-_via_control_panel.prototype._add_project_tools = function() {
+control_panel.prototype._add_project_tools = function() {
   var load = _via_util_get_svg_button('micon_open', 'Open a VIA Project');
   load.addEventListener('click', function() {
     _via_util_file_select_local(_VIA_FILE_SELECT_TYPE.JSON, this._project_load_on_local_file_select.bind(this), false);
@@ -198,7 +198,7 @@ _via_control_panel.prototype._add_project_tools = function() {
   // this.c.appendChild(import_export_annotation);
 }
 
-_via_control_panel.prototype._page_show_import_export = function(d) {
+control_panel.prototype._page_show_import_export = function(d) {
   var action_map = {
     'via_page_button_import':this._page_on_action_import.bind(this),
     'via_page_button_export':this._page_on_action_export.bind(this),
@@ -206,7 +206,7 @@ _via_control_panel.prototype._page_show_import_export = function(d) {
   _via_util_page_show('page_import_export', action_map);
 }
 
-_via_control_panel.prototype._page_on_action_import = function(d) {
+control_panel.prototype._page_on_action_import = function(d) {
   if ( d._action_id === 'via_page_button_import' ) {
     if ( d.via_page_import_pid !== '' ) {
       this.via.s._project_pull(d.via_page_import_pid).then( function(remote_rev) {
@@ -237,27 +237,27 @@ _via_control_panel.prototype._page_on_action_import = function(d) {
   }
 }
 
-_via_control_panel.prototype._page_on_action_export = function(d) {
+control_panel.prototype._page_on_action_export = function(d) {
   if ( d._action_id === 'via_page_button_export' ) {
     this.via.ie.export_to_file(d.via_page_export_format);
   }
 }
 
-_via_control_panel.prototype._project_load_on_local_file_select = function(e) {
+control_panel.prototype._project_load_on_local_file_select = function(e) {
   if ( e.target.files.length === 1 ) {
     _via_util_load_text_file(e.target.files[0], this._project_load_on_local_file_read.bind(this));
   }
 }
 
-_via_control_panel.prototype._project_load_on_local_file_read = function(project_data_str) {
+control_panel.prototype._project_load_on_local_file_read = function(project_data_str) {
   this.via.d.project_load(project_data_str);
 }
 
-_via_control_panel.prototype._project_import_via2_on_local_file_read = function(project_data_str) {
+control_panel.prototype._project_import_via2_on_local_file_read = function(project_data_str) {
   this.via.d.project_import_via2_json(project_data_str);
 }
 
-_via_control_panel.prototype._add_project_share_tools = function() {
+control_panel.prototype._add_project_share_tools = function() {
   // if ( this.via.s ) {
   //   var share = _via_util_get_svg_button('micon_share', 'Information about sharing this VIA project with others for collaborative annotation');
   //   share.addEventListener('click', function() {
@@ -278,7 +278,7 @@ _via_control_panel.prototype._add_project_share_tools = function() {
   // }
 }
 
-_via_control_panel.prototype._share_show_info = function() {
+control_panel.prototype._share_show_info = function() {
   if ( this.via.d.project_is_remote() ) {
     this.via.s.exists(this.via.d.store.project.pid).then( function() {
       this.via.s._project_pull(this.via.d.store.project.pid).then( function(ok) {
@@ -320,7 +320,7 @@ _via_control_panel.prototype._share_show_info = function() {
 }
 
 
-_via_control_panel.prototype._page_on_action_fileuri_bulk_add = function(d) {
+control_panel.prototype._page_on_action_fileuri_bulk_add = function(d) {
   if ( d.via_page_fileuri_urilist.length ) {
     this.fileuri_bulk_add_from_url_list(d.via_page_fileuri_urilist);
   }
@@ -343,23 +343,23 @@ _via_control_panel.prototype._page_on_action_fileuri_bulk_add = function(d) {
   }
 }
 
-_via_control_panel.prototype.fileuri_bulk_add_image_from_file = function(uri_list_str) {
+control_panel.prototype.fileuri_bulk_add_image_from_file = function(uri_list_str) {
   this.fileuri_bulk_add_from_url_list(uri_list_str, _VIA_FILE_TYPE.IMAGE);
 }
 
-_via_control_panel.prototype.fileuri_bulk_add_audio_from_file = function(uri_list_str) {
+control_panel.prototype.fileuri_bulk_add_audio_from_file = function(uri_list_str) {
   this.fileuri_bulk_add_from_url_list(uri_list_str, _VIA_FILE_TYPE.AUDIO);
 }
 
-_via_control_panel.prototype.fileuri_bulk_add_video_from_file = function(uri_list_str) {
+control_panel.prototype.fileuri_bulk_add_video_from_file = function(uri_list_str) {
   this.fileuri_bulk_add_from_url_list(uri_list_str, _VIA_FILE_TYPE.VIDEO);
 }
 
-_via_control_panel.prototype.fileuri_bulk_add_auto_from_file = function(uri_list_str) {
+control_panel.prototype.fileuri_bulk_add_auto_from_file = function(uri_list_str) {
   this.fileuri_bulk_add_from_url_list(uri_list_str, 0);
 }
 
-_via_control_panel.prototype.fileuri_bulk_add_from_url_list = function(uri_list_str, type) {
+control_panel.prototype.fileuri_bulk_add_from_url_list = function(uri_list_str, type) {
   var uri_list = uri_list_str.split('\n');
   if ( uri_list.length ) {
     var filelist = [];

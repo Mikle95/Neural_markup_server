@@ -3,16 +3,16 @@
  * @classdesc Marks time segments of a {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement|HTMLMediaElement}
  * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
  * @since 5 Mar. 2019
- * @fires _via_temporal_segmenter#segment_add
- * @fires _via_temporal_segmenter#segment_del
- * @fires _via_temporal_segmenter#segment_edit
+ * @fires temporal_segmenter#segment_add
+ * @fires temporal_segmenter#segment_del
+ * @fires temporal_segmenter#segment_edit
  * @param {Element} container HTML container element like <div>
  * @param {HTMLMediaElement} media_element HTML video of audio
  */
 
 'use strict';
 
-function _via_temporal_segmenter(file_annotator, container, vid, data, media_element) {
+function temporal_segmenter(file_annotator, container, vid, data, media_element) {
   this._ID = '_via_temporal_segmenter_';
   this.fa = file_annotator;
   this.c = container;
@@ -58,8 +58,8 @@ function _via_temporal_segmenter(file_annotator, container, vid, data, media_ele
   this.audio_analyser_active = false;
 
   // registers on_event(), emit_event(), ... methods from
-  // _via_event to let this module listen and emit events
-  _via_event.call( this );
+  // event to let this module listen and emit events
+  event.call( this );
   this.d.on_event('attribute_update', this._ID, this._on_event_attribute_update.bind(this));
   this.d.on_event('metadata_update_bulk', this._ID, this._on_event_metadata_update_bulk.bind(this));
 
@@ -76,7 +76,7 @@ function _via_temporal_segmenter(file_annotator, container, vid, data, media_ele
   this._init();
 }
 
-_via_temporal_segmenter.prototype._init = function() {
+temporal_segmenter.prototype._init = function() {
   this.group_aid_candidate_list = [];
   if ( this.d.cache.attribute_group.hasOwnProperty('FILE1_Z2_XY0') ) {
     for ( var aindex in this.d.cache.attribute_group['FILE1_Z2_XY0'] ) {
@@ -96,11 +96,11 @@ _via_temporal_segmenter.prototype._init = function() {
   }
 }
 
-_via_temporal_segmenter.prototype._init_on_fail = function() {
+temporal_segmenter.prototype._init_on_fail = function() {
   this.c.innerHTML = '<p>You must define an attribute with anchor "Temporal Segment in Video or Audio" in order to define temporal segments in this file. Click&nbsp;<svg class="svg_icon" viewbox="0 0 24 24"><use xlink:href="#micon_insertcomment"></use></svg>&nbsp;button to define such attributes using attribute editor.</p><p>After defining the attribute, <span class="text_button" onclick="via.va.view_show(via.va.vid);">reload this file</span>.' ;
 }
 
-_via_temporal_segmenter.prototype._init_on_success = function(groupby_aid) {
+temporal_segmenter.prototype._init_on_success = function(groupby_aid) {
   try {
     this.fid = this.d.store.view[this.vid].fid_list[0];
     this.file = this.d.store.file[this.fid];
@@ -126,7 +126,7 @@ _via_temporal_segmenter.prototype._init_on_success = function(groupby_aid) {
 //
 // All animation frame routines
 //
-_via_temporal_segmenter.prototype._redraw_all = function() {
+temporal_segmenter.prototype._redraw_all = function() {
   window.requestAnimationFrame(this._redraw_all.bind(this));
   var tnow = this.m.currentTime;
   this._update_playback_rate(tnow);
@@ -166,7 +166,7 @@ _via_temporal_segmenter.prototype._redraw_all = function() {
   }
 }
 
-_via_temporal_segmenter.prototype._update_playback_rate = function(t) {
+temporal_segmenter.prototype._update_playback_rate = function(t) {
   //console.log(this.current_playback_mode + ':' + t)
   if ( this.current_playback_mode !== this.PLAYBACK_MODE.NORMAL ) {
     var mindex = this._tmetadata_group_gid_metadata_at_time(t);
@@ -188,7 +188,7 @@ _via_temporal_segmenter.prototype._update_playback_rate = function(t) {
   }
 }
 
-_via_temporal_segmenter.prototype._redraw_timeline = function() {
+temporal_segmenter.prototype._redraw_timeline = function() {
   // draw the full video timeline (on the top)
   this._vtimeline_mark_draw();
   // draw group timeline
@@ -198,7 +198,7 @@ _via_temporal_segmenter.prototype._redraw_timeline = function() {
 //
 // thumbnail viewer
 //
-_via_temporal_segmenter.prototype._thumbview_init = function() {
+temporal_segmenter.prototype._thumbview_init = function() {
   if ( this.d.store.file[this.fid].type === _VIA_FILE_TYPE.VIDEO ) {
     this.thumbnail_container = document.createElement('div');
     this.thumbnail_container.setAttribute('class', 'thumbnail_container');
@@ -206,12 +206,12 @@ _via_temporal_segmenter.prototype._thumbview_init = function() {
     this.c.appendChild(this.thumbnail_container);
 
     // initialise thumbnail viewer
-    this.thumbnail = new _via_video_thumbnail(this.fid, this.d);
+    this.thumbnail = new video_thumbnail(this.fid, this.d);
     this.thumbnail.load();
   }
 }
 
-_via_temporal_segmenter.prototype._thumbview_show = function(time, x, y) {
+temporal_segmenter.prototype._thumbview_show = function(time, x, y) {
   if ( this.d.store.file[this.fid].type === _VIA_FILE_TYPE.VIDEO ) {
     this.thumbnail_container.innerHTML = '';
     this.thumbnail_container.appendChild(this.thumbnail.get_thumbnail(time));
@@ -222,7 +222,7 @@ _via_temporal_segmenter.prototype._thumbview_show = function(time, x, y) {
   }
 }
 
-_via_temporal_segmenter.prototype._thumbview_hide = function(t) {
+temporal_segmenter.prototype._thumbview_hide = function(t) {
   if ( this.d.store.file[this.fid].type === _VIA_FILE_TYPE.VIDEO ) {
     this.thumbnail_container.style.display = 'none';
   }
@@ -231,7 +231,7 @@ _via_temporal_segmenter.prototype._thumbview_hide = function(t) {
 //
 // Full video timeline
 //
-_via_temporal_segmenter.prototype._vtimeline_init = function() {
+temporal_segmenter.prototype._vtimeline_init = function() {
   this.vtimeline = document.createElement('canvas');
   this.vtimeline.setAttribute('class', 'video_timeline');
   this.vtimeline.style.cursor = 'pointer';
@@ -309,16 +309,16 @@ _via_temporal_segmenter.prototype._vtimeline_init = function() {
   this.c.appendChild(this.vtimeline);
 }
 
-_via_temporal_segmenter.prototype._vtimeline_time2canvas = function(t) {
+temporal_segmenter.prototype._vtimeline_time2canvas = function(t) {
   return Math.floor( ( ( this.vtimelinew * t ) / this.m.duration ) + this.padx );
 }
 
-_via_temporal_segmenter.prototype._vtimeline_canvas2time = function(x) {
+temporal_segmenter.prototype._vtimeline_canvas2time = function(x) {
   var t = ( ( x - this.padx ) / this.vtimelinew ) * this.m.duration;
   return Math.max(0, Math.min(t, this.m.duration) );
 }
 
-_via_temporal_segmenter.prototype._vtimeline_mark_draw = function() {
+temporal_segmenter.prototype._vtimeline_mark_draw = function() {
   var time = this.m.currentTime;
   var cx = this._vtimeline_time2canvas(time);
 
@@ -349,7 +349,7 @@ _via_temporal_segmenter.prototype._vtimeline_mark_draw = function() {
   this.vtimeline_mark_ctx.fillText(tstr, tx, this.linehn[2] - 2);
 }
 
-_via_temporal_segmenter.prototype._vtimeline_on_mousedown = function(e) {
+temporal_segmenter.prototype._vtimeline_on_mousedown = function(e) {
   var canvas_x = e.offsetX;
   var time = this._vtimeline_canvas2time(canvas_x);
   this.m.currentTime = time;
@@ -359,19 +359,19 @@ _via_temporal_segmenter.prototype._vtimeline_on_mousedown = function(e) {
   this._tmetadata_gtimeline_draw();
 }
 
-_via_temporal_segmenter.prototype._vtimeline_on_mousemove = function(e) {
+temporal_segmenter.prototype._vtimeline_on_mousemove = function(e) {
   var time = this._vtimeline_canvas2time(e.offsetX);
   this._thumbview_show(time, e.offsetX, e.offsetY);
 }
 
-_via_temporal_segmenter.prototype._vtimeline_on_mouseout = function(e) {
+temporal_segmenter.prototype._vtimeline_on_mouseout = function(e) {
   this._thumbview_hide();
 }
 
 //
 // Metadata Panel
 //
-_via_temporal_segmenter.prototype._tmetadata_init = function() {
+temporal_segmenter.prototype._tmetadata_init = function() {
   this.tmetadata_container = document.createElement('div');
   this.tmetadata_container.setAttribute('class', 'tmetadata_container');
 
@@ -438,7 +438,7 @@ _via_temporal_segmenter.prototype._tmetadata_init = function() {
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_audio_init = function() {
+temporal_segmenter.prototype._tmetadata_audio_init = function() {
   try {
     this.audioctx = new (window.AudioContext || window.webkitAudioContext)();
     this.analyser = this.audioctx.createAnalyser();
@@ -454,7 +454,7 @@ _via_temporal_segmenter.prototype._tmetadata_audio_init = function() {
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_gmetadata_update = function() {
+temporal_segmenter.prototype._tmetadata_gmetadata_update = function() {
   this.gmetadata_grid.innerHTML = '';
 
   // initialise the gmetadata (temporal segment corresponding to each group)
@@ -493,7 +493,7 @@ _via_temporal_segmenter.prototype._tmetadata_gmetadata_update = function() {
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_gid_list_reorder = function(gindex_now, gindex_new) {
+temporal_segmenter.prototype._tmetadata_gid_list_reorder = function(gindex_now, gindex_new) {
   var new_loc_gid = this.gid_list[gindex_new];
   this.gid_list[gindex_new] = this.gid_list[gindex_now];
   this.gid_list[gindex_now] = new_loc_gid;
@@ -501,7 +501,7 @@ _via_temporal_segmenter.prototype._tmetadata_gid_list_reorder = function(gindex_
 }
 
 
-_via_temporal_segmenter.prototype._tmetadata_onchange_groupby_aid = function(e) {
+temporal_segmenter.prototype._tmetadata_onchange_groupby_aid = function(e) {
   this.group_aname_select.blur(); // remove selection of dropdown
   var new_groupby_aid = e.target.options[e.target.selectedIndex].value;
   this._group_init( new_groupby_aid );
@@ -511,7 +511,7 @@ _via_temporal_segmenter.prototype._tmetadata_onchange_groupby_aid = function(e) 
   this._tmetadata_gtimeline_draw();
 }
 
-_via_temporal_segmenter.prototype._tmetadata_boundary_move = function(dt) {
+temporal_segmenter.prototype._tmetadata_boundary_move = function(dt) {
   var new_start = Math.floor(this.tmetadata_gtimeline_tstart + dt);
   if ( new_start >= 0 &&
        new_start < this.m.duration
@@ -529,7 +529,7 @@ _via_temporal_segmenter.prototype._tmetadata_boundary_move = function(dt) {
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_boundary_update = function(tstart) {
+temporal_segmenter.prototype._tmetadata_boundary_update = function(tstart) {
   this.tmetadata_gtimeline_tstart = tstart;
   this.tmetadata_gtimeline_xstart = this.padx;
 
@@ -557,7 +557,7 @@ _via_temporal_segmenter.prototype._tmetadata_boundary_update = function(tstart) 
   setTimeout( this._tmetadata_boundary_fetch_all_mid.bind(this), 0);
 }
 
-_via_temporal_segmenter.prototype._tmetadata_boundary_fetch_all_mid = function() {
+temporal_segmenter.prototype._tmetadata_boundary_fetch_all_mid = function() {
   var gindex;
   var t0, t1;
 
@@ -571,7 +571,7 @@ _via_temporal_segmenter.prototype._tmetadata_boundary_fetch_all_mid = function()
   this._tmetadata_boundary_fetch_spatial_mid();
 }
 
-_via_temporal_segmenter.prototype._tmetadata_boundary_fetch_spatial_mid = function() {
+temporal_segmenter.prototype._tmetadata_boundary_fetch_spatial_mid = function() {
   var mid, avalue, time;
   this.smid = {};
   for ( var mindex in this.d.cache.mid_list[this.vid] ) {
@@ -592,7 +592,7 @@ _via_temporal_segmenter.prototype._tmetadata_boundary_fetch_spatial_mid = functi
   this._redraw_timeline();
 }
 
-_via_temporal_segmenter.prototype._tmetadata_boundary_add_spatial_mid = function(mid) {
+temporal_segmenter.prototype._tmetadata_boundary_add_spatial_mid = function(mid) {
   if ( this.d.store.metadata[mid].z.length === 1 &&
        this.d.store.metadata[mid].xy.length !== 0
      ) {
@@ -607,7 +607,7 @@ _via_temporal_segmenter.prototype._tmetadata_boundary_add_spatial_mid = function
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_boundary_del_spatial_mid = function(mid) {
+temporal_segmenter.prototype._tmetadata_boundary_del_spatial_mid = function(mid) {
   for ( var time in this.smid ) {
     if ( this.smid[time].length ) {
       var mindex = this.smid[time].indexOf(mid);
@@ -619,7 +619,7 @@ _via_temporal_segmenter.prototype._tmetadata_boundary_del_spatial_mid = function
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_boundary_fetch_gid_mid = function(gid) {
+temporal_segmenter.prototype._tmetadata_boundary_fetch_gid_mid = function(gid) {
   this.tmetadata_gtimeline_mid[gid] = [];
   var mid_list = [];
   var mindex, mid, t0, t1;
@@ -648,7 +648,7 @@ _via_temporal_segmenter.prototype._tmetadata_boundary_fetch_gid_mid = function(g
 //
 // group timeline (common to all group-id and shown at top)
 //
-_via_temporal_segmenter.prototype._tmetadata_gtimeline_init = function() {
+temporal_segmenter.prototype._tmetadata_gtimeline_init = function() {
   this.gtimeline = document.createElement('canvas');
   this.gtimeline.setAttribute('class', 'gtimeline');
   this.gtimeline.addEventListener('mousedown', this._tmetadata_gtimeline_mousedown.bind(this));
@@ -662,7 +662,7 @@ _via_temporal_segmenter.prototype._tmetadata_gtimeline_init = function() {
   this.gtimeline.addEventListener('wheel', this._tmetadata_gtimeline_wheel_listener.bind(this));
 }
 
-_via_temporal_segmenter.prototype._tmetadata_gtimeline_wheel_listener = function(e) {
+temporal_segmenter.prototype._tmetadata_gtimeline_wheel_listener = function(e) {
   if ( e.shiftKey ) {
     // pan temporal segment horizontally
     if (e.deltaY < 0) {
@@ -681,7 +681,7 @@ _via_temporal_segmenter.prototype._tmetadata_gtimeline_wheel_listener = function
   e.preventDefault();
 }
 
-_via_temporal_segmenter.prototype._tmetadata_gtimeline_zoomin = function() {
+temporal_segmenter.prototype._tmetadata_gtimeline_zoomin = function() {
   var wps = this.tmetadata_width_per_sec + this.GTIMELINE_ZOOM_OFFSET;
   if ( wps < this.gtimeline.width ) {
     this.tmetadata_width_per_sec = wps;
@@ -691,7 +691,7 @@ _via_temporal_segmenter.prototype._tmetadata_gtimeline_zoomin = function() {
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_gtimeline_zoomout = function() {
+temporal_segmenter.prototype._tmetadata_gtimeline_zoomout = function() {
   var wps = this.tmetadata_width_per_sec - this.GTIMELINE_ZOOM_OFFSET;
   if ( wps > 1 ) {
     this.tmetadata_width_per_sec = wps;
@@ -701,12 +701,12 @@ _via_temporal_segmenter.prototype._tmetadata_gtimeline_zoomout = function() {
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_gtimeline_clear = function() {
+temporal_segmenter.prototype._tmetadata_gtimeline_clear = function() {
   this.gtimelinectx.fillStyle = '#ffffff';
   this.gtimelinectx.fillRect(0, 0, this.gtimeline.width, this.gtimeline.height);
 }
 
-_via_temporal_segmenter.prototype._tmetadata_gtimeline_draw = function() {
+temporal_segmenter.prototype._tmetadata_gtimeline_draw = function() {
   this._tmetadata_gtimeline_clear();
 
   // draw line
@@ -762,7 +762,7 @@ _via_temporal_segmenter.prototype._tmetadata_gtimeline_draw = function() {
   // in _redraw_all()
 }
 
-_via_temporal_segmenter.prototype._tmetadata_gtimeline_draw_audio = function() {
+temporal_segmenter.prototype._tmetadata_gtimeline_draw_audio = function() {
   if(!this.m.paused && this.audio_analyser_active) {
     var x = this._tmetadata_gtimeline_time2canvas(this.m.currentTime);
     this.analyser.getFloatTimeDomainData(this.audio_data);
@@ -780,7 +780,7 @@ _via_temporal_segmenter.prototype._tmetadata_gtimeline_draw_audio = function() {
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_draw_currenttime_mark = function(tnow) {
+temporal_segmenter.prototype._tmetadata_draw_currenttime_mark = function(tnow) {
   // clear previous mark
   this.gtimelinectx.fillStyle = '#ffffff';
   this.gtimelinectx.fillRect(0, 0, this.gtimeline.width, this.linehn[2] - 1);
@@ -803,14 +803,14 @@ _via_temporal_segmenter.prototype._tmetadata_draw_currenttime_mark = function(tn
   this.gtimelinectx.fillText(rate, this.tmetadata_gtimeline_xend - this.linehn[2], this.linehn[2] - 2);
 }
 
-_via_temporal_segmenter.prototype._tmetadata_gtimeline_canvas2time = function(x) {
+temporal_segmenter.prototype._tmetadata_gtimeline_canvas2time = function(x) {
   var T = this.tmetadata_gtimeline_tend - this.tmetadata_gtimeline_tstart;
   var W = this.tmetadata_gtimeline_xend - this.tmetadata_gtimeline_xstart;
   var dx = x - this.padx;
   return this.tmetadata_gtimeline_tstart + ((T * dx) / W);
 }
 
-_via_temporal_segmenter.prototype._tmetadata_gtimeline_time2canvas = function(t) {
+temporal_segmenter.prototype._tmetadata_gtimeline_time2canvas = function(t) {
   var canvas_x;
   if ( t < this.tmetadata_gtimeline_tstart ||
        t > this.tmetadata_gtimeline_tend ) {
@@ -830,7 +830,7 @@ _via_temporal_segmenter.prototype._tmetadata_gtimeline_time2canvas = function(t)
   return canvas_x;
 }
 
-_via_temporal_segmenter.prototype._tmetadata_gtimeline_mousemove= function(e) {
+temporal_segmenter.prototype._tmetadata_gtimeline_mousemove= function(e) {
   var t = this._tmetadata_gtimeline_canvas2time(e.offsetX);
   var smark_time_str = this._tmetadata_gtimeline_is_on_smark(t);
   if ( smark_time_str !== '' ) {
@@ -846,7 +846,7 @@ _via_temporal_segmenter.prototype._tmetadata_gtimeline_mousemove= function(e) {
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_gtimeline_mousedown = function(e) {
+temporal_segmenter.prototype._tmetadata_gtimeline_mousedown = function(e) {
   var t = this._tmetadata_gtimeline_canvas2time(e.offsetX);
   var smark_time_str = this._tmetadata_gtimeline_is_on_smark(t);
   if ( smark_time_str !== '' ) {
@@ -860,10 +860,10 @@ _via_temporal_segmenter.prototype._tmetadata_gtimeline_mousedown = function(e) {
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_gtimeline_mouseup = function(e) {
+temporal_segmenter.prototype._tmetadata_gtimeline_mouseup = function(e) {
 }
 
-_via_temporal_segmenter.prototype._tmetadata_gtimeline_is_on_smark = function(t) {
+temporal_segmenter.prototype._tmetadata_gtimeline_is_on_smark = function(t) {
   var smark_time;
   for ( var smark_time_str in this.smid ) {
     smark_time = parseFloat(smark_time_str);
@@ -877,7 +877,7 @@ _via_temporal_segmenter.prototype._tmetadata_gtimeline_is_on_smark = function(t)
 //
 // metadata for a given group-id
 //
-_via_temporal_segmenter.prototype._tmetadata_group_update_gid = function(e) {
+temporal_segmenter.prototype._tmetadata_group_update_gid = function(e) {
   var old_gid = e.target.dataset.gid;
   var new_gid = e.target.value.trim();
   var mindex, mid;
@@ -907,11 +907,11 @@ _via_temporal_segmenter.prototype._tmetadata_group_update_gid = function(e) {
       this._tmetadata_group_gid_sel(new_gindex);
     }
   }.bind(this), function(err) {
-    console.warn('_via_data.metadata_update_av_bulk() failed');
+    console.warn('data.metadata_update_av_bulk() failed');
   }.bind(this));
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_init = function(gid) {
+temporal_segmenter.prototype._tmetadata_group_gid_init = function(gid) {
   this.gcanvas[gid] = document.createElement('canvas');
   this.gcanvas[gid].setAttribute('data-gid', gid);
   this.gcanvas[gid].setAttribute('data-gindex', this.gid_list.indexOf(gid));
@@ -925,7 +925,7 @@ _via_temporal_segmenter.prototype._tmetadata_group_gid_init = function(gid) {
   this._tmetadata_group_gid_draw(gid);
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_clear = function(gid) {
+temporal_segmenter.prototype._tmetadata_group_gid_clear = function(gid) {
   if ( gid === this.selected_gid ) {
     this.gctx[gid].fillStyle = '#e6e6e6';
   } else {
@@ -934,13 +934,13 @@ _via_temporal_segmenter.prototype._tmetadata_group_gid_clear = function(gid) {
   this.gctx[gid].fillRect(0, 0, this.gcanvas[gid].width, this.gcanvas[gid].height);
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_draw = function(gid) {
+temporal_segmenter.prototype._tmetadata_group_gid_draw = function(gid) {
   this._tmetadata_group_gid_clear(gid);
   this._tmetadata_group_gid_draw_boundary(gid);
   this._tmetadata_group_gid_draw_metadata(gid);
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_draw_boundary = function(gid) {
+temporal_segmenter.prototype._tmetadata_group_gid_draw_boundary = function(gid) {
   var gindex = this.gid_list.indexOf(gid);
   var bcolor = this.COLOR_LIST[ gindex % this.NCOLOR ];
   // draw line
@@ -957,7 +957,7 @@ _via_temporal_segmenter.prototype._tmetadata_group_gid_draw_boundary = function(
   this.gctx[gid].stroke();
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_mark_selected = function() {
+temporal_segmenter.prototype._tmetadata_group_gid_mark_selected = function() {
   var gid = this.selected_gid;
   var mid = this.selected_mid;
   var t0, t1, x0, x1;
@@ -998,7 +998,7 @@ _via_temporal_segmenter.prototype._tmetadata_group_gid_mark_selected = function(
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_draw_metadata = function(gid) {
+temporal_segmenter.prototype._tmetadata_group_gid_draw_metadata = function(gid) {
   if ( this.tmetadata_gtimeline_mid.hasOwnProperty(gid) ) {
     var mindex, mid;
     for ( mindex in this.tmetadata_gtimeline_mid[gid] ) {
@@ -1014,7 +1014,7 @@ _via_temporal_segmenter.prototype._tmetadata_group_gid_draw_metadata = function(
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_draw_mid = function(gid, mid) {
+temporal_segmenter.prototype._tmetadata_group_gid_draw_mid = function(gid, mid) {
   var t0, t1, x0, x1;
   t0 = this.d.store.metadata[mid].z[0];
   t1 = this.d.store.metadata[mid].z[1];
@@ -1063,7 +1063,7 @@ _via_temporal_segmenter.prototype._tmetadata_group_gid_draw_mid = function(gid, 
   this.gctx[gid].stroke();
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_sel = function(gindex) {
+temporal_segmenter.prototype._tmetadata_group_gid_sel = function(gindex) {
   var old_selected_gindex = this.selected_gindex;
 
   this.selected_gindex = gindex;
@@ -1084,7 +1084,7 @@ _via_temporal_segmenter.prototype._tmetadata_group_gid_sel = function(gindex) {
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_sel_metadata = function(mindex) {
+temporal_segmenter.prototype._tmetadata_group_gid_sel_metadata = function(mindex) {
   var old_selected_mindex = this.selected_mindex;
   this.selected_mindex = mindex;
   this.selected_mid = this.tmetadata_gtimeline_mid[this.selected_gid][mindex];
@@ -1098,14 +1098,14 @@ _via_temporal_segmenter.prototype._tmetadata_group_gid_sel_metadata = function(m
                      '<span class="key">Esc</span> to unselect.', true);
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_remove_mid_sel = function(mindex) {
+temporal_segmenter.prototype._tmetadata_group_gid_remove_mid_sel = function(mindex) {
   this.selected_mindex = -1;
   this.selected_mid = '';
   this.edge_show_time = -1;
   this._tmetadata_group_gid_draw(this.selected_gid);
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_sel_metadata_at_time = function() {
+temporal_segmenter.prototype._tmetadata_group_gid_sel_metadata_at_time = function() {
   var t = this.m.currentTime;
   var mindex = this._tmetadata_group_gid_metadata_at_time(t);
   if ( mindex !== -1 ) {
@@ -1113,7 +1113,7 @@ _via_temporal_segmenter.prototype._tmetadata_group_gid_sel_metadata_at_time = fu
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_metadata_at_time = function(t) {
+temporal_segmenter.prototype._tmetadata_group_gid_metadata_at_time = function(t) {
   var mindex, mid;
   for ( mindex in this.tmetadata_gtimeline_mid[this.selected_gid] ) {
     mid = this.tmetadata_gtimeline_mid[this.selected_gid][mindex];
@@ -1126,7 +1126,7 @@ _via_temporal_segmenter.prototype._tmetadata_group_gid_metadata_at_time = functi
   return -1;
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_sel_next_metadata = function() {
+temporal_segmenter.prototype._tmetadata_group_gid_sel_next_metadata = function() {
   var sgid = this.gid_list[this.selected_gindex];
   if ( this.selected_mindex === -1 ) {
     if ( this.tmetadata_gtimeline_mid.hasOwnProperty(sgid) ) {
@@ -1144,7 +1144,7 @@ _via_temporal_segmenter.prototype._tmetadata_group_gid_sel_next_metadata = funct
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_sel_prev_metadata = function() {
+temporal_segmenter.prototype._tmetadata_group_gid_sel_prev_metadata = function() {
   var sgid = this.gid_list[this.selected_gindex];
   if ( this.selected_mindex === -1 ) {
     if ( this.tmetadata_gtimeline_mid.hasOwnProperty(sgid) ) {
@@ -1161,7 +1161,7 @@ _via_temporal_segmenter.prototype._tmetadata_group_gid_sel_prev_metadata = funct
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_mid_update_edge = function(eindex, dz) {
+temporal_segmenter.prototype._tmetadata_mid_update_edge = function(eindex, dz) {
   this.edge_show_time = eindex;
   // to ensure only 3 decimal values are stored for time
   var new_value = this.d.store.metadata[this.selected_mid].z[eindex] + dz;
@@ -1194,7 +1194,7 @@ _via_temporal_segmenter.prototype._tmetadata_mid_update_edge = function(eindex, 
 
 }
 
-_via_temporal_segmenter.prototype._tmetadata_mid_move = function(dt) {
+temporal_segmenter.prototype._tmetadata_mid_move = function(dt) {
   var n = this.d.store.metadata[this.selected_mid].z.length;
   var newz = this.d.store.metadata[this.selected_mid].z.slice();
   for ( var i = 0; i < n; ++i ) {
@@ -1227,13 +1227,13 @@ _via_temporal_segmenter.prototype._tmetadata_mid_move = function(dt) {
   }.bind(this));
 }
 
-_via_temporal_segmenter.prototype._tmetadata_mid_del_sel = function(mid) {
+temporal_segmenter.prototype._tmetadata_mid_del_sel = function(mid) {
   this._tmetadata_mid_del(this.selected_mid);
   this._tmetadata_group_gid_remove_mid_sel();
   _via_util_msg_show('Temporal segment deleted.');
 }
 
-_via_temporal_segmenter.prototype._tmetadata_mid_del = function(mid) {
+temporal_segmenter.prototype._tmetadata_mid_del = function(mid) {
   var mindex = this.tmetadata_gtimeline_mid[this.selected_gid].indexOf(mid);
   if ( mindex !== -1 ) {
     this.tmetadata_gtimeline_mid[this.selected_gid].splice(mindex, 1);
@@ -1244,7 +1244,7 @@ _via_temporal_segmenter.prototype._tmetadata_mid_del = function(mid) {
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_mid_update_last_added_end_edge_to_time = function(t) {
+temporal_segmenter.prototype._tmetadata_mid_update_last_added_end_edge_to_time = function(t) {
   if ( this.d.store.metadata.hasOwnProperty(this.metadata_last_added_mid) ) {
     var z_now = this.d.store.metadata[this.metadata_last_added_mid].z;
     var update_edge_index;
@@ -1275,7 +1275,7 @@ _via_temporal_segmenter.prototype._tmetadata_mid_update_last_added_end_edge_to_t
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_mid_add_at_time = function(t) {
+temporal_segmenter.prototype._tmetadata_mid_add_at_time = function(t) {
   var z = [ t ];
   if ( z[0] < 0 ) {
     z[0] = 0.0;
@@ -1307,7 +1307,7 @@ _via_temporal_segmenter.prototype._tmetadata_mid_add_at_time = function(t) {
   }.bind(this));
 }
 
-_via_temporal_segmenter.prototype._tmetadata_mid_merge = function(eindex) {
+temporal_segmenter.prototype._tmetadata_mid_merge = function(eindex) {
   var merge_mid;
   if ( eindex === 0 ) {
     var left_mindex = parseInt(this.selected_mindex) - 1;
@@ -1346,8 +1346,8 @@ _via_temporal_segmenter.prototype._tmetadata_mid_merge = function(eindex) {
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_mid_change_gid = function(from_gindex,
-                                                                       to_gindex) {
+temporal_segmenter.prototype._tmetadata_mid_change_gid = function(from_gindex,
+                                                                  to_gindex) {
   var from_gid = this.gid_list[from_gindex];
   var to_gid = this.gid_list[to_gindex];
   var mid_to_move = this.tmetadata_gtimeline_mid[from_gid][this.selected_mindex];
@@ -1370,7 +1370,7 @@ _via_temporal_segmenter.prototype._tmetadata_mid_change_gid = function(from_gind
   this._tmetadata_group_gid_sel_metadata(moved_mindex);
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_mousemove = function(e) {
+temporal_segmenter.prototype._tmetadata_group_gid_mousemove = function(e) {
   var x = e.offsetX;
   var gid = e.target.dataset.gid;
   var t = this._tmetadata_gtimeline_canvas2time(x);
@@ -1398,7 +1398,7 @@ _via_temporal_segmenter.prototype._tmetadata_group_gid_mousemove = function(e) {
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_mousedown = function(e) {
+temporal_segmenter.prototype._tmetadata_group_gid_mousedown = function(e) {
   var x = e.offsetX;
   var gid = e.target.dataset.gid;
   var gindex = e.target.dataset.gindex;
@@ -1447,7 +1447,7 @@ _via_temporal_segmenter.prototype._tmetadata_group_gid_mousedown = function(e) {
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_mouseup = function(e) {
+temporal_segmenter.prototype._tmetadata_group_gid_mouseup = function(e) {
   var x = e.offsetX;
   if ( this.metadata_resize_is_ongoing ) {
     // resize metadata
@@ -1473,7 +1473,7 @@ _via_temporal_segmenter.prototype._tmetadata_group_gid_mouseup = function(e) {
   }
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_is_on_edge = function(gid, t) {
+temporal_segmenter.prototype._tmetadata_group_gid_is_on_edge = function(gid, t) {
   var mindex, mid;
   for ( mindex in this.tmetadata_gtimeline_mid[gid] ) {
     mid = this.tmetadata_gtimeline_mid[gid][mindex];
@@ -1488,7 +1488,7 @@ _via_temporal_segmenter.prototype._tmetadata_group_gid_is_on_edge = function(gid
   return [-1, -1];
 }
 
-_via_temporal_segmenter.prototype._tmetadata_group_gid_get_mindex_at_time = function(gid, t) {
+temporal_segmenter.prototype._tmetadata_group_gid_get_mindex_at_time = function(gid, t) {
   var mindex, mid;
   for ( mindex in this.tmetadata_gtimeline_mid[gid] ) {
     mid = this.tmetadata_gtimeline_mid[gid][mindex];
@@ -1504,7 +1504,7 @@ _via_temporal_segmenter.prototype._tmetadata_group_gid_get_mindex_at_time = func
 //
 // keyboard input handler
 //
-_via_temporal_segmenter.prototype._on_event_keydown = function(e) {
+temporal_segmenter.prototype._on_event_keydown = function(e) {
   var fid = this.file.fid;
 
   // play/pause
@@ -1814,7 +1814,7 @@ _via_temporal_segmenter.prototype._on_event_keydown = function(e) {
 // group by
 //
 
-_via_temporal_segmenter.prototype._group_init = function(aid) {
+temporal_segmenter.prototype._group_init = function(aid) {
   this.group = {};
   this.groupby_aid = aid;
 
@@ -1870,7 +1870,7 @@ _via_temporal_segmenter.prototype._group_init = function(aid) {
   }
 }
 
-_via_temporal_segmenter.prototype._compare_gid = function(gid1_str, gid2_str) {
+temporal_segmenter.prototype._compare_gid = function(gid1_str, gid2_str) {
   var gid1 = parseInt(gid1_str);
   var gid2 = parseInt(gid2_str);
   if(isNaN(gid1) || isNaN(gid2)) {
@@ -1890,7 +1890,7 @@ _via_temporal_segmenter.prototype._compare_gid = function(gid1_str, gid2_str) {
   }
 }
 
-_via_temporal_segmenter.prototype._compare_mid_by_time = function(mid1, mid2) {
+temporal_segmenter.prototype._compare_mid_by_time = function(mid1, mid2) {
   var t00 = this.d.store.metadata[mid1].z[0];
   var t10 = this.d.store.metadata[mid2].z[0];
   var t01 = this.d.store.metadata[mid1].z[1];
@@ -1933,7 +1933,7 @@ _via_temporal_segmenter.prototype._compare_mid_by_time = function(mid1, mid2) {
   }
 }
 
-_via_temporal_segmenter.prototype._group_gid_add_mid = function(gid, new_mid) {
+temporal_segmenter.prototype._group_gid_add_mid = function(gid, new_mid) {
   // find the best location
   var i, mindex, mid;
   for ( mindex in this.group[gid] ) {
@@ -1949,7 +1949,7 @@ _via_temporal_segmenter.prototype._group_gid_add_mid = function(gid, new_mid) {
   this._tmetadata_group_gid_draw(gid);
 }
 
-_via_temporal_segmenter.prototype._group_gid_del_mid = function(gid, mid) {
+temporal_segmenter.prototype._group_gid_del_mid = function(gid, mid) {
   var mindex = this.group[gid].indexOf(mid);
   if ( mindex !== -1 ) {
     this.group[gid].splice(mindex, 1);
@@ -1957,7 +1957,7 @@ _via_temporal_segmenter.prototype._group_gid_del_mid = function(gid, mid) {
   this._tmetadata_group_gid_draw(gid);
 }
 
-_via_temporal_segmenter.prototype._group_del_gid = function(gid_list) {
+temporal_segmenter.prototype._group_del_gid = function(gid_list) {
   return new Promise( function(ok_callback, err_callback) {
     try {
       var del_mid_list = [];
@@ -1982,7 +1982,7 @@ _via_temporal_segmenter.prototype._group_del_gid = function(gid_list) {
   }.bind(this));
 }
 
-_via_temporal_segmenter.prototype._group_add_gid = function(gid) {
+temporal_segmenter.prototype._group_add_gid = function(gid) {
   if ( this.group.hasOwnProperty(gid) ) {
     _via_util_msg_show(this.d.attribute_store[this.groupby_aid].aname +
                        ' [' + gid + '] already exists!');
@@ -1999,7 +1999,7 @@ _via_temporal_segmenter.prototype._group_add_gid = function(gid) {
 //
 // Utility functions
 //
-_via_temporal_segmenter.prototype._time2str = function(t) {
+temporal_segmenter.prototype._time2str = function(t) {
   var hh = Math.floor(t / 3600);
   var mm = Math.floor( (t - hh * 3600) / 60 );
   var ss = Math.round( t - hh*3600 - mm*60 );
@@ -2015,7 +2015,7 @@ _via_temporal_segmenter.prototype._time2str = function(t) {
   return hh + ':' + mm + ':' + ss;
 }
 
-_via_temporal_segmenter.prototype._time2strms = function(t) {
+temporal_segmenter.prototype._time2strms = function(t) {
   var hh = Math.floor(t / 3600);
   var mm = Math.floor( (t - hh * 3600) / 60 );
   var ss = Math.floor( t - hh*3600 - mm*60 );
@@ -2035,7 +2035,7 @@ _via_temporal_segmenter.prototype._time2strms = function(t) {
   return hh + ':' + mm + ':' + ss + '.' + ms;
 }
 
-_via_temporal_segmenter.prototype._time2ssms = function(t) {
+temporal_segmenter.prototype._time2ssms = function(t) {
   var hh = Math.floor(t / 3600);
   var mm = Math.floor( (t - hh * 3600) / 60 );
   var ss = Math.floor( t - hh*3600 - mm*60 );
@@ -2043,18 +2043,18 @@ _via_temporal_segmenter.prototype._time2ssms = function(t) {
   return ss + ':' + ms;
 }
 
-_via_temporal_segmenter.prototype._vtimeline_playbackrate2str = function(t) {
+temporal_segmenter.prototype._vtimeline_playbackrate2str = function(t) {
   return this.m.playbackRate + 'X';
 }
 
 //
 // external events
 //
-_via_temporal_segmenter.prototype._on_event_metadata_del = function(vid, mid) {
+temporal_segmenter.prototype._on_event_metadata_del = function(vid, mid) {
   _via_util_msg_show('Metadata deleted');
 }
 
-_via_temporal_segmenter.prototype._on_event_metadata_add = function(vid, mid) {
+temporal_segmenter.prototype._on_event_metadata_add = function(vid, mid) {
   if ( this.vid === vid &&
        this.d.store.metadata[mid].z.length === 2 &&
        this.d.store.metadata[mid].xy.length === 0
@@ -2065,14 +2065,14 @@ _via_temporal_segmenter.prototype._on_event_metadata_add = function(vid, mid) {
   }
 }
 
-_via_temporal_segmenter.prototype._on_event_metadata_update = function(vid, mid) {
+temporal_segmenter.prototype._on_event_metadata_update = function(vid, mid) {
   _via_util_msg_show('Metadata updated');
 }
 
 //
 // Toolbar
 //
-_via_temporal_segmenter.prototype._toolbar_init = function() {
+temporal_segmenter.prototype._toolbar_init = function() {
   this.toolbar_container = document.createElement('div');
   this.toolbar_container.setAttribute('class', 'toolbar_container');
 
@@ -2148,20 +2148,20 @@ _via_temporal_segmenter.prototype._toolbar_init = function() {
   this.c.appendChild(this.toolbar_container);
 }
 
-_via_temporal_segmenter.prototype._toolbar_playback_mode_on_change = function(e) {
+temporal_segmenter.prototype._toolbar_playback_mode_on_change = function(e) {
   this.current_playback_mode = e.target.value;
   if ( this.current_playback_mode === this.PLAYBACK_MODE.NORMAL ) {
     this._toolbar_playback_rate_set(1);
   }
 }
 
-_via_temporal_segmenter.prototype._toolbar_playback_rate_set = function(rate) {
+temporal_segmenter.prototype._toolbar_playback_rate_set = function(rate) {
   if ( this.m.playbackRate !== rate ) {
     this.m.playbackRate = rate;
   }
 }
 
-_via_temporal_segmenter.prototype._toolbar_gid_add = function() {
+temporal_segmenter.prototype._toolbar_gid_add = function() {
   var new_gid = document.getElementById('gid_add_del_input').value.trim();
   if(new_gid === '') {
     _via_util_msg_show('Name of new timeline cannot be empty. Enter the name of new timeline in the input panel.');
@@ -2178,7 +2178,7 @@ _via_temporal_segmenter.prototype._toolbar_gid_add = function() {
   document.getElementById('gid_add_del_input').value = '';
 }
 
-_via_temporal_segmenter.prototype._toolbar_gid_del = function() {
+temporal_segmenter.prototype._toolbar_gid_del = function() {
   var del_gid = document.getElementById('gid_add_del_input').value.trim();
   if(del_gid === '') {
     _via_util_msg_show('To delete, you must provide the name of an existing timeline.');
@@ -2207,7 +2207,7 @@ _via_temporal_segmenter.prototype._toolbar_gid_del = function() {
 //
 // external events
 //
-_via_temporal_segmenter.prototype._on_event_attribute_update = function(data, event_payload) {
+temporal_segmenter.prototype._on_event_attribute_update = function(data, event_payload) {
   var aid = event_payload.aid;
   if ( this.groupby_aid === aid ) {
     _via_util_msg_show('Attribute [' + this.d.store['attribute'][aid]['aname'] + '] updated.');
@@ -2215,7 +2215,7 @@ _via_temporal_segmenter.prototype._on_event_attribute_update = function(data, ev
   }
 }
 
-_via_temporal_segmenter.prototype._on_event_metadata_update_bulk = function(data, event_payload) {
+temporal_segmenter.prototype._on_event_metadata_update_bulk = function(data, event_payload) {
   if ( this.vid === event_payload.vid ) {
     _via_util_msg_show('Updated ' + event_payload.mid_list.length + ' metadata');
   }

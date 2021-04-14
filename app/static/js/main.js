@@ -1,17 +1,16 @@
 'use strict'
 
-function _via(via_container, url) {
+function main(via_container, url) {
   this.user_rights = 'user'
   this.username = '---'
   this.url = url;
 
-  this._ID = '_via';
-  console.log('Initializing VGG Image Annotator (VIA) version ' + _VIA_VERSION)
+  this._ID = 'main';
   this.via_container = via_container;
 
-  this.d  = new _via_data();
+  this.d  = new data();
   var conf = { 'ENDPOINT': _VIA_REMOTE_STORE };
-  this.s  = new _via_share(this.d, conf);
+  this.s  = new share(this.d, conf);
 
   if ( typeof(_VIA_DEBUG) === 'undefined' || _VIA_DEBUG === true ) {
     // ADD DEBUG CODE HERE (IF NEEDED)
@@ -49,19 +48,19 @@ function _via(via_container, url) {
   this.via_container.appendChild(this.message_container);
 
   //// initialise content creators and managers
-  this.ie = new _via_import_export(this.d);
+  this.ie = new import_export(this.d);
 
-  this.va = new _via_view_annotator(this.d, this.view_container);
-  this.editor = new _via_editor(this.d, this.va, this.editor_container);
+  this.va = new view_annotator(this.d, this.view_container);
+  this.editor = new editor(this.d, this.va, this.editor_container);
 
   this.ap = new admin_panel(this, this.admin_container);
 
   this.view_manager_container = document.createElement('div');
-  this.vm = new _via_view_manager(this.d, this.va, this.view_manager_container, this);
+  this.vm = new view_manager(this.d, this.va, this.view_manager_container, this);
   this.vm._init();
 
   // control panel shows the view_manager_container
-  this.cp = new _via_control_panel(this.control_panel_container, this);
+  this.cp = new control_panel(this.control_panel_container, this);
   var request = new XMLHttpRequest();
     request.open('GET', 'get_rights', true);
     request.addEventListener("readystatechange", () => {
@@ -139,16 +138,16 @@ function _via(via_container, url) {
   }
 
   // ready
-  _via_util_msg_show(_VIA_NAME + ' (' + _VIA_NAME_SHORT + ') ' + _VIA_VERSION + ' ready.');
+  _via_util_msg_show('Annotator ready!');
 }
 
-_via.prototype._hook_on_browser_resize = function() {
+main.prototype._hook_on_browser_resize = function() {
   if ( typeof(this.va.vid) !== 'undefined' ) {
     this.va.view_show(this.va.vid);
   }
 }
 
-_via.prototype._keydown_handler = function(e) {
+main.prototype._keydown_handler = function(e) {
   // avoid handling events when text input field is in focus
   if ( e.target.type !== 'text' &&
        e.target.type !== 'textarea'

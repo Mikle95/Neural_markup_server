@@ -9,7 +9,7 @@
 
 'use strict';
 
-function _via_store_localstorage(data) {
+function store_localstorage(data) {
   this.d = data;
 
   this.store = window.localStorage;
@@ -23,10 +23,10 @@ function _via_store_localstorage(data) {
   this.BROWSER_ID_KEY = '_via_browser_id';
   this.BROWSER_ID_VALUE = '';
   this.event_prefix = '_via_store_localstorage_';
-  _via_event.call( this );
+  event.call( this );
 }
 
-_via_store_localstorage.prototype._init = function() {
+store_localstorage.prototype._init = function() {
   if ( this.is_store_available() ) {
     this.BROWSER_ID_VALUE = this.store.getItem(this.BROWSER_ID_KEY);
     this.store.clear();
@@ -42,7 +42,7 @@ _via_store_localstorage.prototype._init = function() {
   }
 }
 
-_via_store_localstorage.prototype.prev_session_data_init = function() {
+store_localstorage.prototype.prev_session_data_init = function() {
   return new Promise( function(ok_callback, err_callback) {
     try {
       var existing_project_store_str = this.store.getItem('_via_project_store');
@@ -61,37 +61,37 @@ _via_store_localstorage.prototype.prev_session_data_init = function() {
           err_callback();
         }.bind(this))
       } else {
-        console.log('_via_store_localstorage.prev_session_data_init() failed');
+        console.log('store_localstorage.prev_session_data_init() failed');
         err_callback();
       }
     }
     catch(ex) {
-      console.log('exception in _via_store_localstorage.prev_session_data_init()');
+      console.log('exception in store_localstorage.prev_session_data_init()');
       console.log(ex)
       err_callback(ex);
     }
   }.bind(this));
 }
 
-_via_store_localstorage.prototype.prev_session_is_available = function() {
+store_localstorage.prototype.prev_session_is_available = function() {
   return this.prev_session_available;
 }
 
-_via_store_localstorage.prototype.prev_session_get_size = function() {
+store_localstorage.prototype.prev_session_get_size = function() {
   return this.prev_session_data_blob.size;
 }
 
-_via_store_localstorage.prototype.prev_session_get_timestamp = function() {
+store_localstorage.prototype.prev_session_get_timestamp = function() {
   return this.prev_session_timestamp.toString();
 }
 
-_via_store_localstorage.prototype.prev_session_load = function() {
+store_localstorage.prototype.prev_session_load = function() {
   if ( this.prev_session_available ) {
     this.d._project_load(this.prev_session_data);
   }
 }
 
-_via_store_localstorage.prototype.prev_session_save = function() {
+store_localstorage.prototype.prev_session_save = function() {
   if ( this.prev_session_available ) {
     _via_util_download_as_file(this.prev_session_data_blob,
                                'via_project_' +
@@ -99,7 +99,7 @@ _via_store_localstorage.prototype.prev_session_save = function() {
   }
 }
 
-_via_store_localstorage.prototype._push_all = function() {
+store_localstorage.prototype._push_all = function() {
   var data_key, store_key;
   var data_key_index;
   for( data_key_index in this.d.data_key_list ) {
@@ -109,12 +109,12 @@ _via_store_localstorage.prototype._push_all = function() {
   this._push_metadata();
 }
 
-_via_store_localstorage.prototype._push_data = function(data_key) {
+store_localstorage.prototype._push_data = function(data_key) {
   var store_key = this._datakey_to_storekey(data_key);
   this.store.setItem(store_key, JSON.stringify(this.d[data_key]));
 }
 
-_via_store_localstorage.prototype._push_metadata = function() {
+store_localstorage.prototype._push_metadata = function() {
   var mid, mid_storekey;
   for ( mid in this.d.metadata_store ) {
     mid_storekey = this._datakey_to_storekey(mid);
@@ -122,7 +122,7 @@ _via_store_localstorage.prototype._push_metadata = function() {
   }
 }
 
-_via_store_localstorage.prototype._storekey_to_datakey = function(store_key) {
+store_localstorage.prototype._storekey_to_datakey = function(store_key) {
   if ( store_key.startsWith('_via_') ) {
     return store_key.substring( '_via_'.length ); // remove prefix '_via_'
   } else {
@@ -130,12 +130,12 @@ _via_store_localstorage.prototype._storekey_to_datakey = function(store_key) {
   }
 }
 
-_via_store_localstorage.prototype._datakey_to_storekey = function(data_key) {
+store_localstorage.prototype._datakey_to_storekey = function(data_key) {
   return '_via_' + data_key;
 }
 
 
-_via_store_localstorage.prototype._pack_store_data = function() {
+store_localstorage.prototype._pack_store_data = function() {
   return new Promise( function(ok_callback, err_callback) {
     try {
       var data = { 'metadata_store':{} };
@@ -181,7 +181,7 @@ _via_store_localstorage.prototype._pack_store_data = function() {
 //
 
 // source: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
-_via_store_localstorage.prototype.is_store_available = function() {
+store_localstorage.prototype.is_store_available = function() {
   try {
     var storage = window['localStorage'],
         x = '__storage_test__';
@@ -208,7 +208,7 @@ _via_store_localstorage.prototype.is_store_available = function() {
 //
 // public interface
 //
-_via_store_localstorage.prototype.transaction = function(data_key, action, param) {
+store_localstorage.prototype.transaction = function(data_key, action, param) {
   return new Promise( function(ok_callback, err_callback) {
     if ( ! this.store_available ) {
       err_callback('store not available');
@@ -258,7 +258,7 @@ _via_store_localstorage.prototype.transaction = function(data_key, action, param
 //
 // Self Test
 //
-_via_store_localstorage.prototype._self_test = function() {
+store_localstorage.prototype._self_test = function() {
   var fid1 = this.d.file_add('test123.jpg', _VIA_FILE_TYPE.IMAGE, _VIA_FILE_LOC.LOCAL, '');
   var fid2 = this.d.file_add('testXYZ.jpg', _VIA_FILE_TYPE.IMAGE, _VIA_FILE_LOC.URIHTTP, 'http://somerandurl.com/files/testXYZ.jpg');
 
@@ -273,9 +273,9 @@ _via_store_localstorage.prototype._self_test = function() {
       console.assert( d.file_store[0].filename === 'test123.jpg' );
       console.assert( d.attribute_store[0].attr_name === 'attribute1' );
       console.assert( d.attribute_store[1].attr_name === 'attribute2' );
-      console.log('_via_store_localstorage : self test done');
+      console.log('store_localstorage : self test done');
     }.bind(this), function(err) {
-      console.error('_via_store_localstorage : self test failed');
+      console.error('store_localstorage : self test failed');
     }.bind(this));
   }.bind(this), function(err) {
     console.error('failed');

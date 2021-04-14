@@ -1,5 +1,5 @@
-function _via_editor(data, view_annotator, container) {
-  this._ID = '_via_editor';
+function editor(data, view_annotator, container) {
+  this._ID = 'editor';
   this.d  = data;
   this.va = view_annotator;
   this.c  = container;
@@ -13,22 +13,24 @@ function _via_editor(data, view_annotator, container) {
   this.d.on_event('attribute_add', this._ID, this.on_event_attribute_add.bind(this));
 }
 
-_via_editor.prototype.TYPE = { 'METADATA':2, 'ATTRIBUTE':3 };
+editor.prototype.TYPE = { 'METADATA':2, 'ATTRIBUTE':3 };
 
 
-_via_editor.prototype.toggle = function() {
+editor.prototype.toggle = function() {
   if ( this.c.classList.contains('hide') ) {
+    if (!via.ap.status())
+      via.ap.toggle();
     this.show();
   } else {
     this.hide();
   }
 }
 
-_via_editor.prototype.hide = function() {
+editor.prototype.hide = function() {
   this.c.innerHTML = '';
   this.c.classList.add('hide');
 }
-_via_editor.prototype.show = function() {
+editor.prototype.show = function() {
   this.c.classList.remove('hide');
 
   // top line: editor content selector {metadata, attribute}
@@ -114,7 +116,7 @@ _via_editor.prototype.show = function() {
 //
 // Editor content selector
 //
-_via_editor.prototype.on_editor_content_select = function(selector) {
+editor.prototype.on_editor_content_select = function(selector) {
   var element;
   switch(selector.target.name) {
   case 'metadata':
@@ -135,11 +137,11 @@ _via_editor.prototype.on_editor_content_select = function(selector) {
 //
 // metadata
 //
-_via_editor.prototype.metadata_clear = function() {
+editor.prototype.metadata_clear = function() {
   this.metadata_view.innerHTML = '';
 }
 
-_via_editor.prototype.metadata_update = function() {
+editor.prototype.metadata_update = function() {
   this.metadata_clear();
 
   if ( this.va.vid ) {
@@ -169,7 +171,7 @@ _via_editor.prototype.metadata_update = function() {
   }
 }
 
-_via_editor.prototype.metadata_get = function(mid, metadata_index) {
+editor.prototype.metadata_get = function(mid, metadata_index) {
   var tr = document.createElement('tr');
   tr.setAttribute('data-mid', mid);
 
@@ -204,7 +206,7 @@ _via_editor.prototype.metadata_get = function(mid, metadata_index) {
   return tr;
 }
 
-_via_editor.prototype.get_metadata_action_tools = function(container, mid) {
+editor.prototype.get_metadata_action_tools = function(container, mid) {
   var del = _via_util_get_svg_button('micon_delete', 'Delete Metadata');
   del.setAttribute('data-mid', mid);
   del.addEventListener('click', this.metadata_del.bind(this));
@@ -219,7 +221,7 @@ _via_editor.prototype.get_metadata_action_tools = function(container, mid) {
   */
 }
 
-_via_editor.prototype.get_metadata_header = function() {
+editor.prototype.get_metadata_header = function() {
   var tr = document.createElement('tr');
   tr.appendChild( this.html_element('th', '') );
   tr.appendChild( this.html_element('th', '#') );
@@ -237,7 +239,7 @@ _via_editor.prototype.get_metadata_header = function() {
   return thead;
 }
 
-_via_editor.prototype.html_element = function(name, text) {
+editor.prototype.html_element = function(name, text) {
   var e = document.createElement(name);
   e.innerHTML = text;
   return e;
@@ -247,7 +249,7 @@ _via_editor.prototype.html_element = function(name, text) {
 // Metadata preview
 //
 
-_via_editor.prototype.jump_to_metadata = function(e) {
+editor.prototype.jump_to_metadata = function(e) {
   var fid = e.target.dataset.fid;
   var mid = e.target.dataset.mid;
   var where_index = e.target.dataset.where_index;
@@ -261,11 +263,11 @@ _via_editor.prototype.jump_to_metadata = function(e) {
 //
 // attribute
 //
-_via_editor.prototype.attribute_clear = function() {
+editor.prototype.attribute_clear = function() {
   this.attribute_view.innerHTML = '';
 }
 
-_via_editor.prototype.attributes_update = function() {
+editor.prototype.attributes_update = function() {
   if ( this.c.classList.contains('hide') ) {
     return;
   }
@@ -284,7 +286,7 @@ _via_editor.prototype.attributes_update = function() {
   }
 }
 
-_via_editor.prototype.get_attribute_header = function() {
+editor.prototype.get_attribute_header = function() {
   var tr = document.createElement('tr');
   tr.appendChild( this.html_element('th', '') );
   tr.appendChild( this.html_element('th', 'Id') );
@@ -301,7 +303,11 @@ _via_editor.prototype.get_attribute_header = function() {
   return thead;
 }
 
-_via_editor.prototype.get_attribute = function(aid) {
+editor.prototype.status = function(){
+    return this.c.classList.contains('hide');
+}
+
+editor.prototype.get_attribute = function(aid) {
   var tr = document.createElement('tr');
   tr.setAttribute('data-aid', aid);
 
@@ -419,7 +425,7 @@ _via_editor.prototype.get_attribute = function(aid) {
   return tr;
 }
 
-_via_editor.prototype.get_attribute_html_element = function(aid) {
+editor.prototype.get_attribute_html_element = function(aid) {
   var dval  = this.d.store.attribute[aid].default_option_id;
   var atype = this.d.store.attribute[aid].type;
   var el;
@@ -498,7 +504,7 @@ _via_editor.prototype.get_attribute_html_element = function(aid) {
   return el;
 }
 
-_via_editor.prototype.get_attribute_name_entry_panel = function() {
+editor.prototype.get_attribute_name_entry_panel = function() {
   var c = document.createElement('div');
   c.setAttribute('class', 'attribute_entry');
 
@@ -516,14 +522,14 @@ _via_editor.prototype.get_attribute_name_entry_panel = function() {
   return c;
 }
 
-_via_editor.prototype.get_attribute_action_tools = function(container, aid) {
+editor.prototype.get_attribute_action_tools = function(container, aid) {
   var del = _via_util_get_svg_button('micon_delete', 'Delete Attribute');
   del.setAttribute('data-aid', aid);
   del.addEventListener('click', this.attribute_del.bind(this));
   container.appendChild(del);
 }
 
-_via_editor.prototype.update_attribute_for = function(aid) {
+editor.prototype.update_attribute_for = function(aid) {
   var tbody = this.attribute_view.getElementsByTagName('tbody')[0];
   var n = tbody.childNodes.length;
   var i;
@@ -536,7 +542,7 @@ _via_editor.prototype.update_attribute_for = function(aid) {
   }
 }
 
-_via_editor.prototype.attribute_on_change = function(e) {
+editor.prototype.attribute_on_change = function(e) {
   var varname = e.target.dataset.varname;
   var vartype = e.target.type;
   var aid = e.target.dataset.aid;
@@ -569,7 +575,7 @@ _via_editor.prototype.attribute_on_change = function(e) {
 //
 // Listeners for data update events
 //
-_via_editor.prototype.metadata_del = function(e) {
+editor.prototype.metadata_del = function(e) {
   var fid = e.currentTarget.dataset.fid;
   var mid = e.currentTarget.dataset.mid;
   this.d.metadata_del(fid, mid).then( function(ok) {
@@ -579,13 +585,13 @@ _via_editor.prototype.metadata_del = function(e) {
   }.bind(this));
 }
 
-_via_editor.prototype.metadata_edit = function(e) {
+editor.prototype.metadata_edit = function(e) {
   var fid = e.target.parentNode.dataset.fid;
   var mid = e.target.parentNode.dataset.mid;
   console.log('@todo: edit metadata: fid=' + fid + ', mid=' + mid);
 }
 
-_via_editor.prototype.on_attribute_create = function(e) {
+editor.prototype.on_attribute_create = function(e) {
   var new_attribute_name = this.new_attribute_name_input.value;
   this.d.attribute_add(new_attribute_name,
                        _VIA_DEFAULT_ATTRIBUTE_ANCHOR_ID,
@@ -597,7 +603,7 @@ _via_editor.prototype.on_attribute_create = function(e) {
   }.bind(this));
 }
 
-_via_editor.prototype.attribute_del = function(e) {
+editor.prototype.attribute_del = function(e) {
   var aid = e.currentTarget.dataset.aid;
   this.d.attribute_del(aid).then( function(ok) {
     // we don't need to do anything when attribute delete is successful
@@ -606,38 +612,38 @@ _via_editor.prototype.attribute_del = function(e) {
   }.bind(this));
 }
 
-_via_editor.prototype.attribute_update_options = function(e) {
+editor.prototype.attribute_update_options = function(e) {
   var aid = e.target.dataset.aid;
   var new_options_csv = e.target.value;
   this.d.attribute_update_options(aid, new_options_csv);
 }
 
-_via_editor.prototype.attribute_update_type = function(e) {
+editor.prototype.attribute_update_type = function(e) {
   var aid = e.target.dataset.aid;
   var new_type = parseInt(e.target.options[ e.target.selectedIndex ].value);
   this.d.attribute_update_type(aid, new_type);
 }
 
-_via_editor.prototype.on_event_attribute_update = function(data, event_payload) {
+editor.prototype.on_event_attribute_update = function(data, event_payload) {
   this.attributes_update();
 }
 
-_via_editor.prototype.on_event_attribute_del = function(data, event_payload) {
+editor.prototype.on_event_attribute_del = function(data, event_payload) {
   this.attributes_update();
 }
 
-_via_editor.prototype.on_event_attribute_add = function(data, event_payload) {
+editor.prototype.on_event_attribute_add = function(data, event_payload) {
   this.attributes_update();
 }
 
-_via_editor.prototype.on_event_metadata_add = function(data, event_payload) {
+editor.prototype.on_event_metadata_add = function(data, event_payload) {
   //this.metadata_update();
 }
 
-_via_editor.prototype.on_event_metadata_del = function(data, event_payload) {
+editor.prototype.on_event_metadata_del = function(data, event_payload) {
   //this.metadata_update();
 }
 
-_via_editor.prototype.on_event_file_show = function(data, event_payload) {
+editor.prototype.on_event_file_show = function(data, event_payload) {
   //this.metadata_update();
 }

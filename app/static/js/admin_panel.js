@@ -10,6 +10,8 @@ admin_panel.prototype.toggle = function (){
     }
 
     if ( this.c.classList.contains('hide') ) {
+        if(!via.editor.status())
+            via.editor.toggle();
     this.show();
   } else {
     this.hide();
@@ -20,6 +22,10 @@ admin_panel.prototype.toggle = function (){
 admin_panel.prototype.hide = function (){
     this.c.innerHTML = '';
     this.c.classList.add('hide');
+}
+
+admin_panel.prototype.status = function(){
+    return this.c.classList.contains('hide');
 }
 
 

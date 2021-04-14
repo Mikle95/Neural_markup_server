@@ -20,7 +20,7 @@ const _VIA_PAGE = {
   'START_INFO':'page_start_info',
 };
 
-function _via_view_annotator(data, container ) {
+function view_annotator(data, container ) {
   this._ID = '_via_view_annotator_';
   this.d = data;
   this.c = container;
@@ -36,8 +36,8 @@ function _via_view_annotator(data, container ) {
   this.creg_label_aid = '1';
 
   // registers on_event(), emit_event(), ... methods from
-  // _via_event to let this module listen and emit events
-  _via_event.call( this );
+  // event to let this module listen and emit events
+  event.call( this );
 
   this.d.on_event('metadata_add', this._ID, this._on_event_metadata_add.bind(this));
   this.d.on_event('metadata_update', this._ID, this._on_event_metadata_update.bind(this));
@@ -45,7 +45,7 @@ function _via_view_annotator(data, container ) {
   this._init();
 }
 
-_via_view_annotator.prototype._init = function() {
+view_annotator.prototype._init = function() {
   this._view_clear_all_file_annotator();
   this._show_start_info();
 
@@ -54,7 +54,7 @@ _via_view_annotator.prototype._init = function() {
   }
 }
 
-_via_view_annotator.prototype._show_start_info = function() {
+view_annotator.prototype._show_start_info = function() {
   this.c.setAttribute('style', 'grid-template-rows:1fr;')
   var via_page = document.createElement('div');
   via_page.setAttribute('id', 'via_start_info');
@@ -64,14 +64,14 @@ _via_view_annotator.prototype._show_start_info = function() {
   this.c.appendChild(via_page);
 }
 
-_via_view_annotator.prototype.view_show = function(vid) {
+view_annotator.prototype.view_show = function(vid) {
   this._view_clear_all_file_annotator();
   this.vid = vid;
   this._view_init(vid);
   this.emit_event( 'view_show', { 'vid':this.vid } );
 }
 
-_via_view_annotator.prototype._view_init = function(vid) {
+view_annotator.prototype._view_init = function(vid) {
   var file_count = this.d.store.view[vid].fid_list.length;
   switch(file_count) {
   case 1:
@@ -103,7 +103,7 @@ _via_view_annotator.prototype._view_init = function(vid) {
   }
 }
 
-_via_view_annotator.prototype._view_annotate_single_image = function(vid) {
+view_annotator.prototype._view_annotate_single_image = function(vid) {
   this.view_mode = _VIA_VIEW_MODE.IMAGE1;
 
   this.c.innerHTML = '';
@@ -122,15 +122,15 @@ _via_view_annotator.prototype._view_annotate_single_image = function(vid) {
 
   this.file_annotator[0] = [];
   var vid0 = this.d.view_get_file_vid( this.d.store.view[vid].fid_list[0] );
-  this.file_annotator[0][0] = new _via_file_annotator(this, this.d, vid0, '', this.file_container[0][0]);
+  this.file_annotator[0][0] = new file_annotator(this, this.d, vid0, '', this.file_container[0][0]);
   this.file_annotator[0][0]._file_load().then( function(ok) {
     this.file_annotator[0][0]._rinput_enable();
   }.bind(this), function(err) {
-    // handled by _via_file_annotator._file_load_show_error_page();
+    // handled by file_annotator._file_load_show_error_page();
   }.bind(this));
 }
 
-_via_view_annotator.prototype._view_annotate_single_video = function(vid) {
+view_annotator.prototype._view_annotate_single_video = function(vid) {
   this.view_mode = _VIA_VIEW_MODE.VIDEO1;
 
   this.c.innerHTML = '';
@@ -171,7 +171,7 @@ _via_view_annotator.prototype._view_annotate_single_video = function(vid) {
   this.file_annotator[0] = [];
   var fid0 = this.d.store.view[vid].fid_list[0];
   var vid0 = this.d.view_get_file_vid( fid0 );
-  this.file_annotator[0][0] = new _via_file_annotator(this, this.d, vid0, '', this.file_container[0][0]);
+  this.file_annotator[0][0] = new file_annotator(this, this.d, vid0, '', this.file_container[0][0]);
 
   this.file_annotator[0][0]._file_load().then( function(ok) {
     this.view_metadata_container.innerHTML = '';
@@ -179,7 +179,7 @@ _via_view_annotator.prototype._view_annotate_single_video = function(vid) {
     this.temporal_segmenter_container = document.createElement('div');
     this.temporal_segmenter_container.classList.add('temporal_segmenter_container');
     this.view_metadata_container.appendChild(this.temporal_segmenter_container);
-    this.temporal_segmenter = new _via_temporal_segmenter(this.file_annotator[0][0],
+    this.temporal_segmenter = new temporal_segmenter(this.file_annotator[0][0],
                                                           this.temporal_segmenter_container,
                                                           vid0,
                                                           this.d,
@@ -192,7 +192,7 @@ _via_view_annotator.prototype._view_annotate_single_video = function(vid) {
   }.bind(this));
 }
 
-_via_view_annotator.prototype._view_annotate_single_audio = function(vid) {
+view_annotator.prototype._view_annotate_single_audio = function(vid) {
   this.view_mode = _VIA_VIEW_MODE.AUDIO1;
 
   this.c.innerHTML = '';
@@ -226,7 +226,7 @@ _via_view_annotator.prototype._view_annotate_single_audio = function(vid) {
   this.file_annotator[0] = [];
   var fid0 = this.d.store.view[vid].fid_list[0];
   var vid0 = this.d.view_get_file_vid( fid0 );
-  this.file_annotator[0][0] = new _via_file_annotator(this, this.d, vid0, '', this.file_container[0][0]);
+  this.file_annotator[0][0] = new file_annotator(this, this.d, vid0, '', this.file_container[0][0]);
 
   this.file_annotator[0][0]._file_load().then( function(ok) {
     this.view_metadata_container.innerHTML = '';
@@ -234,7 +234,7 @@ _via_view_annotator.prototype._view_annotate_single_audio = function(vid) {
     this.temporal_segmenter_container = document.createElement('div');
     this.temporal_segmenter_container.classList.add('temporal_segmenter_container');
     this.view_metadata_container.appendChild(this.temporal_segmenter_container);
-    this.temporal_segmenter = new _via_temporal_segmenter(this.file_annotator[0][0],
+    this.temporal_segmenter = new temporal_segmenter(this.file_annotator[0][0],
                                                           this.temporal_segmenter_container,
                                                           vid0,
                                                           this.d,
@@ -245,7 +245,7 @@ _via_view_annotator.prototype._view_annotate_single_audio = function(vid) {
   }.bind(this));
 }
 
-_via_view_annotator.prototype._view_annotate_two_images = function(vid) {
+view_annotator.prototype._view_annotate_two_images = function(vid) {
   this.view_mode = _VIA_VIEW_MODE.IMAGE2;
 
   this.c.innerHTML = '';
@@ -270,8 +270,8 @@ _via_view_annotator.prototype._view_annotate_two_images = function(vid) {
   this.file_annotator[0] = [];
   var vid0 = this.d.view_get_file_vid( this.d.store.view[vid].fid_list[0] );
   var vid1 = this.d.view_get_file_vid( this.d.store.view[vid].fid_list[1] );
-  this.file_annotator[0][0] = new _via_file_annotator(this, this.d, vid0, 'Image 1', this.file_container[0][0]);
-  this.file_annotator[0][1] = new _via_file_annotator(this, this.d, vid1, 'Image 2', this.file_container[0][1]);
+  this.file_annotator[0][0] = new file_annotator(this, this.d, vid0, 'Image 1', this.file_container[0][0]);
+  this.file_annotator[0][1] = new file_annotator(this, this.d, vid1, 'Image 2', this.file_container[0][1]);
 
   // first setup view metadata editor
   this.img_pair_annotator_container = document.createElement('div');
@@ -292,7 +292,7 @@ _via_view_annotator.prototype._view_annotate_two_images = function(vid) {
 
 }
 
-_via_view_annotator.prototype._view_has_only_image = function(vid) {
+view_annotator.prototype._view_has_only_image = function(vid) {
   var fid;
   for ( var vfindex in this.d.store.view[vid].fid_list ) {
     fid = this.d.store.view[vid].fid_list[vfindex];
@@ -303,7 +303,7 @@ _via_view_annotator.prototype._view_has_only_image = function(vid) {
   return true;
 }
 
-_via_view_annotator.prototype._view_has_only_video = function(vid) {
+view_annotator.prototype._view_has_only_video = function(vid) {
   var fid;
   for ( var vfindex in this.d.store.view[vid].fid_list ) {
     fid = this.d.store.view[vid].fid_list[vfindex];
@@ -314,7 +314,7 @@ _via_view_annotator.prototype._view_has_only_video = function(vid) {
   return true;
 }
 
-_via_view_annotator.prototype._view_has_only_audio = function(vid) {
+view_annotator.prototype._view_has_only_audio = function(vid) {
   var fid;
   for ( var vfindex in this.d.store.view[vid].fid_list ) {
     fid = this.d.store.view[vid].fid_list[vfindex];
@@ -328,7 +328,7 @@ _via_view_annotator.prototype._view_has_only_audio = function(vid) {
 //
 // view container
 //
-_via_view_annotator.prototype._view_split_content_container = function(container, file_container, nrow, ncol) {
+view_annotator.prototype._view_split_content_container = function(container, file_container, nrow, ncol) {
   for ( var i = 0; i < nrow; ++i ) {
     file_container[i] = [];
     for ( var j = 0; j < ncol; ++j ) {
@@ -348,7 +348,7 @@ _via_view_annotator.prototype._view_split_content_container = function(container
 //
 // misc
 //
-_via_view_annotator.prototype.set_region_draw_shape = function(shape) {
+view_annotator.prototype.set_region_draw_shape = function(shape) {
   if ( _VIA_RSHAPE.hasOwnProperty(shape) ) {
     this.region_draw_shape = _VIA_RSHAPE[shape];
     switch(this.region_draw_shape) {
@@ -386,8 +386,8 @@ _via_view_annotator.prototype.set_region_draw_shape = function(shape) {
 //
 // cleanup
 //
-_via_view_annotator.prototype._view_clear_all_file_annotator = function() {
-  // _via_file_annotator are attached as events listeners in _via_data
+view_annotator.prototype._view_clear_all_file_annotator = function() {
+  // file_annotator are attached as events listeners in data
   // we must also remove these events listeners
   this.d.clear_events('metadata_add', this._ID);
   this.d.clear_events('metadata_update', this._ID);
@@ -405,7 +405,7 @@ _via_view_annotator.prototype._view_clear_all_file_annotator = function() {
 //
 // view metadata editor
 //
-_via_view_annotator.prototype._metadata_update = function() {
+view_annotator.prototype._metadata_update = function() {
   var anchor_id = 'FILEN_Z0_XY0';
   var table = document.createElement('table');
   // this view has no metadata
@@ -422,7 +422,7 @@ _via_view_annotator.prototype._metadata_update = function() {
   this.img_pair_annotator_container.appendChild(table);
 }
 
-_via_view_annotator.prototype._metadata_table_row = function(aid, mid) {
+view_annotator.prototype._metadata_table_row = function(aid, mid) {
   var tr = document.createElement('tr');
 
   var adesc_col = document.createElement('td');
@@ -435,7 +435,7 @@ _via_view_annotator.prototype._metadata_table_row = function(aid, mid) {
   return tr;
 }
 
-_via_view_annotator.prototype._metadata_on_update = function(e) {
+view_annotator.prototype._metadata_on_update = function(e) {
   var aid = e.target.dataset.aid;
   var mid = e.target.dataset.mid;
 
@@ -473,7 +473,7 @@ _via_view_annotator.prototype._metadata_on_update = function(e) {
 //
 // attribute helper methods
 //
-_via_view_annotator.prototype._attribute_html_element = function(aid, onchange_handler, mid) {
+view_annotator.prototype._attribute_html_element = function(aid, onchange_handler, mid) {
   var el;
   switch(this.d.store.attribute[aid].type) {
   case _VIA_ATTRIBUTE_TYPE.TEXT:
@@ -563,7 +563,7 @@ _via_view_annotator.prototype._attribute_html_element = function(aid, onchange_h
 //
 // keyboard handler
 //
-_via_view_annotator.prototype._on_event_keydown = function(e) {
+view_annotator.prototype._on_event_keydown = function(e) {
   if ( this.view_mode === _VIA_VIEW_MODE.VIDEO1 ) {
     this.file_annotator[0][0]._rinput_keydown_handler(e);
     if ( this.file_annotator[0][0].selected_mid_list.length === 0 ) {
@@ -603,7 +603,7 @@ _via_view_annotator.prototype._on_event_keydown = function(e) {
 //
 // external events
 //
-_via_view_annotator.prototype._on_event_metadata_add = function(data, event_payload) {
+view_annotator.prototype._on_event_metadata_add = function(data, event_payload) {
   var vid = event_payload.vid;
   var mid = event_payload.mid;
 
@@ -612,7 +612,7 @@ _via_view_annotator.prototype._on_event_metadata_add = function(data, event_payl
   }
 }
 
-_via_view_annotator.prototype._on_event_metadata_update = function(data, event_payload) {
+view_annotator.prototype._on_event_metadata_update = function(data, event_payload) {
   var vid = event_payload.vid;
   var mid = event_payload.mid;
 

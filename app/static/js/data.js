@@ -9,7 +9,7 @@
 
 'use strict';
 
-function _via_data() {
+function data() {
   this._ID = '_via_data_';
   this.store = this._init_default_project();
   this.file_ref = {};        // ref. to files selected using browser's file selector
@@ -17,11 +17,11 @@ function _via_data() {
   this.DATA_FORMAT_VERSION = '3.1.1';
 
   // registers on_event(), emit_event(), ... methods from
-  // _via_event to let this module listen and emit events
-  _via_event.call(this);
+  // event to let this module listen and emit events
+  event.call(this);
 }
 
-_via_data.prototype._init_default_project = function() {
+data.prototype._init_default_project = function() {
   var p = {};
   p['project'] = {
     'pid': '_PROJECT_ID__',
@@ -35,7 +35,7 @@ _via_data.prototype._init_default_project = function() {
   }
   p['config'] = {
     'file': {
-      'loc_prefix': { '1':'', '2':'', '3':'', '4':'' }, // constants defined in _via_file._VIA_FILE_LOC
+      'loc_prefix': { '1':'', '2':'', '3':'', '4':'' }, // constants defined in file._VIA_FILE_LOC
     },
     'ui': {
       'file_content_align':'center',
@@ -60,7 +60,7 @@ _via_data.prototype._init_default_project = function() {
 //
 // attribute
 //
-_via_data.prototype._attribute_get_new_id = function() {
+data.prototype._attribute_get_new_id = function() {
   var aid_list = Object.keys(this.store.attribute).map(Number).sort();
   var n = aid_list.length;
   var aid;
@@ -72,7 +72,7 @@ _via_data.prototype._attribute_get_new_id = function() {
   return aid;
 }
 
-_via_data.prototype._attribute_exist = function(aname) {
+data.prototype._attribute_exist = function(aname) {
   var aid;
   for ( aid in this.store['attribute'] ) {
     if ( this.store['attribute'][aid].aname === aname ) {
@@ -82,7 +82,7 @@ _via_data.prototype._attribute_exist = function(aname) {
   return false;
 }
 
-_via_data.prototype.attribute_add = function(name, anchor_id, type, desc, options, default_option_id) {
+data.prototype.attribute_add = function(name, anchor_id, type, desc, options, default_option_id) {
   return new Promise( function(ok_callback, err_callback) {
     if ( this._attribute_exist(name) ) {
       err_callback('attribute already exists');
@@ -93,7 +93,7 @@ _via_data.prototype.attribute_add = function(name, anchor_id, type, desc, option
     var desc = desc || '';
     var options = options || {};
     var default_option_id = default_option_id || '';
-    this.store['attribute'][aid] = new _via_attribute(name,
+    this.store['attribute'][aid] = new attribute(name,
                                                       anchor_id,
                                                       type,
                                                       desc,
@@ -105,7 +105,7 @@ _via_data.prototype.attribute_add = function(name, anchor_id, type, desc, option
   }.bind(this));
 }
 
-_via_data.prototype.attribute_del = function(aid) {
+data.prototype.attribute_del = function(aid) {
   return new Promise( function(ok_callback, err_callback) {
     if ( this._attribute_exist(name) ) {
       err_callback('attribute already exists');
@@ -128,7 +128,7 @@ _via_data.prototype.attribute_del = function(aid) {
 }
 
 
-_via_data.prototype.attribute_update_anchor_id = function(aid, anchor_id) {
+data.prototype.attribute_update_anchor_id = function(aid, anchor_id) {
   return new Promise( function(ok_callback, err_callback) {
     if ( ! this.store.attribute.hasOwnProperty(aid) ) {
       err_callback('aid does not exist');
@@ -141,7 +141,7 @@ _via_data.prototype.attribute_update_anchor_id = function(aid, anchor_id) {
   }.bind(this));
 }
 
-_via_data.prototype.attribute_anchor_value_to_name = function(anchor_value) {
+data.prototype.attribute_anchor_value_to_name = function(anchor_value) {
   for ( var anchor_name in _VIA_ATTRIBUTE_ANCHOR ) {
     if ( _via_util_array_eq(_VIA_ATTRIBUTE_ANCHOR[anchor_name], anchor_value) ) {
       return anchor_name;
@@ -150,7 +150,7 @@ _via_data.prototype.attribute_anchor_value_to_name = function(anchor_value) {
   return '';
 }
 
-_via_data.prototype.attribute_update_aname = function(aid, new_aname) {
+data.prototype.attribute_update_aname = function(aid, new_aname) {
   return new Promise( function(ok_callback, err_callback) {
     if ( ! this.store.attribute.hasOwnProperty(aid) ) {
       err_callback('aid does not exist');
@@ -162,7 +162,7 @@ _via_data.prototype.attribute_update_aname = function(aid, new_aname) {
   }.bind(this));
 }
 
-_via_data.prototype.attribute_update_type = function(aid, new_type) {
+data.prototype.attribute_update_type = function(aid, new_type) {
   return new Promise( function(ok_callback, err_callback) {
     if ( ! this.store.attribute.hasOwnProperty(aid) ) {
       err_callback('aid does not exist');
@@ -175,7 +175,7 @@ _via_data.prototype.attribute_update_type = function(aid, new_type) {
 }
 
 // option_csv = option1,*default_option,option2,...
-_via_data.prototype.attribute_update_options_from_csv = function(aid, options_csv) {
+data.prototype.attribute_update_options_from_csv = function(aid, options_csv) {
   return new Promise( function(ok_callback, err_callback) {
     if ( ! this.store.attribute.hasOwnProperty(aid) ) {
       err_callback('aid does not exist');
@@ -202,7 +202,7 @@ _via_data.prototype.attribute_update_options_from_csv = function(aid, options_cs
 //
 // file
 //
-_via_data.prototype._file_get_new_id = function() {
+data.prototype._file_get_new_id = function() {
   var max_fid = -Infinity;
   var fid;
   for ( var fid_str in this.store.file ) {
@@ -218,11 +218,11 @@ _via_data.prototype._file_get_new_id = function() {
   }
 }
 
-_via_data.prototype.file_add = function(name, type, loc, src) {
+data.prototype.file_add = function(name, type, loc, src) {
   return new Promise( function(ok_callback, err_callback) {
     try {
       var fid = this._file_get_new_id();
-      this.store.file[fid] = new _via_file(fid, name, type, loc, src);
+      this.store.file[fid] = new file(fid, name, type, loc, src);
       this.emit_event( 'file_add', { 'fid':fid } );
       ok_callback(fid);
     }
@@ -233,7 +233,7 @@ _via_data.prototype.file_add = function(name, type, loc, src) {
 }
 
 
-_via_data.prototype.file_update = function(fid, name, value) {
+data.prototype.file_update = function(fid, name, value) {
   return new Promise( function(ok_callback, err_callback) {
     try {
       if ( this.store.file.hasOwnProperty(fid) ) {
@@ -263,7 +263,7 @@ _via_data.prototype.file_update = function(fid, name, value) {
   }.bind(this));
 }
 
-_via_data.prototype.file_get_src = function(fid) {
+data.prototype.file_get_src = function(fid) {
   if ( this.store.file[fid].loc === _VIA_FILE_LOC.LOCAL ) {
     if(this.file_object_uri.hasOwnProperty(fid)) {
       return this.file_object_uri[fid];
@@ -280,7 +280,7 @@ _via_data.prototype.file_get_src = function(fid) {
   }
 }
 
-_via_data.prototype.file_get_uri = function(fid) {
+data.prototype.file_get_uri = function(fid) {
   if ( this.store.file[fid].loc === _VIA_FILE_LOC.LOCAL ) {
     return this.store.file[fid].fname;
   } else {
@@ -288,7 +288,7 @@ _via_data.prototype.file_get_uri = function(fid) {
   }
 }
 
-_via_data.prototype.file_free_resources = function(fid) {
+data.prototype.file_free_resources = function(fid) {
   // for files selected using browser's File Selector, we do not
   // need to revoke the ObjectURL because these are simply pointers
   // to the user selected files. If you use revokeObjectURL() to free
@@ -302,11 +302,11 @@ _via_data.prototype.file_free_resources = function(fid) {
 //
 // Metadata
 //
-_via_data.prototype._metadata_get_new_id = function(vid) {
+data.prototype._metadata_get_new_id = function(vid) {
   return vid + '_' + _via_util_uid6();
 }
 
-_via_data.prototype.metadata_add = function(vid, z, xy, av) {
+data.prototype.metadata_add = function(vid, z, xy, av) {
   return new Promise( function(ok_callback, err_callback) {
     try {
       if ( ! this.store['view'].hasOwnProperty(vid) ) {
@@ -316,7 +316,7 @@ _via_data.prototype.metadata_add = function(vid, z, xy, av) {
       var mid = this._metadata_get_new_id(vid);
       var z_fp = _via_util_float_arr_to_fixed(z, _VIA_FLOAT_FIXED_POINT);
       var xy_fp = _via_util_float_arr_to_fixed(xy, _VIA_FLOAT_FIXED_POINT);
-      this.store.metadata[mid] = new _via_metadata(vid, z_fp, xy_fp, av);
+      this.store.metadata[mid] = new metadata(vid, z_fp, xy_fp, av);
       if ( ! this.cache.mid_list.hasOwnProperty(vid) ) {
         this.cache.mid_list[vid] = [];
       }
@@ -331,7 +331,7 @@ _via_data.prototype.metadata_add = function(vid, z, xy, av) {
   }.bind(this));
 }
 
-_via_data.prototype.metadata_add_bulk = function(metadata_list, emit) {
+data.prototype.metadata_add_bulk = function(metadata_list, emit) {
   return new Promise( function(ok_callback, err_callback) {
     try {
       var added_mid_list = [];
@@ -340,7 +340,7 @@ _via_data.prototype.metadata_add_bulk = function(metadata_list, emit) {
         var mid = this._metadata_get_new_id(vid);
         var z_fp = _via_util_float_arr_to_fixed(metadata_list[mindex].z, _VIA_FLOAT_FIXED_POINT);
         var xy_fp = _via_util_float_arr_to_fixed(metadata_list[mindex].xy, _VIA_FLOAT_FIXED_POINT);
-        this.store.metadata[mid] = new _via_metadata(vid, z_fp, xy_fp, metadata_list[mindex].av);
+        this.store.metadata[mid] = new metadata(vid, z_fp, xy_fp, metadata_list[mindex].av);
         if ( ! this.cache.mid_list.hasOwnProperty(vid) ) {
           this.cache.mid_list[vid] = [];
         }
@@ -359,7 +359,7 @@ _via_data.prototype.metadata_add_bulk = function(metadata_list, emit) {
   }.bind(this));
 }
 
-_via_data.prototype.metadata_update = function(vid, mid, z, xy, v) {
+data.prototype.metadata_update = function(vid, mid, z, xy, v) {
   return new Promise( function(ok_callback, err_callback) {
     try {
       if ( ! this.store.view.hasOwnProperty(vid) ) {
@@ -374,7 +374,7 @@ _via_data.prototype.metadata_update = function(vid, mid, z, xy, v) {
 
       var z_fp = _via_util_float_arr_to_fixed(z, _VIA_FLOAT_FIXED_POINT);
       var xy_fp = _via_util_float_arr_to_fixed(xy, _VIA_FLOAT_FIXED_POINT);
-      this.store.metadata[mid] = new _via_metadata(vid, z_fp, xy_fp, av);
+      this.store.metadata[mid] = new metadata(vid, z_fp, xy_fp, av);
       this.emit_event( 'metadata_update', { 'vid':vid, 'mid':mid } );
       ok_callback({'vid':vid, 'mid':mid});
     }
@@ -384,7 +384,7 @@ _via_data.prototype.metadata_update = function(vid, mid, z, xy, v) {
   }.bind(this));
 }
 
-_via_data.prototype.metadata_update_xy = function(vid, mid, xy) {
+data.prototype.metadata_update_xy = function(vid, mid, xy) {
   return new Promise( function(ok_callback, err_callback) {
     try {
       if ( ! this.store.view.hasOwnProperty(vid) ) {
@@ -407,7 +407,7 @@ _via_data.prototype.metadata_update_xy = function(vid, mid, xy) {
   }.bind(this));
 }
 
-_via_data.prototype.metadata_update_av = function(vid, mid, aid, avalue) {
+data.prototype.metadata_update_av = function(vid, mid, aid, avalue) {
   return new Promise( function(ok_callback, err_callback) {
     try {
       if ( ! this.store.view.hasOwnProperty(vid) ) {
@@ -430,7 +430,7 @@ _via_data.prototype.metadata_update_av = function(vid, mid, aid, avalue) {
   }.bind(this));
 }
 
-_via_data.prototype.metadata_update_av_bulk = function(vid, av_list) {
+data.prototype.metadata_update_av_bulk = function(vid, av_list) {
   return new Promise( function(ok_callback, err_callback) {
     try {
       if ( ! this.store.view.hasOwnProperty(vid) ) {
@@ -457,7 +457,7 @@ _via_data.prototype.metadata_update_av_bulk = function(vid, av_list) {
   }.bind(this));
 }
 
-_via_data.prototype.metadata_update_z = function(vid, mid, z) {
+data.prototype.metadata_update_z = function(vid, mid, z) {
   return new Promise( function(ok_callback, err_callback) {
     if ( ! this.store.view.hasOwnProperty(vid) ) {
       err_callback({'vid':vid});
@@ -475,7 +475,7 @@ _via_data.prototype.metadata_update_z = function(vid, mid, z) {
   }.bind(this));
 }
 
-_via_data.prototype.metadata_update_zi = function(vid, mid, zindex, zvalue) {
+data.prototype.metadata_update_zi = function(vid, mid, zindex, zvalue) {
   return new Promise( function(ok_callback, err_callback) {
     if ( ! this.store.view.hasOwnProperty(vid) ) {
       err_callback({'vid':vid});
@@ -494,7 +494,7 @@ _via_data.prototype.metadata_update_zi = function(vid, mid, zindex, zvalue) {
 }
 
 
-_via_data.prototype.metadata_delete = function(vid, mid) {
+data.prototype.metadata_delete = function(vid, mid) {
   return new Promise( function(ok_callback, err_callback) {
     try {
       if ( ! this.store.view.hasOwnProperty(vid) ) {
@@ -518,7 +518,7 @@ _via_data.prototype.metadata_delete = function(vid, mid) {
   }.bind(this));
 }
 
-_via_data.prototype.metadata_delete_bulk = function(vid, mid_list, emit) {
+data.prototype.metadata_delete_bulk = function(vid, mid_list, emit) {
   return new Promise( function(ok_callback, err_callback) {
     try {
       if ( ! this.store.view.hasOwnProperty(vid) ) {
@@ -549,7 +549,7 @@ _via_data.prototype.metadata_delete_bulk = function(vid, mid_list, emit) {
 //
 // View
 //
-_via_data.prototype._view_get_new_id = function() {
+data.prototype._view_get_new_id = function() {
   var max_vid = -Infinity;
   var vid;
   for ( var vid_str in this.store.view ) {
@@ -565,11 +565,11 @@ _via_data.prototype._view_get_new_id = function() {
   }
 }
 
-_via_data.prototype.view_add = function(fid_list) {
+data.prototype.view_add = function(fid_list) {
   return new Promise( function(ok_callback, err_callback) {
     try {
       var vid = this._view_get_new_id();
-      this.store.view[vid] = new _via_view(fid_list);
+      this.store.view[vid] = new view(fid_list);
       this.store.project.vid_list.push(vid);
       this.emit_event( 'view_add', { 'vid':vid } );
       ok_callback(vid);
@@ -581,7 +581,7 @@ _via_data.prototype.view_add = function(fid_list) {
   }.bind(this));
 }
 
-_via_data.prototype.view_get_file_vid = function(fid) {
+data.prototype.view_get_file_vid = function(fid) {
   for ( var vid in this.store.view ) {
     if ( _via_util_array_eq(this.store.view[vid].fid_list, [fid]) ) {
       return vid;
@@ -591,7 +591,7 @@ _via_data.prototype.view_get_file_vid = function(fid) {
 }
 
 // add view with single file
-_via_data.prototype.view_bulk_add_from_filelist = function(filelist) {
+data.prototype.view_bulk_add_from_filelist = function(filelist) {
   return new Promise( function(ok_callback, err_callback) {
     try {
       var added_fid_list = [];
@@ -602,14 +602,14 @@ _via_data.prototype.view_bulk_add_from_filelist = function(filelist) {
             this.file_ref[fid] = filelist[i].src; // local file ref. stored separately
             filelist[i].src = '';                 // no need to store duplicate of file ref.
         }
-        this.store.file[fid] = new _via_file(fid,
+        this.store.file[fid] = new file(fid,
                                              filelist[i].fname,
                                              filelist[i].type,
                                              filelist[i].loc,
                                              filelist[i].src);
 
         var vid = this._view_get_new_id();
-        this.store.view[vid] = new _via_view( [ fid ] ); // view with single file
+        this.store.view[vid] = new view( [ fid ] ); // view with single file
         this.store.project.vid_list.push(vid);
 
         added_fid_list.push(fid);
@@ -626,7 +626,7 @@ _via_data.prototype.view_bulk_add_from_filelist = function(filelist) {
   }.bind(this));
 }
 
-_via_data.prototype.view_del = function(vid) {
+data.prototype.view_del = function(vid) {
   return new Promise( function(ok_callback, err_callback) {
     try {
       if ( ! this.store.view.hasOwnProperty(vid) ) {
@@ -668,12 +668,12 @@ _via_data.prototype.view_del = function(vid) {
 //
 // cache
 //
-_via_data.prototype._cache_update = function() {
+data.prototype._cache_update = function() {
   this._cache_update_mid_list();
   this._cache_update_attribute_group();
 }
 
-_via_data.prototype._cache_mid_list_del = function(vid, del_mid_list) {
+data.prototype._cache_mid_list_del = function(vid, del_mid_list) {
   var mid;
   for ( var mindex in del_mid_list ) {
     mid = del_mid_list[mindex];
@@ -684,7 +684,7 @@ _via_data.prototype._cache_mid_list_del = function(vid, del_mid_list) {
   }
 }
 
-_via_data.prototype._cache_update_mid_list = function() {
+data.prototype._cache_update_mid_list = function() {
   var vid;
   this.cache.mid_list = {};
   for ( var mid in this.store.metadata ) {
@@ -696,7 +696,7 @@ _via_data.prototype._cache_update_mid_list = function() {
   }
 }
 
-_via_data.prototype._cache_update_attribute_group = function() {
+data.prototype._cache_update_attribute_group = function() {
   this.cache.attribute_group = {};
   var anchor_id;
   for ( var aid in this.store.attribute ) {
@@ -708,7 +708,7 @@ _via_data.prototype._cache_update_attribute_group = function() {
   }
 }
 
-_via_data.prototype._cache_get_attribute_group = function(anchor_id_list) {
+data.prototype._cache_get_attribute_group = function(anchor_id_list) {
   var aid_list = [];
   for ( var i in anchor_id_list ) {
     var anchor_id = anchor_id_list[i];
@@ -722,7 +722,7 @@ _via_data.prototype._cache_get_attribute_group = function(anchor_id_list) {
 //
 // project
 //
-_via_data.prototype.project_save = function() {
+data.prototype.project_save = function() {
   return new Promise( function(ok_callback, err_callback) {
     try {
       // @todo: decide on whether we want to include the base64 data
@@ -747,7 +747,7 @@ _via_data.prototype.project_save = function() {
   }.bind(this));
 }
 
-_via_data.prototype.project_load = function(project_data_str) {
+data.prototype.project_load = function(project_data_str) {
   return new Promise( function(ok_callback, err_callback) {
     try {
       var project_json_data = JSON.parse(project_data_str);
@@ -766,7 +766,7 @@ _via_data.prototype.project_load = function(project_data_str) {
   }.bind(this));
 }
 
-_via_data.prototype.project_load_json = function(project_json_data) {
+data.prototype.project_load_json = function(project_json_data) {
   return new Promise( function(ok_callback, err_callback) {
     try {
       var project_data = Object.assign({}, project_json_data);
@@ -786,7 +786,7 @@ _via_data.prototype.project_load_json = function(project_json_data) {
   }.bind(this));
 }
 
-_via_data.prototype.project_store_apply_version_fix = function(d) {
+data.prototype.project_store_apply_version_fix = function(d) {
   switch(d['project']['data_format_version']) {
   case '3.1.0':
     var local_prefix = d['config']['file']['path'];
@@ -804,7 +804,7 @@ _via_data.prototype.project_store_apply_version_fix = function(d) {
   }
 }
 
-_via_data.prototype.project_is_remote = function() {
+data.prototype.project_is_remote = function() {
   if ( this.store.project.pid === _VIA_PROJECT_ID_MARKER &&
        this.store.project.rev === _VIA_PROJECT_REV_ID_MARKER &&
        this.store.project.rev_timestamp === _VIA_PROJECT_REV_TIMESTAMP_MARKER
@@ -818,7 +818,7 @@ _via_data.prototype.project_is_remote = function() {
 //
 // merge
 //
-_via_data.prototype.project_merge_rev = function(remote, merge_strategy) {
+data.prototype.project_merge_rev = function(remote, merge_strategy) {
   if ( typeof(merge_strategy) === 'undefined' ) {
     merge_strategy = _VIA_MERGE_STRATEGY.THREE_WAY;
   }
@@ -836,7 +836,7 @@ _via_data.prototype.project_merge_rev = function(remote, merge_strategy) {
   }
 }
 
-_via_data.prototype.project_merge_three_way = function(remote) {
+data.prototype.project_merge_three_way = function(remote) {
   return new Promise( function(ok_callback, err_callback) {
     // see https://en.wikipedia.org/wiki/Merge_(version_control)
     // merge using the three way merge algorithm, where
@@ -899,7 +899,7 @@ _via_data.prototype.project_merge_three_way = function(remote) {
   }.bind(this));
 }
 
-_via_data.prototype.merge_3way = function(common_ancestor, remote, local) {
+data.prototype.merge_3way = function(common_ancestor, remote, local) {
   if ( typeof(common_ancestor) === 'object' ) {
     if ( Array.isArray(common_ancestor) ) {
       // use array comparison
@@ -937,7 +937,7 @@ _via_data.prototype.merge_3way = function(common_ancestor, remote, local) {
   }
 }
 
-_via_data.prototype.project_merge_on_success = function() {
+data.prototype.project_merge_on_success = function() {
   this._cache_update();
   this.emit_event( 'project_updated', { 'pid':this.store.project.pid } );
 
@@ -945,7 +945,7 @@ _via_data.prototype.project_merge_on_success = function() {
 }
 
 // is there any difference between local project and remote project?
-_via_data.prototype.project_is_different = function(others_str) {
+data.prototype.project_is_different = function(others_str) {
   return new Promise( function(ok_callback, err_callback) {
     var ours_str = JSON.stringify(this.store);
     if ( ours_str === others_str ) {
@@ -959,7 +959,7 @@ _via_data.prototype.project_is_different = function(others_str) {
 //
 // Import
 //
-_via_data.prototype.project_import_via2_json = function(via2_project_json) {
+data.prototype.project_import_via2_json = function(via2_project_json) {
   return new Promise( function(ok_callback, err_callback) {
     try {
       var via2 = JSON.parse(via2_project_json);
@@ -988,7 +988,7 @@ _via_data.prototype.project_import_via2_json = function(via2_project_json) {
             atype_text = 'SELECT';
           }
           var atype = _VIA_ATTRIBUTE_TYPE[atype_text];
-          this.store['attribute'][via3_aid] = new _via_attribute(aid,
+          this.store['attribute'][via3_aid] = new attribute(aid,
                                                                   anchor_id,
                                                                   atype,
                                                                   via2['_via_attributes'][metadata_type][aid]['description'],
@@ -1005,10 +1005,10 @@ _via_data.prototype.project_import_via2_json = function(via2_project_json) {
         var floc = _via_util_infer_file_loc_from_filename(fname);
         var ftype = _via_util_infer_file_type_from_filename(fname);
         var via3_fid = this._file_get_new_id();
-        this.store.file[via3_fid] = new _via_file(via3_fid, fname, ftype, floc, fname);
+        this.store.file[via3_fid] = new file(via3_fid, fname, ftype, floc, fname);
 
         var vid = this._view_get_new_id();
-        this.store.view[vid] = new _via_view([via3_fid]);
+        this.store.view[vid] = new view([via3_fid]);
         this.store.project.vid_list.push(vid);
 
         // import region metadata
@@ -1059,7 +1059,7 @@ _via_data.prototype.project_import_via2_json = function(via2_project_json) {
           }
 
           var mid = this._metadata_get_new_id(vid);
-          this.store.metadata[mid] = new _via_metadata(vid, z, xy, av);
+          this.store.metadata[mid] = new metadata(vid, z, xy, av);
         }
 
         // import file metadata
@@ -1075,7 +1075,7 @@ _via_data.prototype.project_import_via2_json = function(via2_project_json) {
           file_av[via3_aid] = avalue;
         }
         var mid = this._metadata_get_new_id(vid);
-        this.store.metadata[mid] = new _via_metadata(vid, [], [], file_av);
+        this.store.metadata[mid] = new metadata(vid, [], [], file_av);
       }
       _via_util_msg_show('Project import successful');
       this._cache_update();
