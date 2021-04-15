@@ -2,7 +2,7 @@ var _via_msg_clear_timer; // holds a reference to current message timoout
 var _via_page_current;    // holds a reference to current info page
 var _via_page_action_map; // holds a reference to action map for current info page
 
-function _via_util_get_svg_button(icon_id, title, id) {
+function util_get_svg_button(icon_id, title, id) {
   var el = document.createElementNS(_VIA_SVG_NS, 'svg');
   el.setAttributeNS(null, 'viewBox', '0 0 24 24');
   el.innerHTML = '<use xlink:href="#' + icon_id + '"></use><title>' + title + '</title>';
@@ -13,7 +13,7 @@ function _via_util_get_svg_button(icon_id, title, id) {
   return el;
 }
 
-function _via_util_get_html_input_element_value(el) {
+function util_get_html_input_element_value(el) {
   switch(el.tagName) {
   case 'TEXTAREA':
     return el.value;
@@ -26,7 +26,7 @@ function _via_util_get_html_input_element_value(el) {
   }
 }
 
-function _via_util_get_filename_from_uri(uri) {
+function util_get_filename_from_uri(uri) {
   if ( uri.includes('/') ) {
     var tokens = uri.split('/');
     return tokens[ tokens.length - 1 ];
@@ -35,15 +35,15 @@ function _via_util_get_filename_from_uri(uri) {
   }
 }
 
-function _via_util_file_type_to_str(type) {
+function util_file_type_to_str(type) {
   switch(type) {
-    case _VIA_FILE_TYPE.IMAGE:
+    case FILE_TYPE.IMAGE:
       return 'image';
       break;
-    case _VIA_FILE_TYPE.VIDEO:
+    case FILE_TYPE.VIDEO:
       return 'video';
       break;
-    case _VIA_FILE_TYPE.AUDIO:
+    case FILE_TYPE.AUDIO:
       return 'audio';
       break;
     default:
@@ -54,13 +54,13 @@ function _via_util_file_type_to_str(type) {
 function _via_util_file_type_str_to_id(type) {
   switch(type) {
     case 'image':
-      return _VIA_FILE_TYPE.IMAGE;
+      return FILE_TYPE.IMAGE;
       break;
     case 'video':
-      return _VIA_FILE_TYPE.VIDEO;
+      return FILE_TYPE.VIDEO;
       break;
     case 'audio':
-      return _VIA_FILE_TYPE.AUDIO;
+      return FILE_TYPE.AUDIO;
       break;
     default:
       return -1;
@@ -69,16 +69,16 @@ function _via_util_file_type_str_to_id(type) {
 
 function _via_util_file_loc_to_str(loc) {
   switch(loc) {
-    case _VIA_FILE_TYPE.LOCAL:
+    case FILE_TYPE.LOCAL:
       return 'local';
       break;
-    case _VIA_FILE_TYPE.URIHTTP:
+    case FILE_TYPE.URIHTTP:
       return 'http://';
       break;
-    case _VIA_FILE_TYPE.URIFILE:
+    case FILE_TYPE.URIFILE:
       return 'file://';
       break;
-    case _VIA_FILE_TYPE.URIFILE:
+    case FILE_TYPE.URIFILE:
       return 'inline';
       break;
     default:
@@ -89,16 +89,16 @@ function _via_util_file_loc_to_str(loc) {
 function _via_util_file_loc_str_to_id(loc) {
   switch(loc) {
     case 'local':
-      return _VIA_FILE_TYPE.LOCAL;
+      return FILE_TYPE.LOCAL;
       break;
     case 'http://':
-      return _VIA_FILE_TYPE.URIHTTP;
+      return FILE_TYPE.URIHTTP;
       break;
     case 'file://':
-      return _VIA_FILE_TYPE.URIFILE;
+      return FILE_TYPE.URIFILE;
       break;
     case 'inline':
-      return _VIA_FILE_TYPE.URIFILE;
+      return FILE_TYPE.URIFILE;
       break;
     default:
       return -1;
@@ -144,7 +144,7 @@ function _via_util_escape_quote_for_csv(s) {
   return s.replace(/["]/g, '""');
 }
 
-function _via_util_load_text_file(text_file, callback_function) {
+function util_load_text_file(text_file, callback_function) {
   if (text_file) {
     var text_reader = new FileReader();
 
@@ -160,7 +160,7 @@ function _via_util_load_text_file(text_file, callback_function) {
   }
 }
 
-function _via_util_file_ext(filename) {
+function util_file_ext(filename) {
   return filename.substr( filename.lastIndexOf('.') + 1 );
 }
 
@@ -176,32 +176,32 @@ function _via_util_infer_file_loc_from_filename(filename) {
   }
 }
 
-function _via_util_infer_file_type_from_filename(filename) {
-  var ext = _via_util_file_ext(filename);
+function util_infer_file_type_from_filename(filename) {
+  var ext = util_file_ext(filename);
   switch( ext.toLowerCase() ) {
   case 'ogv':
   case 'mp4':
   case 'avi':
   case 'webm':
   case 'mov':
-    return _VIA_FILE_TYPE.VIDEO;
+    return FILE_TYPE.VIDEO;
     break;
   case 'jpg':
   case 'jpeg':
   case 'png':
   case 'bmp':
-    return _VIA_FILE_TYPE.IMAGE;
+    return FILE_TYPE.IMAGE;
     break;
   case 'mp3':
   case 'wav':
   case 'oga':
   case 'ogg':
-    return _VIA_FILE_TYPE.AUDIO;
+    return FILE_TYPE.AUDIO;
   }
 }
 
 
-function _via_util_download_as_file(data, filename) {
+function util_download_as_file(data, filename) {
   var a      = document.createElement('a');
   a.href     = URL.createObjectURL(data);
   a.download = filename;
@@ -258,7 +258,6 @@ function _via_util_file_select_local(type, handler, multiple) {
   fsel.click();
 }
 
-// see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
 function _via_util_rand_int(min_inclusive, max_exclusive) {
   return Math.floor(Math.random() * (max_exclusive - min_inclusive)) + min_inclusive;
 }
@@ -340,7 +339,7 @@ function _via_util_page_hide() {
   _via_page_current = null;
 }
 
-function _via_util_msg_show(msg, sticky) {
+function util_msg_show(msg, sticky) {
   var container = document.getElementById('_via_message_container');
   var content = document.getElementById('_via_message');
   if ( container && content ) {

@@ -26,7 +26,7 @@ control_panel.prototype._init = function(type) {
 
   this._add_spacer();
 
-  var editor = _via_util_get_svg_button('micon_insertcomment', 'Show/Hide Attribute Editor');
+  var editor = util_get_svg_button('micon_insertcomment', 'Show/Hide Attribute Editor');
   editor.addEventListener('click', function() {
     this.emit_event( 'editor_toggle', {});
   }.bind(this));
@@ -38,7 +38,7 @@ control_panel.prototype._init = function(type) {
 
   this._add_spacer();
 
-  var keyboard = _via_util_get_svg_button('micon_keyboard', 'Keyboard Shortcuts');
+  var keyboard = util_get_svg_button('micon_keyboard', 'Keyboard Shortcuts');
   keyboard.addEventListener('click', function() {
     _via_util_page_show('page_keyboard_shortcut');
   }.bind(this));
@@ -78,15 +78,15 @@ control_panel.prototype._add_spacer = function() {
 }
 
 control_panel.prototype._add_view_manager_tools = function() {
-  var prev_view = _via_util_get_svg_button('micon_navigate_prev', 'Show Previous File', 'show_prev');
+  var prev_view = util_get_svg_button('micon_navigate_prev', 'Show Previous File', 'show_prev');
   prev_view.addEventListener('click', this.via.vm._on_prev_view.bind(this.via.vm));
   this.c.appendChild(prev_view);
 
-  var next_view = _via_util_get_svg_button('micon_navigate_next', 'Show Next File', 'show_next');
+  var next_view = util_get_svg_button('micon_navigate_next', 'Show Next File', 'show_next');
   next_view.addEventListener('click', this.via.vm._on_next_view.bind(this.via.vm));
   this.c.appendChild(next_view);
 
-  var add_media_local = _via_util_get_svg_button('micon_add_circle', 'Add File in Local Computer', 'add_media_local');
+  var add_media_local = util_get_svg_button('micon_add_circle', 'Add File in Local Computer', 'add_media_local');
   add_media_local.addEventListener('click', this.via.vm._on_add_media_local.bind(this.via.vm));
   this.c.appendChild(add_media_local);
 }
@@ -96,56 +96,56 @@ control_panel.prototype._add_region_shape_selector = function() {
     return;
   }
 
-  var rect = _via_util_get_svg_button('shape_rectangle', 'Rectangle', 'RECTANGLE');
+  var rect = util_get_svg_button('shape_rectangle', 'Rectangle', 'RECTANGLE');
   rect.addEventListener('click', function() {
     this._set_region_shape('RECTANGLE');
   }.bind(this));
   this.c.appendChild(rect);
 
-  var extreme_rect = _via_util_get_svg_button('shape_extreme_rectangle', 'Extreme rectangle is defined using four points along the boundary of a rectangular object.', 'EXTREME_RECTANGLE');
+  var extreme_rect = util_get_svg_button('shape_extreme_rectangle', 'Extreme rectangle is defined using four points along the boundary of a rectangular object.', 'EXTREME_RECTANGLE');
   extreme_rect.classList.add('shape_selector');
   extreme_rect.addEventListener('click', function() {
     this._set_region_shape('EXTREME_RECTANGLE');
   }.bind(this));
   this.c.appendChild(extreme_rect);
 
-  var circle = _via_util_get_svg_button('shape_circle', 'Circle', 'CIRCLE');
+  var circle = util_get_svg_button('shape_circle', 'Circle', 'CIRCLE');
   circle.addEventListener('click', function() {
     this._set_region_shape('CIRCLE');
   }.bind(this));
   this.c.appendChild(circle);
 
-  var extreme_circle = _via_util_get_svg_button('shape_extreme_circle', 'Extreme circle is defined using any three points along the circumference of a circular object.', 'EXTREME_CIRCLE');
+  var extreme_circle = util_get_svg_button('shape_extreme_circle', 'Extreme circle is defined using any three points along the circumference of a circular object.', 'EXTREME_CIRCLE');
   extreme_circle.addEventListener('click', function() {
     this._set_region_shape('EXTREME_CIRCLE');
   }.bind(this));
   this.c.appendChild(extreme_circle);
 
-  var ellipse = _via_util_get_svg_button('shape_ellipse', 'Ellipse', 'ELLIPSE');
+  var ellipse = util_get_svg_button('shape_ellipse', 'Ellipse', 'ELLIPSE');
   ellipse.addEventListener('click', function() {
     this._set_region_shape('ELLIPSE');
   }.bind(this));
   this.c.appendChild(ellipse);
 
-  var line = _via_util_get_svg_button('shape_line', 'Line', 'LINE');
+  var line = util_get_svg_button('shape_line', 'Line', 'LINE');
   line.addEventListener('click', function() {
     this._set_region_shape('LINE');
   }.bind(this));
   this.c.appendChild(line);
 
-  var polygon = _via_util_get_svg_button('shape_polygon', 'Polygon', 'POLYGON');
+  var polygon = util_get_svg_button('shape_polygon', 'Polygon', 'POLYGON');
   polygon.addEventListener('click', function() {
     this._set_region_shape('POLYGON');
   }.bind(this));
   this.c.appendChild(polygon);
 
-  var polyline = _via_util_get_svg_button('shape_polyline', 'Polyline', 'POLYLINE');
+  var polyline = util_get_svg_button('shape_polyline', 'Polyline', 'POLYLINE');
   polyline.addEventListener('click', function() {
     this._set_region_shape('POLYLINE');
   }.bind(this));
   this.c.appendChild(polyline);
 
-  var point = _via_util_get_svg_button('shape_point', 'Point', 'POINT');
+  var point = util_get_svg_button('shape_point', 'Point', 'POINT');
   point.addEventListener('click', function() {
     this._set_region_shape('POINT');
   }.bind(this));
@@ -166,13 +166,13 @@ control_panel.prototype._set_region_shape = function(shape) {
 }
 
 control_panel.prototype._add_project_tools = function() {
-  var load = _via_util_get_svg_button('micon_open', 'Open a VIA Project');
+  var load = util_get_svg_button('micon_open', 'Open a VIA Project');
   load.addEventListener('click', function() {
     _via_util_file_select_local(_VIA_FILE_SELECT_TYPE.JSON, this._project_load_on_local_file_select.bind(this), false);
   }.bind(this));
   this.c.appendChild(load);
 
-  var save = _via_util_get_svg_button('micon_save', 'Save current VIA Project');
+  var save = util_get_svg_button('micon_save', 'Save current VIA Project');
   save.addEventListener('click', function() {
     this.via.d.project_save();
   }.bind(this));
@@ -185,7 +185,7 @@ control_panel.prototype._add_project_tools = function() {
 
 control_panel.prototype._project_load_on_local_file_select = function(e) {
   if ( e.target.files.length === 1 ) {
-    _via_util_load_text_file(e.target.files[0], this._project_load_on_local_file_read.bind(this));
+    util_load_text_file(e.target.files[0], this._project_load_on_local_file_read.bind(this));
   }
 }
 
@@ -203,12 +203,12 @@ control_panel.prototype._add_project_share_tools = function() {
   //   share.addEventListener('click', function() {
   //     this._share_show_info();
   //   }.bind(this));
-    var push = _via_util_get_svg_button('micon_upload', 'Push (upload the project to the server)');
+    var push = util_get_svg_button('micon_upload', 'Push (upload the project to the server)');
     push.addEventListener('click', function() {
       this.via.s.push();
     }.bind(this));
   //
-      var pull = _via_util_get_svg_button('micon_download', 'download the admin project');
+      var pull = util_get_svg_button('micon_download', 'download the admin project');
       pull.addEventListener('click', function () {
         this.via.s.pull();
       }.bind(this));

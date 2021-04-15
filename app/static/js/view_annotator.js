@@ -231,7 +231,7 @@ view_annotator.prototype._view_annotate_single_audio = function(vid) {
                                                           this.file_annotator[0][0].file_html_element
                                                          );
   }.bind(this), function(err) {
-    _via_util_msg_show('Failed to load audio!', true);
+    util_msg_show('Failed to load audio!', true);
   }.bind(this));
 }
 
@@ -277,7 +277,7 @@ view_annotator.prototype._view_annotate_two_images = function(vid) {
   Promise.all( promise_list ).then( function(ok) {
   }.bind(this), function(err) {
     console.warn('Failed to load images');
-    _via_util_msg_show('Failed to load images!');
+    util_msg_show('Failed to load images!');
   }.bind(this));
 
 }
@@ -286,7 +286,7 @@ view_annotator.prototype._view_has_only_image = function(vid) {
   var fid;
   for ( var vfindex in this.d.store.view[vid].fid_list ) {
     fid = this.d.store.view[vid].fid_list[vfindex];
-    if ( this.d.store.file[fid].type !== _VIA_FILE_TYPE.IMAGE ) {
+    if ( this.d.store.file[fid].type !== FILE_TYPE.IMAGE ) {
       return false;
     }
   }
@@ -297,7 +297,7 @@ view_annotator.prototype._view_has_only_video = function(vid) {
   var fid;
   for ( var vfindex in this.d.store.view[vid].fid_list ) {
     fid = this.d.store.view[vid].fid_list[vfindex];
-    if ( this.d.store.file[fid].type !== _VIA_FILE_TYPE.VIDEO ) {
+    if ( this.d.store.file[fid].type !== FILE_TYPE.VIDEO ) {
       return false;
     }
   }
@@ -308,7 +308,7 @@ view_annotator.prototype._view_has_only_audio = function(vid) {
   var fid;
   for ( var vfindex in this.d.store.view[vid].fid_list ) {
     fid = this.d.store.view[vid].fid_list[vfindex];
-    if ( this.d.store.file[fid].type !== _VIA_FILE_TYPE.AUDIO ) {
+    if ( this.d.store.file[fid].type !== FILE_TYPE.AUDIO ) {
       return false;
     }
   }
@@ -343,31 +343,31 @@ view_annotator.prototype.set_region_draw_shape = function(shape) {
     this.region_draw_shape = _VIA_RSHAPE[shape];
     switch(this.region_draw_shape) {
     case _VIA_RSHAPE.POINT:
-      _via_util_msg_show('Click to define feature points');
+      util_msg_show('Click to define feature points');
       break;
     case _VIA_RSHAPE.RECTANGLE:
-      _via_util_msg_show('Click and drag mouse cursor to define a rectangular region');
+      util_msg_show('Click and drag mouse cursor to define a rectangular region');
       break;
     case _VIA_RSHAPE.EXTREME_RECTANGLE:
-      _via_util_msg_show('Click and define the left, top, right and bottom (in any order) extreme points of a rectangular object to define its bounding box.');
+      util_msg_show('Click and define the left, top, right and bottom (in any order) extreme points of a rectangular object to define its bounding box.');
       break;
     case _VIA_RSHAPE.CIRCLE:
-      _via_util_msg_show('Click and drag mouse cursor to define a circular region');
+      util_msg_show('Click and drag mouse cursor to define a circular region');
       break;
     case _VIA_RSHAPE.EXTREME_CIRCLE:
-      _via_util_msg_show('Click and define three points on the circumference to define a circular region.');
+      util_msg_show('Click and define three points on the circumference to define a circular region.');
       break;
     case _VIA_RSHAPE.ELLIPSE:
-      _via_util_msg_show('Click and drag mouse cursor to define a elliptical region');
+      util_msg_show('Click and drag mouse cursor to define a elliptical region');
       break;
     case _VIA_RSHAPE.LINE:
-      _via_util_msg_show('Click and drag mouse cursor to define a line region');
+      util_msg_show('Click and drag mouse cursor to define a line region');
       break;
     case _VIA_RSHAPE.POLYLINE:
-      _via_util_msg_show('Click to define vertices of polyline and to finish click at the last vertex.');
+      util_msg_show('Click to define vertices of polyline and to finish click at the last vertex.');
       break;
     case _VIA_RSHAPE.POLYGON:
-      _via_util_msg_show('Click to define vertices of polygon and to finish click at the last vertex.');
+      util_msg_show('Click to define vertices of polygon and to finish click at the last vertex.');
       break;
     }
   }
@@ -442,19 +442,19 @@ view_annotator.prototype._metadata_on_update = function(e) {
     var mid = e.target.dataset.mid;
     // update existing metadata
     this.d.metadata_update_av(this.vid, mid, aid, avalue).then( function(ok) {
-      _via_util_msg_show('Update metadata');
+      util_msg_show('Update metadata');
     }.bind(this), function(err) {
-      _via_util_msg_show('Failed to update metadata!');
+      util_msg_show('Failed to update metadata!');
     }.bind(this));
   } else {
     // add new metadata
     var av = {};
     av[aid] = avalue;
     this.d.metadata_add(this.vid, [], [], av).then( function(ok) {
-      _via_util_msg_show('Created metadata');
+      util_msg_show('Created metadata');
       this._metadata_update();
     }.bind(this), function(err) {
-      _via_util_msg_show('Failed to update metadata!');
+      util_msg_show('Failed to update metadata!');
     }.bind(this));
   }
 

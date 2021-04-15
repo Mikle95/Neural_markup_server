@@ -5,7 +5,7 @@ function admin_panel(via, container){
 
 admin_panel.prototype.toggle = function (){
     if(this.via.user_rights !== "admin"){
-        _via_util_msg_show("Permission denied the administrator rights are required to run this tool");
+        util_msg_show("Permission denied the administrator rights are required to run this tool");
         return;
     }
 
@@ -111,7 +111,7 @@ admin_panel.prototype.add_cells = function (){
         const pname = keys[i];
         var tr = document.createElement('tr');
         var proj = this.html_element('th', keys[i]);
-        var delProjBtn = _via_util_get_svg_button('micon_remove_circle', 'remove Project')
+        var delProjBtn = util_get_svg_button('micon_remove_circle', 'remove Project')
         delProjBtn.addEventListener('click', function (){
             via.ap.delete_project(pname);
         })
@@ -121,7 +121,7 @@ admin_panel.prototype.add_cells = function (){
             if(via.username !== this.projects[keys[i]][j]) {
                 const usr = this.projects[keys[i]][j];
                 var td = this.html_element('td', this.projects[keys[i]][j])
-                var el = _via_util_get_svg_button('micon_remove_circle', 'remove ' + usr)
+                var el = util_get_svg_button('micon_remove_circle', 'remove ' + usr)
                 el.addEventListener('click', function () {
                     via.ap.user_for_project(usr, pname, 'delete');
                 })

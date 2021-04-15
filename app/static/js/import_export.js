@@ -10,7 +10,7 @@ function import_export(data) {
 import_export.prototype.import_from_file = function(data_format, file) {
   switch(data_format) {
   case 'coco':
-    _via_util_load_text_file(file[0], this.import_from_coco.bind(this));
+    util_load_text_file(file[0], this.import_from_coco.bind(this));
     break;
   default:
     console.warn('Unknown data format: ' + data_format);
@@ -25,7 +25,7 @@ import_export.prototype.import_from_coco = function(json_str) {
              d.hasOwnProperty('images')
            )
        ) {
-      _via_util_msg_show('Cannot import annotations from malformed JSON!');
+      util_msg_show('Cannot import annotations from malformed JSON!');
       return;
     }
     var p = this.d._init_default_project();
@@ -35,7 +35,7 @@ import_export.prototype.import_from_coco = function(json_str) {
       var fid = d.images[i].id;
       var fname = d.images[i].file_name;
       var src = d.images[i].coco_url;
-      var type = _VIA_FILE_TYPE.IMAGE;
+      var type = FILE_TYPE.IMAGE;
       var loc = _VIA_FILE_LOC.URIHTTP;
       p.file[fid] = new file(fid, fname, type, loc, src);
 
@@ -87,7 +87,7 @@ import_export.prototype.import_from_coco = function(json_str) {
     this.d.project_load_json(p);
   }
   catch(e) {
-    _via_util_msg_show('Failed to import annotations: ' + e);
+    util_msg_show('Failed to import annotations: ' + e);
     console.warn(e)
   }
 }
@@ -170,7 +170,7 @@ import_export.prototype.export_to_via3_csv = function() {
     filename.push(this.d.store.project.pname.replace(' ', '-'));
     filename.push(_via_util_date_to_filename_str(Date.now()));
     filename.push('_export.csv');
-    _via_util_download_as_file(data_blob, filename.join(''));
+    util_download_as_file(data_blob, filename.join(''));
   }.bind(this));
 }
 
@@ -231,6 +231,6 @@ import_export.prototype.export_to_temporal_segments_csv = function() {
     filename.push(this.d.store.project.pname.replace(' ', '-'));
     filename.push(_via_util_date_to_filename_str(Date.now()));
     filename.push('_export.csv');
-    _via_util_download_as_file(data_blob, filename.join(''));
+    util_download_as_file(data_blob, filename.join(''));
   }.bind(this));
 }

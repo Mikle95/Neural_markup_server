@@ -6,9 +6,9 @@ function video_thumbnail(fid, data) {
   this.file_object_url = undefined; // file contents are in this the object url
   this.frames = {}; // indexed by second
 
-  if ( this.d.store.file[this.fid].type !== _VIA_FILE_TYPE.VIDEO ) {
+  if ( this.d.store.file[this.fid].type !== FILE_TYPE.VIDEO ) {
     console.log('video_thumbnail() : file type must be ' +
-                _VIA_FILE_TYPE.VIDEO + ' (got ' + this.d.store.file[this.fid].type + ')');
+                FILE_TYPE.VIDEO + ' (got ' + this.d.store.file[this.fid].type + ')');
     return;
   }
 

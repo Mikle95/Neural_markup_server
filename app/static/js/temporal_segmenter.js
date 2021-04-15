@@ -92,7 +92,7 @@ temporal_segmenter.prototype._init_on_success = function(groupby_aid) {
     this.file = this.d.store.file[this.fid];
 
     this._group_init(groupby_aid);
-    if ( this.d.store.file[this.fid].type === _VIA_FILE_TYPE.VIDEO ) {
+    if ( this.d.store.file[this.fid].type === FILE_TYPE.VIDEO ) {
       this._thumbview_init();
     }
 
@@ -185,7 +185,7 @@ temporal_segmenter.prototype._redraw_timeline = function() {
 // thumbnail viewer
 //
 temporal_segmenter.prototype._thumbview_init = function() {
-  if ( this.d.store.file[this.fid].type === _VIA_FILE_TYPE.VIDEO ) {
+  if ( this.d.store.file[this.fid].type === FILE_TYPE.VIDEO ) {
     this.thumbnail_container = document.createElement('div');
     this.thumbnail_container.setAttribute('class', 'thumbnail_container');
     this.thumbnail_container.setAttribute('style', 'display:none; position:absolute; top:0; left:0;');
@@ -198,7 +198,7 @@ temporal_segmenter.prototype._thumbview_init = function() {
 }
 
 temporal_segmenter.prototype._thumbview_show = function(time, x, y) {
-  if ( this.d.store.file[this.fid].type === _VIA_FILE_TYPE.VIDEO ) {
+  if ( this.d.store.file[this.fid].type === FILE_TYPE.VIDEO ) {
     this.thumbnail_container.innerHTML = '';
     this.thumbnail_container.appendChild(this.thumbnail.get_thumbnail(time));
     this.thumbnail_container.style.display = 'inline-block';
@@ -209,7 +209,7 @@ temporal_segmenter.prototype._thumbview_show = function(time, x, y) {
 }
 
 temporal_segmenter.prototype._thumbview_hide = function(t) {
-  if ( this.d.store.file[this.fid].type === _VIA_FILE_TYPE.VIDEO ) {
+  if ( this.d.store.file[this.fid].type === FILE_TYPE.VIDEO ) {
     this.thumbnail_container.style.display = 'none';
   }
 }
@@ -511,7 +511,7 @@ temporal_segmenter.prototype._tmetadata_boundary_move = function(dt) {
       }
     }
   } else {
-    _via_util_msg_show('Cannot move beyond the video timeline boundary!');
+    util_msg_show('Cannot move beyond the video timeline boundary!');
   }
 }
 
@@ -1076,7 +1076,7 @@ temporal_segmenter.prototype._tmetadata_group_gid_sel_metadata = function(mindex
   this.selected_mid = this.tmetadata_gtimeline_mid[this.selected_gid][mindex];
   this.m.currentTime = this.d.store.metadata[this.selected_mid].z[0];
   this._tmetadata_group_gid_draw(this.selected_gid);
-  _via_util_msg_show('Metadata selected. ' +
+  util_msg_show('Metadata selected. ' +
                      'Use <span class="key">l</span> or <span class="key">r</span> to expand and ' +
                      '<span class="key">L</span> or <span class="key">R</span> to reduce segment. ' +
                      'Press <span class="key">&larr;</span>&nbsp;<span class="key">&rarr;</span> to move, ' +
@@ -1156,17 +1156,17 @@ temporal_segmenter.prototype._tmetadata_mid_update_edge = function(eindex, dz) {
   // consistency check
   if ( eindex === 0 ) {
     if ( new_value >= this.d.store.metadata[this.selected_mid].z[1] ) {
-      _via_util_msg_show('Cannot update left edge!');
+      util_msg_show('Cannot update left edge!');
       return;
     }
   } else {
     if ( new_value <= this.d.store.metadata[this.selected_mid].z[0] ) {
-      _via_util_msg_show('Cannot update right edge!');
+      util_msg_show('Cannot update right edge!');
       return;
     }
   }
   if ( new_value < 0.0 || new_value > this.m.duration ) {
-    _via_util_msg_show('Cannot update edge beyond the boundary!');
+    util_msg_show('Cannot update edge beyond the boundary!');
     return;
   }
 
@@ -1186,7 +1186,7 @@ temporal_segmenter.prototype._tmetadata_mid_move = function(dt) {
   for ( var i = 0; i < n; ++i ) {
     newz[i] = parseFloat((parseFloat(newz[i]) + dt).toFixed(3));
     if ( newz[i] < 0 || newz[i] > this.m.duration ) {
-      _via_util_msg_show('Cannot move temporal segment beyond the boundary!');
+      util_msg_show('Cannot move temporal segment beyond the boundary!');
       return;
     }
   }
@@ -1216,7 +1216,7 @@ temporal_segmenter.prototype._tmetadata_mid_move = function(dt) {
 temporal_segmenter.prototype._tmetadata_mid_del_sel = function(mid) {
   this._tmetadata_mid_del(this.selected_mid);
   this._tmetadata_group_gid_remove_mid_sel();
-  _via_util_msg_show('Temporal segment deleted.');
+  util_msg_show('Temporal segment deleted.');
 }
 
 temporal_segmenter.prototype._tmetadata_mid_del = function(mid) {
@@ -1277,7 +1277,7 @@ temporal_segmenter.prototype._tmetadata_mid_add_at_time = function(t) {
   if ( this.d.store.metadata.hasOwnProperty(this.metadata_last_added_mid) ) {
     var z0 = this.d.store.metadata[this.metadata_last_added_mid].z;
     if ( z0[0] === z[0] && z0[1] === z[1] ) {
-      _via_util_msg_show('A temporal segment of same size already exists.');
+      util_msg_show('A temporal segment of same size already exists.');
       return;
     }
   }
@@ -1288,7 +1288,7 @@ temporal_segmenter.prototype._tmetadata_mid_add_at_time = function(t) {
     this.metadata_last_added_mid = ok.mid;
     this._tmetadata_group_gid_draw(this.selected_gid);
   }.bind(this), function(err) {
-    _via_util_msg_show('Failed to add metadata!');
+    util_msg_show('Failed to add metadata!');
     console.log(err);
   }.bind(this));
 }
@@ -1326,9 +1326,9 @@ temporal_segmenter.prototype._tmetadata_mid_merge = function(eindex) {
     } else {
       this.m.currentTime = new_z[1];
     }
-    _via_util_msg_show('Temporal segments merged.');
+    util_msg_show('Temporal segments merged.');
   } else {
-    _via_util_msg_show('Merge is not possible without temporal segments in the neighbourhood');
+    util_msg_show('Merge is not possible without temporal segments in the neighbourhood');
   }
 }
 
@@ -1501,10 +1501,10 @@ temporal_segmenter.prototype._on_event_keydown = function(e) {
     }
     if ( this.m.paused ) {
       this.m.play();
-      _via_util_msg_show('Playing ...');
+      util_msg_show('Playing ...');
     } else {
       this.m.pause();
-      _via_util_msg_show('Paused. Press <span class="key">a</span> to add a temporal segment, ' +
+      util_msg_show('Paused. Press <span class="key">a</span> to add a temporal segment, ' +
                          '<span class="key">Tab</span> to select and ' +
                          '<span class="key">&uarr;</span>&nbsp;<span class="key">&darr;</span> to select another temporal segment timeline.', true);
     }
@@ -1741,7 +1741,7 @@ temporal_segmenter.prototype._on_event_keydown = function(e) {
       } else {
         // selected the group above/below the current group in the timeline list
         this._tmetadata_group_gid_sel(next_gindex);
-        _via_util_msg_show('Selected group "' + this.selected_gid + '"');
+        util_msg_show('Selected group "' + this.selected_gid + '"');
         return;
       }
     }
@@ -1970,14 +1970,14 @@ temporal_segmenter.prototype._group_del_gid = function(gid_list) {
 
 temporal_segmenter.prototype._group_add_gid = function(gid) {
   if ( this.group.hasOwnProperty(gid) ) {
-    _via_util_msg_show(this.d.attribute_store[this.groupby_aid].aname +
+    util_msg_show(this.d.attribute_store[this.groupby_aid].aname +
                        ' [' + gid + '] already exists!');
   } else {
     this.group[gid] = [];
     this.gid_list.push(gid);
     this.metadata_tbody.appendChild( this._tmetadata_group_gid_html(gid) );
     this.new_group_id_input.value = ''; // clear input field
-    _via_util_msg_show('Add ' + this.d.attribute_store[this.groupby_aid].aname +
+    util_msg_show('Add ' + this.d.attribute_store[this.groupby_aid].aname +
                        ' [' + gid + ']');
   }
 }
@@ -2037,7 +2037,7 @@ temporal_segmenter.prototype._vtimeline_playbackrate2str = function(t) {
 // external events
 //
 temporal_segmenter.prototype._on_event_metadata_del = function(vid, mid) {
-  _via_util_msg_show('Metadata deleted');
+  util_msg_show('Metadata deleted');
 }
 
 temporal_segmenter.prototype._on_event_metadata_add = function(vid, mid) {
@@ -2047,12 +2047,12 @@ temporal_segmenter.prototype._on_event_metadata_add = function(vid, mid) {
      ) {
     this._group_gid_add_mid(this.selected_gid, mid); // add at correct location
     this._tmetadata_boundary_fetch_gid_mid(this.selected_gid);
-    _via_util_msg_show('Metadata added');
+    util_msg_show('Metadata added');
   }
 }
 
 temporal_segmenter.prototype._on_event_metadata_update = function(vid, mid) {
-  _via_util_msg_show('Metadata updated');
+  util_msg_show('Metadata updated');
 }
 
 //
@@ -2150,11 +2150,11 @@ temporal_segmenter.prototype._toolbar_playback_rate_set = function(rate) {
 temporal_segmenter.prototype._toolbar_gid_add = function() {
   var new_gid = document.getElementById('gid_add_del_input').value.trim();
   if(new_gid === '') {
-    _via_util_msg_show('Name of new timeline cannot be empty. Enter the name of new timeline in the input panel.');
+    util_msg_show('Name of new timeline cannot be empty. Enter the name of new timeline in the input panel.');
     return;
   }
   if ( this.group.hasOwnProperty(new_gid) ) {
-    _via_util_msg_show('Timeline [' + new_gid + '] already exists!');
+    util_msg_show('Timeline [' + new_gid + '] already exists!');
     return;
   }
 
@@ -2167,12 +2167,12 @@ temporal_segmenter.prototype._toolbar_gid_add = function() {
 temporal_segmenter.prototype._toolbar_gid_del = function() {
   var del_gid = document.getElementById('gid_add_del_input').value.trim();
   if(del_gid === '') {
-    _via_util_msg_show('To delete, you must provide the name of an existing timeline.');
+    util_msg_show('To delete, you must provide the name of an existing timeline.');
     return;
   }
 
   if(!this.gid_list.includes(del_gid)) {
-    _via_util_msg_show('Timeline [' + del_gid + '] does not exist and therefore deletion is not possible');
+    util_msg_show('Timeline [' + del_gid + '] does not exist and therefore deletion is not possible');
     return;
   }
 
@@ -2181,12 +2181,12 @@ temporal_segmenter.prototype._toolbar_gid_del = function() {
     this.d.metadata_delete_bulk(this.vid, del_mid_list, false).then( function(ok) {
       this._tmetadata_gmetadata_update();
       document.getElementById('gid_add_del_input').value = '';
-      _via_util_msg_show('Deleted timeline ' + JSON.stringify(del_gid_list) + ' and ' + del_mid_list.length + ' metadata associated with this timeline.');
+      util_msg_show('Deleted timeline ' + JSON.stringify(del_gid_list) + ' and ' + del_mid_list.length + ' metadata associated with this timeline.');
     }.bind(this), function(err) {
-      _via_util_msg_show('Failed to delete ' + del_mid_list.length + ' metadata associated with timeline ' + JSON.stringify(del_gid_list));
+      util_msg_show('Failed to delete ' + del_mid_list.length + ' metadata associated with timeline ' + JSON.stringify(del_gid_list));
     }.bind(this));
   }.bind(this), function(err) {
-    _via_util_msg_show('Failed to delete timeline ' + JSON.stringify(del_gid_list));
+    util_msg_show('Failed to delete timeline ' + JSON.stringify(del_gid_list));
   }.bind(this));
 }
 
@@ -2196,13 +2196,13 @@ temporal_segmenter.prototype._toolbar_gid_del = function() {
 temporal_segmenter.prototype._on_event_attribute_update = function(data, event_payload) {
   var aid = event_payload.aid;
   if ( this.groupby_aid === aid ) {
-    _via_util_msg_show('Attribute [' + this.d.store['attribute'][aid]['aname'] + '] updated.');
+    util_msg_show('Attribute [' + this.d.store['attribute'][aid]['aname'] + '] updated.');
     this._init();
   }
 }
 
 temporal_segmenter.prototype._on_event_metadata_update_bulk = function(data, event_payload) {
   if ( this.vid === event_payload.vid ) {
-    _via_util_msg_show('Updated ' + event_payload.mid_list.length + ' metadata');
+    util_msg_show('Updated ' + event_payload.mid_list.length + ' metadata');
   }
 }

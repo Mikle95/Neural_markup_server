@@ -2,7 +2,7 @@ function share(data, conf) {
   this._ID = '_via_share_';
   this.d = data;
   this.conf = conf;
-  
+
   event.call(this);
 }
 
@@ -12,7 +12,7 @@ share.prototype.push = function() {
     if ( Object.keys(this.d.store.file).length === 0 ||
          Object.keys(this.d.store.view).length === 0
        ) {
-      _via_util_msg_show('Cannot push empty project');
+      util_msg_show('Cannot push empty project');
       return;
     }
 
@@ -21,7 +21,7 @@ share.prototype.push = function() {
     request.setRequestHeader('Content-Type', 'text/json; charset=UTF-8');
     request.addEventListener("readystatechange", () => {
       if (request.readyState === 4 && request.status === 200)
-        _via_util_msg_show('Project uploaded successfully!');
+        util_msg_show('Project uploaded successfully!');
     });
     request.send(JSON.stringify(this.d.store));
 

@@ -207,7 +207,7 @@ editor.prototype.metadata_get = function(mid, metadata_index) {
 }
 
 editor.prototype.get_metadata_action_tools = function(container, mid) {
-  var del = _via_util_get_svg_button('micon_delete', 'Delete Metadata');
+  var del = util_get_svg_button('micon_delete', 'Delete Metadata');
   del.setAttribute('data-mid', mid);
   del.addEventListener('click', this.metadata_del.bind(this));
   container.appendChild(del);
@@ -523,7 +523,7 @@ editor.prototype.get_attribute_name_entry_panel = function() {
 }
 
 editor.prototype.get_attribute_action_tools = function(container, aid) {
-  var del = _via_util_get_svg_button('micon_delete', 'Delete Attribute');
+  var del = util_get_svg_button('micon_delete', 'Delete Attribute');
   del.setAttribute('data-aid', aid);
   del.addEventListener('click', this.attribute_del.bind(this));
   container.appendChild(del);

@@ -108,7 +108,7 @@ view_manager.prototype._on_next_view = function() {
       }
       this.va.view_show( this.view_selector_vid_list[next_vindex] );
     } else {
-      _via_util_msg_show('Cannot move to next view!');
+      util_msg_show('Cannot move to next view!');
     }
   }
 }
@@ -124,7 +124,7 @@ view_manager.prototype._on_prev_view = function() {
       }
       this.va.view_show( this.view_selector_vid_list[prev_vindex] );
     } else {
-      _via_util_msg_show('Cannot move to next view!');
+      util_msg_show('Cannot move to next view!');
     }
   }
 }
@@ -259,15 +259,15 @@ view_manager.prototype._file_add_from_filelist = function(filelist) {
     var fid, ftype_str;
     for ( var findex in ok.fid_list ) {
       fid = ok.fid_list[findex];
-      ftype_str = _via_util_file_type_to_str( this.d.store.file[fid].type );
+      ftype_str = util_file_type_to_str( this.d.store.file[fid].type );
       if ( ! filetype_summary.hasOwnProperty(ftype_str) ) {
         filetype_summary[ftype_str] = 0;
       }
       filetype_summary[ftype_str] = filetype_summary[ftype_str] + 1;
     }
-    _via_util_msg_show('Added ' + ok.fid_list.length + ' files. ' + JSON.stringify(filetype_summary));
+    util_msg_show('Added ' + ok.fid_list.length + ' files. ' + JSON.stringify(filetype_summary));
   }.bind(this), function(err) {
-    _via_util_msg_show('Failed to add files! [' + err + ']');
+    util_msg_show('Failed to add files! [' + err + ']');
     console.warn(err);
   }.bind(this));
 }
@@ -289,7 +289,7 @@ view_manager.prototype._file_add_local = function(e) {
         this.d.file_update(this.d.store.file[i.toString()].fid, 'src', files[findex]).then( function(ok) {
           this.va.view_show(this.va.vid);
         }.bind(this), function(err) {
-        _via_util_msg_show('Failed to update properties of file: ' + err );
+        util_msg_show('Failed to update properties of file: ' + err );
         }.bind(this));
         flag = true;
         break;
@@ -297,7 +297,7 @@ view_manager.prototype._file_add_local = function(e) {
     if(flag) continue;
 
     filelist.push({ 'fname':files[findex].name,
-                    'type':_via_util_infer_file_type_from_filename(files[findex].name),
+                    'type':util_infer_file_type_from_filename(files[findex].name),
                     'loc':_VIA_FILE_LOC.LOCAL,
                     'src':files[findex],
                   });
@@ -318,7 +318,7 @@ view_manager.prototype._on_add_media_remote = function() {
   var url = window.prompt('Enter URL of an image, audio or video (e.g. http://www....)',
                           '');
   var filelist = [ {'fname':url,
-                    'type':_via_util_infer_file_type_from_filename(url),
+                    'type':util_infer_file_type_from_filename(url),
                     'loc':_VIA_FILE_LOC.URIHTTP,
                     'src':url,
                    }
@@ -334,7 +334,7 @@ view_manager.prototype._on_add_media_bulk = function() {
 
 view_manager.prototype._on_add_media_bulk_file_selected = function(e) {
   if ( e.target.files.length ) {
-    _via_util_load_text_file(e.target.files[0], this._on_add_media_bulk_file_load.bind(this));
+    util_load_text_file(e.target.files[0], this._on_add_media_bulk_file_load.bind(this));
   }
 }
 
@@ -350,7 +350,7 @@ view_manager.prototype._on_add_media_bulk_file_load = function(file_data) {
         continue; // skip
       }
       filelist.push({ 'fname':url_list[i],
-                      'type':_via_util_infer_file_type_from_filename(url_list[i]),
+                      'type':util_infer_file_type_from_filename(url_list[i]),
                       'loc':_via_util_infer_file_loc_from_filename(url_list[i]),
                       'src':url_list[i],
                     });

@@ -4,11 +4,11 @@ function audio_spectrum(file, path) {
   this.file_object_url = undefined; // file contents are in this the object url
   this.frames = {}; // indexed by second
 
-  if ( this.file.type !== _VIA_FILE_TYPE.VIDEO &&
-       this.file.type !== _VIA_FILE_TYPE.AUDIO
+  if ( this.file.type !== FILE_TYPE.VIDEO &&
+       this.file.type !== FILE_TYPE.AUDIO
      ) {
     console.log('audio_spectrum() : file type must be ' +
-                _VIA_FILE_TYPE.VIDEO + ' or ' + _VIA_FILE_TYPE.AUDIO +
+                FILE_TYPE.VIDEO + ' or ' + FILE_TYPE.AUDIO +
                 ' (got ' + this.file.type + ')');
     return;
   }

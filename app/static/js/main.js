@@ -136,7 +136,7 @@ function main(via_container, url) {
   }
 
   // ready
-  _via_util_msg_show('Annotator ready!');
+  util_msg_show('Annotator ready!');
 }
 
 main.prototype._hook_on_browser_resize = function() {

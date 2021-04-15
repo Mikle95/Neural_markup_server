@@ -82,7 +82,7 @@ store_localstorage.prototype.prev_session_load = function() {
 
 store_localstorage.prototype.prev_session_save = function() {
   if ( this.prev_session_available ) {
-    _via_util_download_as_file(this.prev_session_data_blob,
+    util_download_as_file(this.prev_session_data_blob,
                                'via_project_' +
                                this.prev_session_timestamp_str + '.json');
   }
@@ -248,8 +248,8 @@ store_localstorage.prototype.transaction = function(data_key, action, param) {
 // Self Test
 //
 store_localstorage.prototype._self_test = function() {
-  var fid1 = this.d.file_add('test123.jpg', _VIA_FILE_TYPE.IMAGE, _VIA_FILE_LOC.LOCAL, '');
-  var fid2 = this.d.file_add('testXYZ.jpg', _VIA_FILE_TYPE.IMAGE, _VIA_FILE_LOC.URIHTTP, 'http://somerandurl.com/files/testXYZ.jpg');
+  var fid1 = this.d.file_add('test123.jpg', FILE_TYPE.IMAGE, _VIA_FILE_LOC.LOCAL, '');
+  var fid2 = this.d.file_add('testXYZ.jpg', FILE_TYPE.IMAGE, _VIA_FILE_LOC.URIHTTP, 'http://somerandurl.com/files/testXYZ.jpg');
 
   var aid1 = this.d.attribute_add('attribute1', _VIA_ATTRIBUTE_TYPE.TEXT);
   var aid2 = this.d.attribute_add('attribute2', _VIA_ATTRIBUTE_TYPE.TEXT);

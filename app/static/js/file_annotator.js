@@ -1,4 +1,4 @@
-var _VIA_RINPUT_STATE = {
+var RINPUT_STATE = {
   UNKNOWN: 0,
   SUSPEND: 1,
   IDLE: 2,
@@ -22,7 +22,7 @@ function file_annotator(view_annotator, data, vid, file_label, container) {
   this.c = container;
 
   // state variables
-  this.state_id = this._state_set(_VIA_RINPUT_STATE.UNKNOWN);
+  this.state_id = this._state_set(RINPUT_STATE.UNKNOWN);
   this.user_input_pts = []; // [x0, y0, x1, y1, ..., xk, yk]
   this.last_clicked_mid_list = [];
   this.resize_control_point_index = -1;
@@ -126,11 +126,11 @@ file_annotator.prototype._file_load_show_error_page = function() {
   filetype_select.setAttribute('data-pname', 'type');
   filetype_select.addEventListener('change', this._file_on_attribute_update.bind(this));
 
-  for ( var filetype in _VIA_FILE_TYPE ) {
+  for ( var filetype in FILE_TYPE ) {
     var oi = document.createElement('option');
-    oi.setAttribute('value', _VIA_FILE_TYPE[filetype]);
+    oi.setAttribute('value', FILE_TYPE[filetype]);
     oi.innerHTML = filetype;
-    if ( this.d.store.file[this.fid].type === _VIA_FILE_TYPE[filetype] ) {
+    if ( this.d.store.file[this.fid].type === FILE_TYPE[filetype] ) {
       oi.setAttribute('selected', '');
     }
     filetype_select.appendChild(oi);
@@ -244,7 +244,7 @@ file_annotator.prototype._file_on_attribute_update = function(e) {
   this.d.file_update(this.fid, pname, pvalue).then( function(ok) {
     this.va.view_show(this.vid);
   }.bind(this), function(err) {
-    _via_util_msg_show('Failed to update properties of file: ' + err );
+    util_msg_show('Failed to update properties of file: ' + err );
   }.bind(this));
 }
 
@@ -274,19 +274,19 @@ file_annotator.prototype._file_load = function() {
     }.bind(this));
     this.file_html_element.addEventListener('abort', function(e) {
       //console.log('abort:' + this.fid + ', now freeing resources')
-      _via_util_msg_show('Failed to load file [' + this.d.store.file[this.fid].fname + '] (' + e + ')' );
+      util_msg_show('Failed to load file [' + this.d.store.file[this.fid].fname + '] (' + e + ')' );
       this._file_load_show_error_page();
       err_callback();
     }.bind(this));
     this.file_html_element.addEventListener('stalled', function(e) {
       //console.log('stalled:' + this.fid + ', now freeing resources')
-      _via_util_msg_show('Failed to load file [' + this.d.store.file[this.fid].fname + '] (' + e + ')' );
+      util_msg_show('Failed to load file [' + this.d.store.file[this.fid].fname + '] (' + e + ')' );
       this._file_load_show_error_page();
       err_callback();
     }.bind(this));
     this.file_html_element.addEventListener('error', function(e) {
       //console.log('error:' + this.fid + ', now freeing resources')
-      _via_util_msg_show('Failed to load file [' + this.d.store.file[this.fid].fname + '] (' + e + ')' );
+      util_msg_show('Failed to load file [' + this.d.store.file[this.fid].fname + '] (' + e + ')' );
       this._file_load_show_error_page();
       err_callback();
     }.bind(this));
@@ -296,7 +296,7 @@ file_annotator.prototype._file_load = function() {
 file_annotator.prototype._file_create_html_element = function() {
   var media;
   switch( this.d.store.file[this.fid].type ) {
-  case _VIA_FILE_TYPE.VIDEO:
+  case FILE_TYPE.VIDEO:
     media = document.createElement('video');
     media.setAttribute('controls', 'true');
     media.setAttribute('playsinline', 'true');
@@ -321,15 +321,8 @@ file_annotator.prototype._file_create_html_element = function() {
     //media.addEventListener('suspend', this._file_html_element_error.bind(this));
     break;
 
-  case _VIA_FILE_TYPE.IMAGE:
+  case FILE_TYPE.IMAGE:
     media = document.createElement('img');
-    break;
-
-  case _VIA_FILE_TYPE.AUDIO:
-    media = document.createElement('audio');
-    media.setAttribute('controls', '');
-    // @todo : add subtitle track for video
-    media.setAttribute('preload', 'auto');
     break;
 
   default:
@@ -345,16 +338,16 @@ file_annotator.prototype._file_html_element_compute_scale = function() {
   // original size of the content
   var cw0, ch0;
   switch( this.d.store.file[this.fid].type ) {
-  case _VIA_FILE_TYPE.VIDEO:
+  case FILE_TYPE.VIDEO:
     cw0 = this.file_html_element.videoWidth;
     ch0 = this.file_html_element.videoHeight;
     break;
-  case _VIA_FILE_TYPE.IMAGE:
+  case FILE_TYPE.IMAGE:
     cw0 = this.file_html_element.naturalWidth;
     ch0 = this.file_html_element.naturalHeight;
     break;
 
-  case _VIA_FILE_TYPE.AUDIO:
+  case FILE_TYPE.AUDIO:
     this.left_pad = 0;
     this.file_html_element_size_css = '';
     return;
@@ -448,7 +441,7 @@ file_annotator.prototype._file_html_element_ready = function() {
   this._creg_update();
   this._creg_draw_all();
 
-  this._state_set(_VIA_RINPUT_STATE.IDLE);
+  this._state_set(RINPUT_STATE.IDLE);
 }
 
 //
@@ -482,7 +475,7 @@ file_annotator.prototype._rinput_keydown_handler = function(e) {
     if ( this.selected_mid_list.length ) {
       e.preventDefault();
       this._creg_del_sel_regions();
-      _via_util_msg_show('Spatial region deleted.');
+      util_msg_show('Spatial region deleted.');
     }
     return;
   }
@@ -492,7 +485,7 @@ file_annotator.prototype._rinput_keydown_handler = function(e) {
       e.preventDefault();
       this._creg_select_all();
       this._creg_draw_all();
-      _via_util_msg_show('Selected all regions.');
+      util_msg_show('Selected all regions.');
     }
     return;
   }
@@ -531,7 +524,7 @@ file_annotator.prototype._rinput_keydown_handler = function(e) {
 
   if ( e.key === 'Escape' ) {
     e.preventDefault();
-    if ( this.state_id === _VIA_RINPUT_STATE.REGION_DRAW_NCLICK_ONGOING &&
+    if ( this.state_id === RINPUT_STATE.REGION_DRAW_NCLICK_ONGOING &&
          this.user_input_pts.length > 2
        ) {
       this._rinput_cancel_last_nclick();
@@ -539,14 +532,14 @@ file_annotator.prototype._rinput_keydown_handler = function(e) {
       var pts = this.user_input_pts.slice(0);
       pts.push(this.last_cx, this.last_cy);
       this._tmpreg_draw_region(this.va.region_draw_shape, pts);
-      _via_util_msg_show('Discarded last drawn vertex.');
+      util_msg_show('Discarded last drawn vertex.');
     } else {
       this._creg_select_none();
       this._smetadata_hide();
       this._tmpreg_clear();
       this.user_input_pts = [];
-      this._state_set( _VIA_RINPUT_STATE.IDLE );
-      _via_util_msg_show('Reset done.');
+      this._state_set( RINPUT_STATE.IDLE );
+      util_msg_show('Reset done.');
     }
     this._creg_draw_all();
     return;
@@ -557,19 +550,19 @@ file_annotator.prototype._rinput_keydown_handler = function(e) {
     // For extreme box, we do not want to allow finishing the drawing unless
     // all 4 extreme points have been marked, at which point we automatically
     // finish the drawing, anyway.
-    if ( this.state_id === _VIA_RINPUT_STATE.REGION_DRAW_NCLICK_ONGOING &&
+    if ( this.state_id === RINPUT_STATE.REGION_DRAW_NCLICK_ONGOING &&
          this.user_input_pts.length > 4 &&
          this.va.region_draw_shape != _VIA_RSHAPE.EXTREME_BOX) {
       this._rinput_region_draw_nclick_done();
       this.user_input_pts = [];
       this._tmpreg_clear();
-      this._state_set( _VIA_RINPUT_STATE.IDLE );
-      _via_util_msg_show( 'Finished drawing a region shape with multiple vertices.');
+      this._state_set( RINPUT_STATE.IDLE );
+      util_msg_show( 'Finished drawing a region shape with multiple vertices.');
     } else {
       if (this.va.region_draw_shape == _VIA_RSHAPE.EXTREME_BOX) {
-        _via_util_msg_show('You must define all 4 vertices. Press <span class="key">Esc</span> to cancel last drawn vertex.');
+        util_msg_show('You must define all 4 vertices. Press <span class="key">Esc</span> to cancel last drawn vertex.');
       } else {
-        _via_util_msg_show('You must define at least 2 vertices. Press <span class="key">Esc</span> to cancel last drawn vertex.');
+        util_msg_show('You must define at least 2 vertices. Press <span class="key">Esc</span> to cancel last drawn vertex.');
       }
     }
   }
@@ -586,10 +579,10 @@ file_annotator.prototype._rinput_mousedown_handler = function(e) {
   var cy = e.offsetY;
   //console.log('[vid=' + this.vid + ', state=' + this._state_id2str(this.state_id) + '] : mousedown at (cx,cy) = (' + cx + ',' + cy + ')');
 
-  if ( this.state_id === _VIA_RINPUT_STATE.IDLE ) {
+  if ( this.state_id === RINPUT_STATE.IDLE ) {
     if ( e.shiftkey ) {
       this.user_input_pts.push(cx, cy);
-      this._state_set( _VIA_RINPUT_STATE.SELECT_ALL_INSIDE_AN_AREA_ONGOING );
+      this._state_set( RINPUT_STATE.SELECT_ALL_INSIDE_AN_AREA_ONGOING );
     } else {
       // is this mousedown inside a region?
       this.last_clicked_mid_list = this._is_point_inside_existing_regions(cx, cy);
@@ -597,17 +590,17 @@ file_annotator.prototype._rinput_mousedown_handler = function(e) {
         // two possibilities:
         // 1. Draw region inside an existing region
         // 2. Select the region
-        this._state_set( _VIA_RINPUT_STATE.REGION_SELECT_OR_DRAW_POSSIBLE );
+        this._state_set( RINPUT_STATE.REGION_SELECT_OR_DRAW_POSSIBLE );
       } else {
         // draw region
         this.user_input_pts.push(cx, cy);
-        this._state_set( _VIA_RINPUT_STATE.REGION_DRAW_ONGOING );
+        this._state_set( RINPUT_STATE.REGION_DRAW_ONGOING );
       }
     }
     return;
   }
 
-  if ( this.state_id === _VIA_RINPUT_STATE.REGION_DRAW_NCLICK_ONGOING ) {
+  if ( this.state_id === RINPUT_STATE.REGION_DRAW_NCLICK_ONGOING ) {
     var nclick_done = false;
     switch( this.va.region_draw_shape ) {
     case _VIA_RSHAPE.EXTREME_RECTANGLE:
@@ -635,20 +628,20 @@ file_annotator.prototype._rinput_mousedown_handler = function(e) {
       this._rinput_region_draw_nclick_done();
       this.user_input_pts = [];
       this._tmpreg_clear();
-      this._state_set( _VIA_RINPUT_STATE.IDLE );
+      this._state_set( RINPUT_STATE.IDLE );
       //_via_util_msg_show( 'Finished drawing a region shape with multiple vertices.');
     }
     return;
   }
 
-  if ( this.state_id === _VIA_RINPUT_STATE.REGION_SELECTED ) {
+  if ( this.state_id === RINPUT_STATE.REGION_SELECTED ) {
     var sel_region_cp = this._creg_is_on_sel_region_cp(cx, cy,
                                                        this.conf.CONTROL_POINT_CLICK_TOL);
     if ( sel_region_cp[0] !== -1 ) {
       // mousedown was on control point of one of the selected regions
       this.resize_selected_mid_index = sel_region_cp[0];
       this.resize_control_point_index = sel_region_cp[1];
-      this._state_set( _VIA_RINPUT_STATE.REGION_RESIZE_ONGOING );
+      this._state_set( RINPUT_STATE.REGION_RESIZE_ONGOING );
     } else {
       // mousedown was not on a control point, two possibilities:
       // - inside an already selected region
@@ -660,23 +653,23 @@ file_annotator.prototype._rinput_mousedown_handler = function(e) {
         if ( mid_list.length === 0 ) {
           // outside a region, hence it could be to select regions inside a user drawn area
           this.user_input_pts.push(cx, cy);
-          this._state_set( _VIA_RINPUT_STATE.SELECT_ALL_INSIDE_AN_AREA_ONGOING );
+          this._state_set( RINPUT_STATE.SELECT_ALL_INSIDE_AN_AREA_ONGOING );
         } else {
           // inside a region, hence toggle selection
           this.last_clicked_mid_list = mid_list;
-          this._state_set( _VIA_RINPUT_STATE.REGION_SELECT_TOGGLE_ONGOING );
+          this._state_set( RINPUT_STATE.REGION_SELECT_TOGGLE_ONGOING );
         }
       } else {
         if ( mid_list.length === 0 ) {
-          this._state_set( _VIA_RINPUT_STATE.REGION_UNSELECT_ONGOING );
+          this._state_set( RINPUT_STATE.REGION_UNSELECT_ONGOING );
         } else {
           var sel_mindex = this._is_point_inside_sel_regions(cx, cy);
           if ( sel_mindex === -1 ) {
             this.last_clicked_mid_list = mid_list;
-            this._state_set( _VIA_RINPUT_STATE.REGION_SELECT_OR_DRAW_POSSIBLE );
+            this._state_set( RINPUT_STATE.REGION_SELECT_OR_DRAW_POSSIBLE );
           } else {
             this.user_input_pts.push(cx, cy);
-            this._state_set( _VIA_RINPUT_STATE.REGION_MOVE_ONGOING );
+            this._state_set( RINPUT_STATE.REGION_MOVE_ONGOING );
           }
         }
       }
@@ -691,21 +684,21 @@ file_annotator.prototype._rinput_mouseup_handler = function(e) {
   var cy = e.offsetY;
   //console.log('[vid=' + this.vid + ', state=' + this._state_id2str(this.state_id) + '] : mouseup at (cx,cy) = (' + cx + ',' + cy + ')');
 
-  if ( this.state_id === _VIA_RINPUT_STATE.REGION_DRAW_ONGOING ) {
+  if ( this.state_id === RINPUT_STATE.REGION_DRAW_ONGOING ) {
     switch ( this.va.region_draw_shape ) {
     case _VIA_RSHAPE.EXTREME_RECTANGLE:
-      this._state_set( _VIA_RINPUT_STATE.REGION_DRAW_NCLICK_ONGOING );
-      _via_util_msg_show( 'First boundary point added. Now click at three remaining points to mark the boundary of a rectangular object.', true);
+      this._state_set( RINPUT_STATE.REGION_DRAW_NCLICK_ONGOING );
+      util_msg_show( 'First boundary point added. Now click at three remaining points to mark the boundary of a rectangular object.', true);
       break;
     case _VIA_RSHAPE.EXTREME_CIRCLE:
-      this._state_set( _VIA_RINPUT_STATE.REGION_DRAW_NCLICK_ONGOING );
-      _via_util_msg_show( 'First point on added. Now click at two remaining points on the circumference to define a circular region.', true);
+      this._state_set( RINPUT_STATE.REGION_DRAW_NCLICK_ONGOING );
+      util_msg_show( 'First point on added. Now click at two remaining points on the circumference to define a circular region.', true);
       break;
     case _VIA_RSHAPE.POLYGON:
     case _VIA_RSHAPE.POLYLINE:
       // region shape requiring more than two points (polygon, polyline)
-      this._state_set( _VIA_RINPUT_STATE.REGION_DRAW_NCLICK_ONGOING );
-      _via_util_msg_show( 'To finish, click at the first vertex or press <span class="key">Enter</span> key. To discard the last drawn vertex, press <span class="key">Esc</span> key.', true);
+      this._state_set( RINPUT_STATE.REGION_DRAW_NCLICK_ONGOING );
+      util_msg_show( 'To finish, click at the first vertex or press <span class="key">Enter</span> key. To discard the last drawn vertex, press <span class="key">Esc</span> key.', true);
       break;
 
     default:
@@ -713,7 +706,7 @@ file_annotator.prototype._rinput_mouseup_handler = function(e) {
       this.user_input_pts.push(cx, cy);
       if ( this._is_user_input_pts_equal() ) {
         if ( this.va.region_draw_shape !== _VIA_RSHAPE.POINT ) {
-          _via_util_msg_show('Discarded degenerate region. Press <span class="key">Space</span> key to play or pause video.');
+          util_msg_show('Discarded degenerate region. Press <span class="key">Space</span> key to play or pause video.');
         } else {
           var canvas_input_pts = this.user_input_pts.slice(0);
           this._metadata_add(this.va.region_draw_shape, canvas_input_pts);
@@ -724,12 +717,12 @@ file_annotator.prototype._rinput_mouseup_handler = function(e) {
       }
       this.user_input_pts = [];
       this._tmpreg_clear();
-      this._state_set( _VIA_RINPUT_STATE.IDLE );
+      this._state_set( RINPUT_STATE.IDLE );
     }
     return;
   }
 
-  if ( this.state_id === _VIA_RINPUT_STATE.REGION_SELECT_OR_DRAW_POSSIBLE ) {
+  if ( this.state_id === RINPUT_STATE.REGION_SELECT_OR_DRAW_POSSIBLE ) {
     if ( ! e.shiftKey ) {
       this._creg_select_none();
     }
@@ -739,12 +732,12 @@ file_annotator.prototype._rinput_mouseup_handler = function(e) {
     }
     this._smetadata_show();
     this._creg_draw_all();
-    this._state_set( _VIA_RINPUT_STATE.REGION_SELECTED );
-    _via_util_msg_show('Region selected. Press <span class="key">Backspace</span> key to delete and arrow keys to move selected region. Use mouse wheel to update region label.', true);
+    this._state_set( RINPUT_STATE.REGION_SELECTED );
+    util_msg_show('Region selected. Press <span class="key">Backspace</span> key to delete and arrow keys to move selected region. Use mouse wheel to update region label.', true);
     return;
   }
 
-  if ( this.state_id === _VIA_RINPUT_STATE.REGION_MOVE_ONGOING ) {
+  if ( this.state_id === RINPUT_STATE.REGION_MOVE_ONGOING ) {
     this.user_input_pts.push(cx, cy);
     // region shape requiring just two points (rectangle, circle, ellipse, etc.)
     if ( this._is_user_input_pts_equal() ) {
@@ -755,7 +748,7 @@ file_annotator.prototype._rinput_mouseup_handler = function(e) {
         if(clicked_mid_list[0] === this.last_clicked_mid_list[0]) {
           this._creg_select_none();
           this.user_input_pts = [];
-          this._state_set( _VIA_RINPUT_STATE.IDLE );
+          this._state_set( RINPUT_STATE.IDLE );
         } else {
           // select the new region
           if ( e.shiftKey ) {
@@ -763,7 +756,7 @@ file_annotator.prototype._rinput_mouseup_handler = function(e) {
           } else {
             this._creg_select_one( clicked_mid_list[0] );
           }
-          this._state_set( _VIA_RINPUT_STATE.REGION_SELECTED );
+          this._state_set( RINPUT_STATE.REGION_SELECTED );
         }
         this._smetadata_show();
         this._creg_draw_all();
@@ -777,48 +770,48 @@ file_annotator.prototype._rinput_mouseup_handler = function(e) {
       this._metadata_move_region(mid_list, cdx, cdy);
       this._tmpreg_clear();
       this.user_input_pts = [];
-      this._state_set( _VIA_RINPUT_STATE.REGION_SELECTED );
+      this._state_set( RINPUT_STATE.REGION_SELECTED );
     }
     return;
   }
 
-  if ( this.state_id === _VIA_RINPUT_STATE.REGION_RESIZE_ONGOING ) {
+  if ( this.state_id === RINPUT_STATE.REGION_RESIZE_ONGOING ) {
     this._metadata_resize_region(this.resize_selected_mid_index,
                                  this.resize_control_point_index,
                                  cx, cy);
     this._tmpreg_clear();
     this.user_input_pts = [];
-    this._state_set( _VIA_RINPUT_STATE.REGION_SELECTED );
+    this._state_set( RINPUT_STATE.REGION_SELECTED );
     return;
   }
 
-  if ( this.state_id === _VIA_RINPUT_STATE.REGION_UNSELECT_ONGOING ) {
+  if ( this.state_id === RINPUT_STATE.REGION_UNSELECT_ONGOING ) {
     this._creg_select_none();
     this._smetadata_hide();
     this._creg_draw_all();
     this.user_input_pts = [];
-    this._state_set( _VIA_RINPUT_STATE.IDLE );
+    this._state_set( RINPUT_STATE.IDLE );
     return;
   }
 
-  if ( this.state_id === _VIA_RINPUT_STATE.SELECT_ALL_INSIDE_AN_AREA_ONGOING ) {
+  if ( this.state_id === RINPUT_STATE.SELECT_ALL_INSIDE_AN_AREA_ONGOING ) {
     // @todo
     this._creg_select_none();
     this._smetadata_hide();
     this._creg_draw_all();
     this.user_input_pts = [];
-    this._state_set( _VIA_RINPUT_STATE.IDLE );
+    this._state_set( RINPUT_STATE.IDLE );
     return;
   }
 
-  if ( this.state_id === _VIA_RINPUT_STATE.REGION_SELECT_TOGGLE_ONGOING ) {
+  if ( this.state_id === RINPUT_STATE.REGION_SELECT_TOGGLE_ONGOING ) {
     if ( ! e.shiftKey ) {
       this._creg_select_none();
     }
     this._creg_select_toggle( this.last_clicked_mid_list );
     this._smetadata_show();
     this._creg_draw_all();
-    this._state_set( _VIA_RINPUT_STATE.REGION_SELECTED );
+    this._state_set( RINPUT_STATE.REGION_SELECTED );
     return;
   }
 }
@@ -835,19 +828,19 @@ file_annotator.prototype._rinput_mousemove_handler = function(e) {
 
   this._tmpreg_clear();
   if ( this.va.region_draw_shape === _VIA_RSHAPE.EXTREME_RECTANGLE ) {
-    if ( this.state_id !== _VIA_RINPUT_STATE.REGION_SELECTED ) {
+    if ( this.state_id !== RINPUT_STATE.REGION_SELECTED ) {
       this._tmpreg_draw_crosshair(this.last_cx, this.last_cy);
     }
   }
 
-  if ( this.state_id === _VIA_RINPUT_STATE.REGION_DRAW_ONGOING ||
-       this.state_id === _VIA_RINPUT_STATE.REGION_DRAW_NCLICK_ONGOING
+  if ( this.state_id === RINPUT_STATE.REGION_DRAW_ONGOING ||
+       this.state_id === RINPUT_STATE.REGION_DRAW_NCLICK_ONGOING
      ) {
     this._tmpreg_draw_region(this.va.region_draw_shape, pts);
     return;
   }
 
-  if ( this.state_id === _VIA_RINPUT_STATE.REGION_SELECTED ) {
+  if ( this.state_id === RINPUT_STATE.REGION_SELECTED ) {
     var sel_region_cp = this._creg_is_on_sel_region_cp(cx, cy,
                                                        this.conf.CONTROL_POINT_CLICK_TOL);
 
@@ -895,7 +888,7 @@ file_annotator.prototype._rinput_mousemove_handler = function(e) {
     return;
   }
 
-  if ( this.state_id === _VIA_RINPUT_STATE.REGION_MOVE_ONGOING ) {
+  if ( this.state_id === RINPUT_STATE.REGION_MOVE_ONGOING ) {
     this._tmpreg_clear();
     var dx = cx - this.user_input_pts[0];
     var dy = cy - this.user_input_pts[1];
@@ -903,7 +896,7 @@ file_annotator.prototype._rinput_mousemove_handler = function(e) {
     return;
   }
 
-  if ( this.state_id === _VIA_RINPUT_STATE.REGION_RESIZE_ONGOING ) {
+  if ( this.state_id === RINPUT_STATE.REGION_RESIZE_ONGOING ) {
     this._tmpreg_clear();
     this._tmpreg_move_sel_region_cp(this.resize_selected_mid_index,
                                     this.resize_control_point_index,
@@ -996,8 +989,8 @@ file_annotator.prototype._state_set = function(state_id) {
 }
 
 file_annotator.prototype._state_id2str = function(state_id) {
-  for ( var state in _VIA_RINPUT_STATE ) {
-    if ( _VIA_RINPUT_STATE[state] === state_id ) {
+  for ( var state in RINPUT_STATE ) {
+    if ( RINPUT_STATE[state] === state_id ) {
       return state;
     }
   }
@@ -1005,8 +998,8 @@ file_annotator.prototype._state_id2str = function(state_id) {
 }
 
 file_annotator.prototype._state_str2id = function(state) {
-  if ( _VIA_RINPUT_STATE.hasOwnProperty(state) ) {
-    return _VIA_RINPUT_STATE[state];
+  if ( RINPUT_STATE.hasOwnProperty(state) ) {
+    return RINPUT_STATE[state];
   } else {
     return -1;
   }
@@ -1123,7 +1116,7 @@ file_annotator.prototype._metadata_add = function(region_shape, canvas_input_pts
     var file_input_pts = this._rinput_pts_canvas_to_file(canvas_input_pts);
     var xy = this._metadata_pts_to_xy(region_shape, file_input_pts);
     var z = [];
-    if ( this.d.store.file[this.fid].type === _VIA_FILE_TYPE.VIDEO ) {
+    if ( this.d.store.file[this.fid].type === FILE_TYPE.VIDEO ) {
       z[0] = this.file_html_element.currentTime;
     }
     // set default attributes
@@ -1714,7 +1707,7 @@ file_annotator.prototype._creg_del_sel_regions = function() {
     this._creg_select_none();
     this._smetadata_hide();
     this.user_input_pts = [];
-    this._state_set( _VIA_RINPUT_STATE.IDLE );
+    this._state_set( RINPUT_STATE.IDLE );
   }.bind(this), function(err) {
     console.log(err);
   }.bind(this));
@@ -2225,13 +2218,13 @@ file_annotator.prototype._draw_control_point = function(ctx, cx, cy) {
 // region draw enable/disable
 //
 file_annotator.prototype._rinput_enable = function() {
-  this._state_set(_VIA_RINPUT_STATE.IDLE);
+  this._state_set(RINPUT_STATE.IDLE);
   this.input.style.pointerEvents = 'auto';
   this.input.classList.add('rinput_enabled');
-  if ( this.d.store.file[this.fid].type === _VIA_FILE_TYPE.VIDEO ||
-       this.d.store.file[this.fid].type === _VIA_FILE_TYPE.AUDIO
+  if ( this.d.store.file[this.fid].type === FILE_TYPE.VIDEO ||
+       this.d.store.file[this.fid].type === FILE_TYPE.AUDIO
      ) {
-    if ( this.d.store.file[this.fid].type === _VIA_FILE_TYPE.VIDEO ) {
+    if ( this.d.store.file[this.fid].type === FILE_TYPE.VIDEO ) {
       this.file_html_element.removeAttribute('controls');
     }
     // _via_util_msg_show('At any time, press <span class="key">Space</span> to play or pause the video.');
@@ -2239,11 +2232,11 @@ file_annotator.prototype._rinput_enable = function() {
 }
 
 file_annotator.prototype._rinput_disable = function() {
-  this._state_set(_VIA_RINPUT_STATE.SUSPEND);
+  this._state_set(RINPUT_STATE.SUSPEND);
   this.input.style.pointerEvents = 'none';
   this.input.classList.remove('rinput_enabled');
-  if ( this.d.store.file[this.fid].type === _VIA_FILE_TYPE.VIDEO ||
-       this.d.store.file[this.fid].type === _VIA_FILE_TYPE.AUDIO
+  if ( this.d.store.file[this.fid].type === FILE_TYPE.VIDEO ||
+       this.d.store.file[this.fid].type === FILE_TYPE.AUDIO
      ) {
     this.file_html_element.setAttribute('controls', 'true');
     //_via_util_msg_show('At any time, press <span class="key">Space</span> to play or pause the video.', true);

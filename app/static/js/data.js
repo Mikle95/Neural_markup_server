@@ -718,11 +718,11 @@ data.prototype.project_save = function() {
       }
       filename.push(_via_util_date_to_filename_str(Date.now()));
       filename.push('.json');
-      _via_util_download_as_file(data_blob, filename.join(''));
+      util_download_as_file(data_blob, filename.join(''));
       ok_callback();
     }
     catch(err) {
-      _via_util_msg_show('Failed to save project! [' + err + ']');
+      util_msg_show('Failed to save project! [' + err + ']');
       err_callback();
     }
   }.bind(this));
@@ -739,7 +739,7 @@ data.prototype.project_load = function(project_data_str) {
       }.bind(this));
     }
     catch(err) {
-      _via_util_msg_show('Failed to load project! [' + err + ']');
+      util_msg_show('Failed to load project! [' + err + ']');
       this._init_default_project();
       console.log(err)
       err_callback();
@@ -758,7 +758,7 @@ data.prototype.project_load_json = function(project_json_data) {
       ok_callback();
     }
     catch(err) {
-      _via_util_msg_show('Failed to load project! [' + err + ']');
+      util_msg_show('Failed to load project! [' + err + ']');
       this._init_default_project();
       console.warn('failed to load project')
       console.log(err)
@@ -873,7 +873,7 @@ data.prototype.project_merge_three_way = function(remote) {
       this.project_merge_on_success();
     }
     catch (e) {
-      _via_util_msg_show('Merge failed: ' + e, true);
+      util_msg_show('Merge failed: ' + e, true);
       console.warn(e);
       err_callback(e);
     }
@@ -922,7 +922,7 @@ data.prototype.project_merge_on_success = function() {
   this._cache_update();
   this.emit_event( 'project_updated', { 'pid':this.store.project.pid } );
 
-  _via_util_msg_show('Successfully merged with revision ' + this.store.project.rev, true);
+  util_msg_show('Successfully merged with revision ' + this.store.project.rev, true);
 }
 
 // is there any difference between local project and remote project?
@@ -984,7 +984,7 @@ data.prototype.project_import_via2_json = function(via2_project_json) {
       for ( var fid in via2['_via_img_metadata'] ) {
         var fname = via2['_via_img_metadata'][fid]['filename'];
         var floc = _via_util_infer_file_loc_from_filename(fname);
-        var ftype = _via_util_infer_file_type_from_filename(fname);
+        var ftype = util_infer_file_type_from_filename(fname);
         var via3_fid = this._file_get_new_id();
         this.store.file[via3_fid] = new file(via3_fid, fname, ftype, floc, fname);
 
@@ -1058,14 +1058,14 @@ data.prototype.project_import_via2_json = function(via2_project_json) {
         var mid = this._metadata_get_new_id(vid);
         this.store.metadata[mid] = new metadata(vid, [], [], file_av);
       }
-      _via_util_msg_show('Project import successful');
+      util_msg_show('Project import successful');
       this._cache_update();
       this.emit_event( 'project_loaded', {} );
       ok_callback();
     }
     catch(ex) {
       console.log(ex)
-      _via_util_msg_show('Failed to import project');
+      util_msg_show('Failed to import project');
       err_callback(ex);
     }
   }.bind(this));
