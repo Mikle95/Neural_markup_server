@@ -1,5 +1,3 @@
-'use strict'
-
 const _VIA_NAME = 'VGG Image Annotator';
 const _VIA_NAME_SHORT = 'VIA';
 const _VIA_VERSION = '3.0.8';

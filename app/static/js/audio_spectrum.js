@@ -1,14 +1,3 @@
-/**
- * @class
- * @classdesc Visualisation of audio amplitude and spectrogram
- *
- * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
- * @since 18 May 2019
- *
- */
-
-'use strict';
-
 function audio_spectrum(file, path) {
   this.file = file;
   this.file_path = path;

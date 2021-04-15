@@ -1,12 +1,3 @@
-/**
- * @class
- * @classdesc Manages region draw and view operations on an image or video
- * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
- * @since 8 Apr. 2019
- */
-
-'use strict';
-
 var _VIA_RINPUT_STATE = {
   UNKNOWN: 0,
   SUSPEND: 1,
@@ -109,7 +100,7 @@ file_annotator.prototype._file_load_show_error_page = function() {
 
   var msg = document.createElement('p');
   msg.innerHTML = 'File "<code>' + this.d.file_get_uri(this.fid) + '</code>" not found. ';
-  msg.innerHTML += 'VIA application will automatically reload this file when you update one of the properties below.';
+  msg.innerHTML += 'Application will automatically reload this file when you update one of the properties below.';
   page.appendChild(msg);
 
   var table = document.createElement('table');

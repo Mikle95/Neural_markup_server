@@ -1,14 +1,3 @@
-/**
- *
- * @class
- * @classdesc View manager
- * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
- * @date 5 Apr. 2019
- *
- */
-
-'use strict';
-
 function view_manager(data, view_annotator, container, via) {
   this._ID = '_via_view_manager_';
   this.d = data;
@@ -17,16 +6,12 @@ function view_manager(data, view_annotator, container, via) {
   this.via = via;
 
   this.view_selector_vid_list = [];
-  var is_view_filtered_by_regex = false;
 
-  // registers on_event(), emit_event(), ... methods from
-  // event to let this module listen and emit events
   event.call( this );
 
   this.d.on_event('project_loaded', this._ID, this._on_event_project_loaded.bind(this));
   this.d.on_event('project_updated', this._ID, this._on_event_project_updated.bind(this));
   this.d.on_event('view_bulk_add', this._ID, this._on_event_view_bulk_add.bind(this));
-  this.d.on_event('view_del', this._ID, this._on_event_view_del.bind(this));
   this.va.on_event('view_show', this._ID, this._on_event_view_show.bind(this));
   this.va.on_event('view_next', this._ID, this._on_event_view_next.bind(this));
   this.va.on_event('view_prev', this._ID, this._on_event_view_prev.bind(this));
@@ -220,49 +205,9 @@ view_manager.prototype._view_selector_option_html = function(vindex, vid) {
 }
 
 view_manager.prototype._view_selector_update = function() {
-  if ( this.is_view_filtered_by_regex ) {
-    this._view_selector_update_regex();
-  } else {
     this._view_selector_update_showall();
-  }
 }
 
-view_manager.prototype._view_selector_update_regex = function(regex) {
-  if ( regex === '' ||
-       typeof(regex) === 'undefined'
-     ) {
-    this._view_selector_update_showall();
-  } else {
-    var existing_vid = '';
-    if ( this.view_selector.options.length ) {
-      if ( this.view_selector.selectedIndex !== -1 ) {
-        existing_vid = this.view_selector.options[this.view_selector.selectedIndex].value;
-      }
-    }
-    this._view_selector_clear();
-    var vid, fid;
-    for ( var vindex in this.d.store.project.vid_list ) {
-      vid = this.d.store.project.vid_list[vindex];
-      for ( var findex in this.d.store.view[vid].fid_list ) {
-        fid = this.d.store.view[vid].fid_list[findex];
-        if ( this.d.store.file[fid].fname.match(regex) !== null ) {
-          this.view_selector.appendChild( this._view_selector_option_html(vindex, vid) );
-          this.view_selector_vid_list.push(vid);
-          break;
-        }
-      }
-    }
-    this.is_view_selector_regex_active = true;
-    var existing_vid_index = this.view_selector_vid_list.indexOf(existing_vid);
-    if ( existing_vid_index === -1 ) {
-      if ( this.view_selector_vid_list.length ) {
-        this.va.view_show( this.view_selector_vid_list[0] );
-      }
-    } else {
-      this.view_selector.selectedIndex = existing_vid_index;
-    }
-  }
-}
 
 view_manager.prototype._view_selector_update_showall = function() {
   var existing_selectedIndex = this.view_selector.selectedIndex;
@@ -300,13 +245,9 @@ view_manager.prototype._load_project_from_server = function(pname){
     request.open('POST', this.via.url + 'load_project?' + params, true);
     request.addEventListener("readystatechange", () => {
       if (request.readyState === 4 && request.status === 200) {
-        if(request.responseText != "")
+        if(request.responseText != "") {
           this.via.d.project_load(request.responseText)
-        else
-          this.via.d.project_load(empty_project);
-        //   this.via.d = data();
-        // выводим в консоль то что ответил сервер
-        // alert( request.responseText );
+        }
       }
     });
     request.send(params);
@@ -415,27 +356,5 @@ view_manager.prototype._on_add_media_bulk_file_load = function(file_data) {
                     });
     }
     this._file_add_from_filelist(filelist);
-  }
-}
-
-view_manager.prototype._on_del_view = function() {
-  this.d.view_del(this.va.vid).then( function(ok) {
-    _via_util_msg_show('Deleted view ' + ( parseInt(ok.vindex) + 1));
-  }.bind(this), function(err) {
-    console.warn(err);
-  }.bind(this));
-}
-
-view_manager.prototype._on_event_view_del = function(data, event_payload) {
-  this._view_selector_update();
-  var vindex = event_payload.vindex;
-  if ( this.d.store.project.vid_list.length ) {
-    if ( vindex < this.d.store.project.vid_list.length ) {
-      this.va.view_show( this.d.store.project.vid_list[vindex] );
-    } else {
-      this.va.view_show( this.d.store.project.vid_list[ this.d.store.project.vid_list.length - 1 ] );
-    }
-  } else {
-    this.va._init();
   }
 }

@@ -1,14 +1,3 @@
-/**
- * @class
- * @classdesc Extracts thumbnail sized frames from a video
- *
- * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
- * @since 5 Feb. 2019
- * @param {_via_file} an instance of file corresponding to a video file
- */
-
-'use strict';
-
 function video_thumbnail(fid, data) {
   this._ID = '_via_video_thumbnail_';
   this.fid = fid;

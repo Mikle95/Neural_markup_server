@@ -1,14 +1,3 @@
-/**
- *
- * @class
- * @classdesc Manages import and export of annotations
- * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
- * @date 26 May 2019
- *
- */
-
-'use strict';
-
 function import_export(data) {
   this.d = data;
 

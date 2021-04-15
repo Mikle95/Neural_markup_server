@@ -129,12 +129,12 @@ admin_panel.prototype.add_cells = function (){
                 tr.appendChild(td);
             }
         var btn = this.html_element('button', 'Add User');
-        var selector = document.createElement('select');
+        const selector = document.createElement('select');
         selector.setAttribute('style', 'width:12em;');
         this.fill_user_selector(selector);
 
         btn.addEventListener('click', function () {
-            via.ap.user_for_project(selector.value, pname, 'add');
+            via.ap.user_for_project(selector[selector.selectedIndex].value, pname, 'add');
         })
 
         var td = document.createElement('td');

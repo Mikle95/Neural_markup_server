@@ -1,13 +1,3 @@
-/**
- * Utilities used by VIA default user interface
- *
- * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
- * @date 31 Dec. 2018
- *
- */
-
-'use strict'
-
 var _via_msg_clear_timer; // holds a reference to current message timoout
 var _via_page_current;    // holds a reference to current info page
 var _via_page_action_map; // holds a reference to action map for current info page

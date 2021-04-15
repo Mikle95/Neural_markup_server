@@ -1,5 +1,3 @@
-'use strict'
-
 function main(via_container, url) {
   this.user_rights = 'user'
   this.username = '---'

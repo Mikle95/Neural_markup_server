@@ -1,14 +1,3 @@
-/**
- *
- * @class
- * @classdesc Manages communication with VIA project server to allow sharing of VIA projects.
- * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
- * @date 24 June 2019
- *
- */
-
-'use strict';
-
 function share(data, conf) {
   this._ID = '_via_share_';
   this.d = data;

@@ -1,14 +1,3 @@
-/**
- * Builds user interface and control handlers to allow
- * annotation of a file (image, video or audio)
-
- * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
- * @date 24 Dec. 2018
- *
- */
-
-'use strict';
-
 const _VIA_VIEW_MODE = {'UNKNOWN':0,
                         'IMAGE1':1, 'IMAGE2':2, 'IMAGEK':3,
                         'VIDEO1':101, 'VIDEO2':102, 'VIDEOK':103,
@@ -72,6 +61,7 @@ view_annotator.prototype.view_show = function(vid) {
 }
 
 view_annotator.prototype._view_init = function(vid) {
+  if(!this.d.store.view[vid].hasOwnProperty('fid_list')) return;
   var file_count = this.d.store.view[vid].fid_list.length;
   switch(file_count) {
   case 1:

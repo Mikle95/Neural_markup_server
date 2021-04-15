@@ -1,17 +1,3 @@
-/**
- * @class
- * @classdesc Marks time segments of a {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement|HTMLMediaElement}
- * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
- * @since 5 Mar. 2019
- * @fires temporal_segmenter#segment_add
- * @fires temporal_segmenter#segment_del
- * @fires temporal_segmenter#segment_edit
- * @param {Element} container HTML container element like <div>
- * @param {HTMLMediaElement} media_element HTML video of audio
- */
-
-'use strict';
-
 function temporal_segmenter(file_annotator, container, vid, data, media_element) {
   this._ID = '_via_temporal_segmenter_';
   this.fa = file_annotator;

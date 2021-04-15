@@ -1,12 +1,3 @@
-/**
- * @class
- * @classdesc Implements a basic event emitter and event listener
- * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
- * @since 15 Jan. 2019
- */
-
-'use strict';
-
 function event() {
   this.on_event       = event.prototype.on_event;
   this.emit_event     = event.prototype.emit_event;

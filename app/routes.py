@@ -7,17 +7,12 @@ import dataBaseController
 import storeManager
 import json
 
-# https://www.youtube.com/watch?v=9MHYHgh4jYc
 
 
 @app.route('/')
 @app.route('/check')
 def index():
-    return redirect(url_for('via'))
-    # if current_user.is_authenticated:
-    #     return "You are authenticated, {}!".format(current_user.username)
-    # else:
-    #     return "You are not authenticated!"
+    return redirect(url_for('annotator'))
 
 
 def shutdown_server():
@@ -50,7 +45,7 @@ def login():
         login_user(user)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('via')
+            next_page = url_for('annotator')
         return redirect(next_page)
     else:
         return render_template("login.html")
@@ -68,9 +63,9 @@ def echo(text):
     return render_template("index.html", content=text)
 
 
-@app.route('/via')
+@app.route('/annotator')
 @login_required
-def via():
+def annotator():
     return render_template("annotator.html")
 
 

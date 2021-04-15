@@ -1,14 +1,3 @@
-/**
- *
- * @class
- * @classdesc Attribute
- * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
- * @date 31 Dec. 2018
- *
- */
-
-'use strict'
-
 const _VIA_ATTRIBUTE_TYPE = { 'TEXT':1, 'CHECKBOX':2, 'RADIO':3, 'SELECT':4, 'IMAGE':5 };
 
 const _VIA_ATTRIBUTE_ANCHOR = {

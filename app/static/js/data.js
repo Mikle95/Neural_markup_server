@@ -1,20 +1,9 @@
-/**
- *
- * @class
- * @classdesc Manages the storage and update of all data (annotations, files, etc. )
- * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
- * @date 31 Dec. 2018
- *
- */
-
-'use strict';
-
 function data() {
   this._ID = '_via_data_';
   this.store = this._init_default_project();
-  this.file_ref = {};        // ref. to files selected using browser's file selector
-  this.file_object_uri = {}; // WARNING: cleanup using file_object_url[fid]._destroy_file_object_url()
-  this.DATA_FORMAT_VERSION = '3.1.1';
+  this.file_ref = {};
+  this.file_object_uri = {};
+  this.DATA_FORMAT_VERSION = '1';
 
   // registers on_event(), emit_event(), ... methods from
   // event to let this module listen and emit events
@@ -232,6 +221,9 @@ data.prototype.file_add = function(name, type, loc, src) {
   }.bind(this));
 }
 
+data.prototype.clear_files = function(){
+  this.store.file = {};
+}
 
 data.prototype.file_update = function(fid, name, value) {
   return new Promise( function(ok_callback, err_callback) {
@@ -289,19 +281,10 @@ data.prototype.file_get_uri = function(fid) {
 }
 
 data.prototype.file_free_resources = function(fid) {
-  // for files selected using browser's File Selector, we do not
-  // need to revoke the ObjectURL because these are simply pointers
-  // to the user selected files. If you use revokeObjectURL() to free
-  // resources, it will invalidate the pointer to user selected file
-  // see https://stackoverflow.com/a/49346614
 
-  //URL.revokeObjectURL( this.file_object_uri[fid] );
-  //delete this.file_object_uri[fid];
 }
 
-//
-// Metadata
-//
+
 data.prototype._metadata_get_new_id = function(vid) {
   return vid + '_' + _via_util_uid6();
 }
@@ -725,8 +708,6 @@ data.prototype._cache_get_attribute_group = function(anchor_id_list) {
 data.prototype.project_save = function() {
   return new Promise( function(ok_callback, err_callback) {
     try {
-      // @todo: decide on whether we want to include the base64 data
-      // of inline files (i.e. this.store.file[fid].loc === _VIA_FILE_LOC.INLINE)
       var data_blob = new Blob( [JSON.stringify(this.store)],
                                 {type: 'text/json;charset=utf-8'});
       var filename = [];

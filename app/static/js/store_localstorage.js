@@ -1,14 +1,3 @@
-/**
- *
- * @class
- * @classdesc Provided persistence of data using browser's localStorage
- * @author Abhishek Dutta <adutta@robots.ox.ac.uk>
- * @date 27 Feb. 2019
- *
- */
-
-'use strict';
-
 function store_localstorage(data) {
   this.d = data;
 
