@@ -3,21 +3,24 @@ import os
 import dataBaseController as dbc
 import shutil
 
+
 def save_project(jsonStr, username):
     project = json.loads(jsonStr)
     if project["project"]["pname"] == "New Project":
-        return ""
-    dir = "store/" +  project["project"]["pname"]
+        return False
+    dir = "store/" + project["project"]["pname"]
     filename =dir + "/" + username + ".json"
 
     if not os.path.exists(dir):
-        return
+        return False
 
     if not os.path.exists(filename):
         dbc.add_new_user_project(project["project"]["pname"], username)
 
     with open(filename, "w", encoding='utf8') as write_file:
         json.dump(project, write_file, ensure_ascii=False)
+    return True
+
 
 def load_project(pname, username):
     dir = "store/" + pname
@@ -82,14 +85,14 @@ def create_project(pname):
 
 
 
-def create_dataset(pname, data):
-    if pname != "admin":
-        return
-
-def delete_dataset(pname, data):
-    if pname != "admin":
-        return
-
-def load_dataset(pname, data):
-    if pname != "admin":
-        return
+# def create_dataset(pname, data):
+#     if pname != "admin":
+#         return
+#
+# def delete_dataset(pname, data):
+#     if pname != "admin":
+#         return
+#
+# def load_dataset(pname, data):
+#     if pname != "admin":
+#         return

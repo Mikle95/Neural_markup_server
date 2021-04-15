@@ -183,8 +183,8 @@ import_export.prototype.export_to_temporal_segments_csv = function() {
       attribute[aid] = this.d.store.attribute[aid].aname;
     }
 
-    csv.push('# Exported using VGG Image Annotator (http://www.robots.ox.ac.uk/~vgg/software/via)');
-    csv.push('# CSV_HEADER = metadata_id,file_list,temporal_segment_start,temporal_segment_end,metadata');
+    csv.push('#');
+    csv.push('#');
     // build file_list for each view_id
     var vid_filesrc_str_list = {};
     var vid, fid;

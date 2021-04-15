@@ -4,7 +4,7 @@ function main(via_container, url) {
   this.url = url;
 
   this._ID = 'main';
-  this.via_container = via_container;
+  this.container = via_container;
 
   this.d  = new data();
   var conf = { 'ENDPOINT': _VIA_REMOTE_STORE };
@@ -17,22 +17,22 @@ function main(via_container, url) {
   //// define the html containers
   this.control_panel_container = document.createElement('div');
   this.control_panel_container.setAttribute('id', 'via_control_panel_container');
-  this.via_container.appendChild(this.control_panel_container);
+  this.container.appendChild(this.control_panel_container);
 
   this.view_container = document.createElement('div');
   this.view_container.setAttribute('id', 'view_container');
-  this.via_container.appendChild(this.view_container);
+  this.container.appendChild(this.view_container);
 
   this.editor_container = document.createElement('div');
   this.editor_container.setAttribute('id', 'editor_container');
   this.editor_container.classList.add('hide');
-  this.via_container.appendChild(this.editor_container);
+  this.container.appendChild(this.editor_container);
 
   this.admin_container = document.createElement('div');
   this.admin_container.classList.add('hide');
   this.admin_container.setAttribute('id', 'admin_container');
   // this.admin_container.setAttribute('class', 'editor_container')
-  this.via_container.appendChild(this.admin_container);
+  this.container.appendChild(this.admin_container);
 
 
 
@@ -43,10 +43,10 @@ function main(via_container, url) {
   this.message_panel = document.createElement('div');
   this.message_panel.setAttribute('id', '_via_message');
   this.message_container.appendChild(this.message_panel);
-  this.via_container.appendChild(this.message_container);
+  this.container.appendChild(this.message_container);
 
   //// initialise content creators and managers
-  this.ie = new import_export(this.d);
+  // this.ie = new import_export(this.d);
 
   this.va = new view_annotator(this.d, this.view_container);
   this.editor = new editor(this.d, this.va, this.editor_container);

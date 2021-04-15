@@ -110,8 +110,10 @@ def add_user_for_project():
 
 @app.route('/save_project/', methods=["POST"])
 def save_project():
-    storeManager.save_project(request.data, current_user.username)
-    return "success!"
+    if storeManager.save_project(request.data, current_user.username):
+        return "Success!"
+    else:
+        return "Exception!"
 
 
 @app.route('/delete_user_for_project/', methods=["POST"])

@@ -21,8 +21,8 @@ def get_user_id_by_name(username):
     return User.query.filter_by(username=username).first().id
 
 
-def add_user(name, password):
-    u = User(username=name)
+def add_user(name, password, rights="user"):
+    u = User(username=name, rights=rights)
     u.set_password(password)
     db.session.add(u)
     db.session.commit()
