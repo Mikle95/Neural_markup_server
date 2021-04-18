@@ -22,10 +22,22 @@ def get_user_id_by_name(username):
 
 
 def add_user(name, password, rights="user"):
+    if user_exist(name):
+        return "wrong name"
     u = User(username=name, rights=rights)
     u.set_password(password)
     db.session.add(u)
     db.session.commit()
+    return "success!"
+
+
+def delete_user(name):
+    if not user_exist(name):
+        return "wrong name"
+    Markup.query.filter_by(user_id=get_user_id_by_name(name)).delete()
+    User.query.filter_by(username=name).delete()
+    db.session.commit()
+    return "success!"
 
 
 def get_user(username):

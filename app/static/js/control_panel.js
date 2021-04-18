@@ -1,6 +1,7 @@
 function control_panel(control_panel_container, via) {
   this._ID = '_via_control_panel_';
   this.c   = control_panel_container;
+  this.c.setAttribute("style", "background-color:#c2ffe0;");
   this.via = via;
 
   // registers on_event(), emit_event(), ... methods from

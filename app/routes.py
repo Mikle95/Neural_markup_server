@@ -98,6 +98,30 @@ def get_all_users():
     return jsonify(data)
 
 
+@app.route('/add_user/', methods=["GET", "POST"])
+@login_required
+def add_user():
+    if current_user.rights != "admin":
+        return "Permission denied"
+    data = json.loads(request.data)
+    if "username" in data and "password" in data:
+        return dataBaseController.add_user(data["username"], data["password"])
+    else:
+        return "wrong JSON!"
+
+
+@app.route('/delete_user/', methods=["GET", "POST"])
+@login_required
+def delete_user():
+    if current_user.rights != "admin":
+        return "Permission denied"
+    data = json.loads(request.data)
+    if "username" in data and current_user.username != data["username"]:
+        return dataBaseController.delete_user(data["username"])
+    else:
+        return "wrong data!"
+
+
 @app.route('/add_user_for_project/', methods=["POST"])
 @login_required
 def add_user_for_project():

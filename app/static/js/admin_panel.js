@@ -34,6 +34,7 @@ admin_panel.prototype.show = function (){
     this.show_info();
     if ( this.c.classList.contains('hide') )
         this.c.classList.remove('hide');
+    this.add_user_form();
 }
 
 admin_panel.prototype.project_update = function (){
@@ -183,6 +184,9 @@ admin_panel.prototype.fill_user_selector = function(selector){
 
 admin_panel.prototype.user_for_project = function(username, pname, op = 'add'){
     if (op !== 'add' && op !== 'delete') return;
+
+    if (op === "delete" && !confirm("Удалить пользователя " + username + " с проекта " + pname + "?")) return;
+
     var data = {'username' : username, 'pname': pname};
     var request = new XMLHttpRequest();
     request.open('POST', via.url + op + '_user_for_project', true);
@@ -222,4 +226,70 @@ admin_panel.prototype.html_element = function(name, text) {
 admin_panel.prototype.on_project_create = function () {
     var pname = this.new_project_name_input.value
     this.create_project(pname)
+}
+
+admin_panel.prototype.add_user_form = function (){
+    var title = document.createElement('h2');
+    title.innerText = "User";
+    this.project_container.appendChild(title);
+
+    this.project_container.appendChild(this.html_element("div", "username:"));
+
+    this.new_user_name_input = document.createElement('input');
+    this.new_user_name_input.setAttribute('type', 'text');
+    this.new_user_name_input.setAttribute('placeholder', 'name of new user');
+    this.project_container.appendChild(this.new_user_name_input);
+
+    var btn = document.createElement('button');
+    btn.setAttribute('class', 'text-button');
+    btn.setAttribute("style", "margin:0 2em; background-color:#fd5e53;")
+    btn.innerText = "Delete user";
+    btn.addEventListener("click", this.add_del_user.bind(this, "delete"))
+    this.project_container.appendChild(btn);
+
+    this.project_container.appendChild(this.html_element("div", "password:"));
+
+    this.new_user_password_input = document.createElement('input');
+    this.new_user_password_input.setAttribute('type', 'text');
+    this.new_user_password_input.setAttribute('placeholder', 'password');
+    this.project_container.appendChild(this.new_user_password_input);
+
+    this.project_container.appendChild(this.html_element("h2", ""));
+
+    btn = document.createElement('button');
+    btn.setAttribute('class', 'text-button');
+    btn.innerText = "Add new user";
+    btn.addEventListener("click", this.add_del_user.bind(this, "add"))
+    this.project_container.appendChild(btn);
+
+    this.project_container.appendChild(this.html_element("h2", ""));
+}
+
+
+admin_panel.prototype.add_del_user = function (op) {
+    if (op !== 'add' && op !== 'delete') return;
+
+    var data = {"username": this.new_user_name_input.value};
+    if (op === "add"){
+        if (this.new_user_password_input.value.length < 2) {
+            util_msg_show("Wrong password!");
+            return;
+        }
+        data["password"] = this.new_user_password_input.value;
+
+    }
+    else
+        if (!confirm("Удалить пользователя " + data["username"] + "?")) return;
+
+
+    var request = new XMLHttpRequest();
+    request.open('POST', via.url + op + '_user/', true);
+    request.setRequestHeader('Content-Type', 'text/json; charset=UTF-8');
+    request.addEventListener("readystatechange", () => {
+      if (request.readyState === 4 && request.status === 200) {
+          util_msg_show(request.responseText);
+          via.ap.show()
+      }
+    });
+    request.send(JSON.stringify(data));
 }
