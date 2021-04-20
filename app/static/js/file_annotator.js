@@ -733,7 +733,7 @@ file_annotator.prototype._rinput_mouseup_handler = function(e) {
     this._smetadata_show();
     this._creg_draw_all();
     this._state_set( RINPUT_STATE.REGION_SELECTED );
-    util_msg_show('Region selected. Press <span class="key">Backspace</span> key to delete and arrow keys to move selected region. Use mouse wheel to update region label.', true);
+    // util_msg_show('Region selected. Press <span class="key">Backspace</span> key to delete and arrow keys to move selected region. Use mouse wheel to update region label.', true);
     return;
   }
 
@@ -1312,6 +1312,7 @@ file_annotator.prototype._creg_add = function(vid, mid) {
 
 file_annotator.prototype._creg_clear = function() {
   this.rshape_canvas = document.getElementById('region_shape');
+  if (this.rshape_canvas === null) return;
   this.rshapectx = this.rshape_canvas.getContext('2d', { alpha:true });
   this.rshapectx.clearRect(0, 0, this.rshape_canvas.width, this.rshape_canvas.height);
 }
@@ -2219,6 +2220,7 @@ file_annotator.prototype._draw_control_point = function(ctx, cx, cy) {
 //
 file_annotator.prototype._rinput_enable = function() {
   this._state_set(RINPUT_STATE.IDLE);
+  if (this.input === undefined) return;
   this.input.style.pointerEvents = 'auto';
   this.input.classList.add('rinput_enabled');
   if ( this.d.store.file[this.fid].type === FILE_TYPE.VIDEO ||

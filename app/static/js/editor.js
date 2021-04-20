@@ -295,7 +295,7 @@ editor.prototype.get_attribute_header = function() {
   tr.appendChild( this.html_element('th', 'Input Type') );
   tr.appendChild( this.html_element('th', 'Description') );
   tr.appendChild( this.html_element('th', 'Options') );
-  tr.appendChild( this.html_element('th', 'Default Value') );
+  // tr.appendChild( this.html_element('th', 'Default Value') );
   tr.appendChild( this.html_element('th', 'Preview') );
 
   var thead = document.createElement('thead');
@@ -405,17 +405,17 @@ editor.prototype.get_attribute = function(aid) {
   }
 
   // column: default value (only if other than TEXT)
-  if ( this.d.store.attribute[aid].type === _VIA_ATTRIBUTE_TYPE.TEXT ) {
-    // text has no defaults
-    tr.appendChild( this.html_element('td', '-') );
-  } else {
-    var default_value = this.d.store.attribute[aid].options[ this.d.store.attribute[aid].default_option_id ];
-    if ( typeof(default_value) === 'undefined' ) {
-      tr.appendChild( this.html_element('td', 'Not Defined') );
-    } else {
-      tr.appendChild( this.html_element('td', default_value) );
-    }
-  }
+  // if ( this.d.store.attribute[aid].type === _VIA_ATTRIBUTE_TYPE.TEXT ) {
+  //   // text has no defaults
+  //   tr.appendChild( this.html_element('td', '-') );
+  // } else {
+  //   var default_value = this.d.store.attribute[aid].options[ this.d.store.attribute[aid].default_option_id ];
+  //   if ( typeof(default_value) === 'undefined' ) {
+  //     tr.appendChild( this.html_element('td', 'Not Defined') );
+  //   } else {
+  //     tr.appendChild( this.html_element('td', default_value) );
+  //   }
+  // }
 
   // column: preview of attribute
   var preview = document.createElement('td');
