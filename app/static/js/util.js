@@ -502,11 +502,11 @@ function _via_util_obj_to_csv(obj, default_key) {
 function _via_util_attribute_to_html_element(attr) {
   var el;
   switch(attr.type) {
-  case _VIA_ATTRIBUTE_TYPE.TEXT:
+  case _ATTRIBUTE_TYPE.TEXT:
     el = document.createElement('textarea');
     break;
 
-  case _VIA_ATTRIBUTE_TYPE.SELECT:
+  case _ATTRIBUTE_TYPE.SELECT:
     el = document.createElement('select');
     var oid;
     for ( oid in attr.options ) {
@@ -520,7 +520,7 @@ function _via_util_attribute_to_html_element(attr) {
     }
     break;
 
-  case _VIA_ATTRIBUTE_TYPE.RADIO:
+  case _ATTRIBUTE_TYPE.RADIO:
     el = document.createElement('table');
     for ( var oid in attr.options ) {
       var oi = document.createElement('input');

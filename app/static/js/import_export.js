@@ -49,7 +49,7 @@ import_export.prototype.import_from_coco = function(json_str) {
     for ( var i in d.categories ) {
       var aid = d.categories[i].id;
       var aname = d.categories[i].name;
-      p.attribute[aid] = new attribute(aname, 'FILE1_Z0_XY1', _VIA_ATTRIBUTE_TYPE.TEXT, {}, {});
+      p.attribute[aid] = new attribute(aname, 'FILE1_Z0_XY1', _ATTRIBUTE_TYPE.TEXT, {}, {});
 /*
       var aid = d.categories[i].supercategory;
       var option_id = d.categories[i].id;

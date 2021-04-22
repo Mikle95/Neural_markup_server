@@ -1,4 +1,4 @@
-const _VIA_ATTRIBUTE_TYPE = { 'TEXT':1, 'CHECKBOX':2, 'RADIO':3, 'SELECT':4, 'IMAGE':5 };
+const _ATTRIBUTE_TYPE = { 'TEXT':1, 'CHECKBOX':2, 'RADIO':3, 'SELECT':4, 'IMAGE':5 };
 
 const _VIA_ATTRIBUTE_ANCHOR = {
   'FILE1_Z0_XY0':'Attribute of a File (e.g. image caption)',

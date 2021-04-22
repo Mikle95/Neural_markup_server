@@ -455,7 +455,7 @@ temporal_segmenter.prototype._tmetadata_gmetadata_update = function() {
     gid_container.setAttribute('class', 'gidcol');
     var gid_input = document.createElement('input');
     gid_input.setAttribute('type', 'text');
-    if ( this.d.store.attribute[this.groupby_aid].type === _VIA_ATTRIBUTE_TYPE.SELECT &&
+    if ( this.d.store.attribute[this.groupby_aid].type === _ATTRIBUTE_TYPE.SELECT &&
          this.d.store.attribute[this.groupby_aid].options.hasOwnProperty(gid)
        ) {
       gid_input.setAttribute('value', this.d.store.attribute[this.groupby_aid].options[gid]);
@@ -1823,7 +1823,7 @@ temporal_segmenter.prototype._group_init = function(aid) {
   // add possible values for the group variable
   this.gid_list = [];
   // if attribute type is select, then add gid from the attribute's options
-  if ( this.d.store.attribute[aid].type === _VIA_ATTRIBUTE_TYPE.SELECT &&
+  if ( this.d.store.attribute[aid].type === _ATTRIBUTE_TYPE.SELECT &&
        Object.keys(this.d.store.attribute[aid].options).length !== 0
      ) {
     for ( var gid in this.d.store.attribute[aid].options ) {

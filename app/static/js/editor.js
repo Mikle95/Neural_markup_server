@@ -363,12 +363,12 @@ editor.prototype.get_attribute = function(aid) {
   type_select.setAttribute('data-varname', 'type');
   type_select.addEventListener('change', this.attribute_update_type.bind(this));
   var type_str;
-  for ( type_str in _VIA_ATTRIBUTE_TYPE ) {
+  for ( type_str in _ATTRIBUTE_TYPE ) {
     var oi = document.createElement('option');
-    oi.setAttribute('value', _VIA_ATTRIBUTE_TYPE[type_str]);
+    oi.setAttribute('value', _ATTRIBUTE_TYPE[type_str]);
     oi.innerHTML = type_str;
 
-    if ( _VIA_ATTRIBUTE_TYPE[type_str] === this.d.store.attribute[aid].type ) {
+    if ( _ATTRIBUTE_TYPE[type_str] === this.d.store.attribute[aid].type ) {
       oi.setAttribute('selected', '');
     }
     type_select.appendChild(oi);
@@ -389,7 +389,7 @@ editor.prototype.get_attribute = function(aid) {
   tr.appendChild( desc_container );
 
   // column: options
-  if ( this.d.store.attribute[aid].type === _VIA_ATTRIBUTE_TYPE.TEXT ) {
+  if ( this.d.store.attribute[aid].type === _ATTRIBUTE_TYPE.TEXT ) {
     // text has no defaults
     tr.appendChild( this.html_element('td', '-') );
   } else {
@@ -431,11 +431,11 @@ editor.prototype.get_attribute_html_element = function(aid) {
   var el;
 
   switch(atype) {
-  case _VIA_ATTRIBUTE_TYPE.TEXT:
+  case _ATTRIBUTE_TYPE.TEXT:
     el = document.createElement('textarea');
     break;
 
-  case _VIA_ATTRIBUTE_TYPE.SELECT:
+  case _ATTRIBUTE_TYPE.SELECT:
     el = document.createElement('select');
 
     for ( var oid in this.d.store.attribute[aid].options ) {
@@ -449,7 +449,7 @@ editor.prototype.get_attribute_html_element = function(aid) {
     }
     break;
 
-  case _VIA_ATTRIBUTE_TYPE.RADIO:
+  case _ATTRIBUTE_TYPE.RADIO:
     el = document.createElement('div');
 
     for ( var oid in this.d.store.attribute[aid].options ) {
@@ -472,7 +472,7 @@ editor.prototype.get_attribute_html_element = function(aid) {
     }
     break;
 
-  case _VIA_ATTRIBUTE_TYPE.CHECKBOX:
+  case _ATTRIBUTE_TYPE.CHECKBOX:
     el = document.createElement('div');
 
     for ( var oid in this.d.store.attribute[aid].options ) {
@@ -498,7 +498,7 @@ editor.prototype.get_attribute_html_element = function(aid) {
   default:
     console.log('attribute type ' + atype + ' not implemented yet!');
     var el = document.createElement('span');
-    el.innerHTML = aval;
+    el.innerHTML = "aval";
   }
   el.setAttribute('data-aid', aid);
   return el;
@@ -595,7 +595,7 @@ editor.prototype.on_attribute_create = function(e) {
   var new_attribute_name = this.new_attribute_name_input.value;
   this.d.attribute_add(new_attribute_name,
                        _VIA_DEFAULT_ATTRIBUTE_ANCHOR_ID,
-                       _VIA_ATTRIBUTE_TYPE.TEXT).then( function(ok) {
+                       _ATTRIBUTE_TYPE.TEXT).then( function(ok) {
     this.attributes_update();
     // attribute was added
   }.bind(this), function(err) {

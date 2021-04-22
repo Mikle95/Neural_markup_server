@@ -251,8 +251,8 @@ store_localstorage.prototype._self_test = function() {
   var fid1 = this.d.file_add('test123.jpg', FILE_TYPE.IMAGE, _VIA_FILE_LOC.LOCAL, '');
   var fid2 = this.d.file_add('testXYZ.jpg', FILE_TYPE.IMAGE, _VIA_FILE_LOC.URIHTTP, 'http://somerandurl.com/files/testXYZ.jpg');
 
-  var aid1 = this.d.attribute_add('attribute1', _VIA_ATTRIBUTE_TYPE.TEXT);
-  var aid2 = this.d.attribute_add('attribute2', _VIA_ATTRIBUTE_TYPE.TEXT);
+  var aid1 = this.d.attribute_add('attribute1', _ATTRIBUTE_TYPE.TEXT);
+  var aid2 = this.d.attribute_add('attribute2', _ATTRIBUTE_TYPE.TEXT);
   this.d.metadata_add( fid1, [], [ _VIA_SHAPE.RECT, 10, 20, 50, 100 ], { aid1:'value1', aid2:'value2'}).then( function(ok) {
     this._pack_store_data().then( function(ok) {
       console.assert( d.file_mid_store[0][0] === Object.keys(d.metadata_store)[0] );

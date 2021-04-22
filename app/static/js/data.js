@@ -968,7 +968,7 @@ data.prototype.project_import_via2_json = function(via2_project_json) {
           if ( atype_text === 'DROPDOWN' ) {
             atype_text = 'SELECT';
           }
-          var atype = _VIA_ATTRIBUTE_TYPE[atype_text];
+          var atype = _ATTRIBUTE_TYPE[atype_text];
           this.store['attribute'][via3_aid] = new attribute(aid,
                                                                   anchor_id,
                                                                   atype,

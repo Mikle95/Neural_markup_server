@@ -1356,13 +1356,13 @@ file_annotator.prototype._creg_draw_label = function(mid) {
 
     var label = '';
     switch(this.d.store.attribute[this.d.store.config.ui['spatial_region_label_attribute_id']].type) {
-    case _VIA_ATTRIBUTE_TYPE.RADIO:
-    case _VIA_ATTRIBUTE_TYPE.SELECT:
-    case _VIA_ATTRIBUTE_TYPE.CHECKBOX:
+    case _ATTRIBUTE_TYPE.RADIO:
+    case _ATTRIBUTE_TYPE.SELECT:
+    case _ATTRIBUTE_TYPE.CHECKBOX:
       var option_id = this.d.store.metadata[mid].av[this.d.store.config.ui['spatial_region_label_attribute_id']];
       label = this.d.store.attribute[this.d.store.config.ui['spatial_region_label_attribute_id']].options[option_id];
       break;
-    case _VIA_ATTRIBUTE_TYPE.TEXT:
+    case _ATTRIBUTE_TYPE.TEXT:
       label = this.d.store.metadata[mid].av[this.d.store.config.ui['spatial_region_label_attribute_id']];
       break;
     }
@@ -2527,7 +2527,7 @@ file_annotator.prototype._metadata_attribute_io_html_element = function(mid, aid
   var el;
 
   switch(atype) {
-  case _VIA_ATTRIBUTE_TYPE.TEXT:
+  case _ATTRIBUTE_TYPE.TEXT:
     if ( typeof(aval) === 'undefined' ) {
       aval = dval;
     }
@@ -2536,7 +2536,7 @@ file_annotator.prototype._metadata_attribute_io_html_element = function(mid, aid
     el.innerHTML = aval;
     break;
 
-  case _VIA_ATTRIBUTE_TYPE.SELECT:
+  case _ATTRIBUTE_TYPE.SELECT:
     el = document.createElement('select');
     if ( typeof(aval) === 'undefined' ) {
       aval = dval;
@@ -2554,7 +2554,7 @@ file_annotator.prototype._metadata_attribute_io_html_element = function(mid, aid
     el.addEventListener('change', this._metadata_on_change.bind(this));
     break;
 
-  case _VIA_ATTRIBUTE_TYPE.RADIO:
+  case _ATTRIBUTE_TYPE.RADIO:
     el = document.createElement('div');
 
     if ( typeof(aval) === 'undefined' ) {
@@ -2582,7 +2582,7 @@ file_annotator.prototype._metadata_attribute_io_html_element = function(mid, aid
     }
     break;
 
-  case _VIA_ATTRIBUTE_TYPE.CHECKBOX:
+  case _ATTRIBUTE_TYPE.CHECKBOX:
     el = document.createElement('div');
 
     console.log(dval)

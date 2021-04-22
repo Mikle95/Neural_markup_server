@@ -431,7 +431,7 @@ view_annotator.prototype._metadata_on_update = function(e) {
 
   var avalue;
   switch(this.d.store.attribute[aid].type) {
-  case _VIA_ATTRIBUTE_TYPE.TEXT:
+  case _ATTRIBUTE_TYPE.TEXT:
     avalue = e.target.value;
     break;
   default:
@@ -466,7 +466,7 @@ view_annotator.prototype._metadata_on_update = function(e) {
 view_annotator.prototype._attribute_html_element = function(aid, onchange_handler, mid) {
   var el;
   switch(this.d.store.attribute[aid].type) {
-  case _VIA_ATTRIBUTE_TYPE.TEXT:
+  case _ATTRIBUTE_TYPE.TEXT:
     el = document.createElement('textarea');
     if ( mid !== '') {
       el.setAttribute('data-mid', mid);
@@ -478,7 +478,7 @@ view_annotator.prototype._attribute_html_element = function(aid, onchange_handle
     el.addEventListener('change', onchange_handler);
     break;
 
-  case _VIA_ATTRIBUTE_TYPE.SELECT:
+  case _ATTRIBUTE_TYPE.SELECT:
     el = document.createElement('select');
     var selected_oid = '';
     if ( mid!== '' &&
@@ -505,7 +505,7 @@ view_annotator.prototype._attribute_html_element = function(aid, onchange_handle
     }
     break;
 
-  case _VIA_ATTRIBUTE_TYPE.RADIO:
+  case _ATTRIBUTE_TYPE.RADIO:
     el = document.createElement('div');
     var selected_oid = '';
     if ( mid!== '' &&
