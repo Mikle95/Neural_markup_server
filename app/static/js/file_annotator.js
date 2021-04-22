@@ -1894,7 +1894,9 @@ file_annotator.prototype._tmpreg_clear = function() {
 
 file_annotator.prototype._draw_text = function (ctx, x, y, mid){
   if(mid !== undefined && this.d.store.metadata[mid].av.hasOwnProperty(1)) {
-    var text = this.d.store.attribute[1]['options'][this.d.store.metadata[mid].av[1]];
+    if (this.d.store.attribute[1]["anchor_id"] === "FILE1_Z1_XY1") var text = this.d.store.metadata[mid].av[1];
+    else
+      var text = this.d.store.attribute[1]['options'][this.d.store.metadata[mid].av[1]];
     ctx.fillStyle = this.conf.REGION_BOUNDARY_COLOR;
     ctx.fillText(text, x, y - 5);
   }
@@ -1923,6 +1925,7 @@ file_annotator.prototype._draw = function(ctx, xy, is_selected, mid) {
     break;
   case _VIA_RSHAPE.ELLIPSE:
     this._draw_ellipse_region(ctx, xy[1], xy[2], xy[3], xy[4], is_selected );
+    this._draw_text(ctx, xy[1], xy[2], mid);
     break;
   case _VIA_RSHAPE.EXTREME_BOX:
     this._draw_extreme_box_region(ctx, xy, is_selected);
@@ -1931,6 +1934,7 @@ file_annotator.prototype._draw = function(ctx, xy, is_selected, mid) {
   case _VIA_RSHAPE.POLYGON:
   case _VIA_RSHAPE.POLYLINE:
     this._draw_polygon_region(ctx, xy, is_selected, shape_id);
+    this._draw_text(ctx, xy[1], xy[2], mid);
     break;
   default:
     console.warn('file_annotator._draw() : shape_id=' + shape_id + ' not implemented');

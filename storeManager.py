@@ -6,8 +6,6 @@ import shutil
 
 def save_project(jsonStr, username):
     project = json.loads(jsonStr)
-    if project["project"]["pname"] == "New Project":
-        return False
     dir = "store/" + project["project"]["pname"]
     filename =dir + "/" + username + ".json"
 

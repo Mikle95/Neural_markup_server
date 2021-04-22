@@ -21,7 +21,7 @@ share.prototype.push = function() {
     request.setRequestHeader('Content-Type', 'text/json; charset=UTF-8');
     request.addEventListener("readystatechange", () => {
       if (request.readyState === 4 && request.status === 200)
-        util_msg_show('Project uploaded successfully!');
+        util_msg_show(request.responseText);
     });
     request.send(JSON.stringify(this.d.store));
 
