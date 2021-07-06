@@ -1894,11 +1894,17 @@ file_annotator.prototype._tmpreg_clear = function() {
 
 file_annotator.prototype._draw_text = function (ctx, x, y, mid){
   if(mid !== undefined && this.d.store.metadata[mid].av.hasOwnProperty(1)) {
-    if (this.d.store.attribute[1]["anchor_id"] === "FILE1_Z1_XY1") var text = this.d.store.metadata[mid].av[1];
+    if (this.d.store.attribute[1].type === 1) var text = this.d.store.metadata[mid].av[1];
+    else if (this.d.store.attribute[1].type === 2){
+        var text = this.d.store.metadata[mid].av[1].split(',');
+        for ( var index = 0; index < text.length; ++index)
+          text[index] = this.d.store.attribute[1]['options'][text[index]];
+
+    }
     else
       var text = this.d.store.attribute[1]['options'][this.d.store.metadata[mid].av[1]];
     ctx.fillStyle = this.conf.REGION_BOUNDARY_COLOR;
-    ctx.fillText(text, x, y - 5);
+    ctx.fillText(text.toString(), x, y - 5);
   }
 }
 
