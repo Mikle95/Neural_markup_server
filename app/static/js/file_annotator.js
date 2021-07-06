@@ -1888,7 +1888,7 @@ file_annotator.prototype._tmpreg_clear = function() {
 }
 
 //
-// region draw routines
+// region draw routines g
 //
 // Note: xy = [shape_id, x0, y0, x1, y1, ..., xk, yk]
 
